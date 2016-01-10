@@ -1,69 +1,68 @@
 "use strict";
 
-var NetworkTables = new function () {
-	
+var NetworkTables = new function() {
+
 	if (!("WebSocket" in window)) {
 		alert("Your browser does not support websockets, this will fail!");
 		return;
 	}
-	
-	//
+
 	// javascript map implementation
 	// map functions copied from d3 (BSD license: Mike Bostock)
-	//
-	
-	var d3_map_proto = "__proto__", d3_map_zero = "\x00";
-	
+
+	var d3_map_proto = "__proto__",
+		d3_map_zero = "\x00";
+
 	// we use encodeURIComponent/decodeURIComponent to allow weird values
 	// into the maps we create
-	
+
 	function d3_map_escape(key) {
 		return (key += "") === d3_map_proto || key[0] === d3_map_zero ? d3_map_zero + encodeURIComponent(key) : encodeURIComponent(key);
 	}
-	
+
 	function d3_map_unescape(key) {
 		return (key += "")[0] === d3_map_zero ? decodeURIComponent(key.slice(1)) : decodeURIComponent(key);
 	}
-	
+
 	var d3_map = function() {
-		
-		this._ = Object.create(null); 
-		
+
+		this._ = Object.create(null);
+
 		this.forEach = function(f) {
 			for (var key in this._) f.call(this, d3_map_unescape(key), this._[key]);
 		};
-		
+
 		this.get = function(key) {
 			return this._[d3_map_escape(key)];
 		};
-		
+
 		this.getKeys = function() {
 			var keys = [];
-			for(var key in this._) keys.push(d3_map_unescape(key));
+			for (var key in this._) keys.push(d3_map_unescape(key));
 			return keys;
 		};
-		
+
 		this.has = function(key) {
 			return d3_map_escape(key) in this._;
 		};
-		
+
 		this.set = function(key, value) {
 			return this._[d3_map_escape(key)] = value;
 		};
 	};
-	
+
 	//
 	// Utility functions
 	//
-	
+
 	/**
 		Creates a new empty map (or hashtable) object and returns it. The map
     	is safe to store NetworkTables keys in.
     */
 	this.create_map = function() {
 		return new d3_map();
-	};
-	
+    };
+
 	/**
 		Escapes NetworkTables keys so that they're valid HTML identifiers.
 
@@ -71,7 +70,7 @@ var NetworkTables = new function () {
     	:returns: Escaped value
     */
 	this.keyToId = encodeURIComponent;
-	
+
 	/**
 		Escapes special characters and returns a valid jQuery selector. Useful as
     	NetworkTables does not really put any limits on what keys can be used.
@@ -80,31 +79,31 @@ var NetworkTables = new function () {
     	:returns: Escaped value
     */
 	this.keySelector = function(str) {
-	    return encodeURIComponent(str).replace(/([;&,\.\+\*\~':"\!\^#$%@\[\]\(\)=>\|])/g, '\\$1');
+		return encodeURIComponent(str).replace(/([;&,\.\+\*\~':"\!\^#$%@\[\]\(\)=>\|])/g, '\\$1');
 	};
-	
+
 	//
 	// NetworkTables internal variables
 	//
-	
-	
+
+
 	// functions that listen for connection changes
 	var connectionListeners = [];
 	var robotConnectionListeners = [];
-	
+
 	// functions that listen for everything
 	var globalListeners = [];
-	
+
 	// functions that listen for specific keys
 	var keyListeners = new d3_map();
-	
+
 	// contents of everything in NetworkTables that we know about
 	var ntCache = new d3_map();
-	
+
 	//
 	// NetworkTables JS API
 	//
-	
+
 	/**
 		Sets a function to be called when the websocket connects/disconnects
 
@@ -115,12 +114,12 @@ var NetworkTables = new function () {
     */
 	this.addWsConnectionListener = function(f, immediateNotify) {
 		connectionListeners.push(f);
-		
+
 		if (immediateNotify == true) {
 			f(socketOpen);
 		}
 	};
-	
+
 	/**
 		Sets a function to be called when the robot connects/disconnects to the
 	    pynetworktables2js server via NetworkTables. It will also be called when
@@ -133,12 +132,12 @@ var NetworkTables = new function () {
 	*/
 	this.addRobotConnectionListener = function(f, immediateNotify) {
 		robotConnectionListeners.push(f);
-		
+
 		if (immediateNotify == true) {
 			f(robotConnected);
 		}
 	}
-	
+
 	/**
 		Set a function that will be called whenever any NetworkTables value is changed
 
@@ -149,14 +148,14 @@ var NetworkTables = new function () {
     */
 	this.addGlobalListener = function(f, immediateNotify) {
 		globalListeners.push(f);
-		
+
 		if (immediateNotify == true) {
-			ntCache.forEach(function(k, v){
+			ntCache.forEach(function(k, v) {
 				f(k, v, true);
 			});
 		}
 	};
-	
+
 	/**
 	    Set a function that will be called whenever a value for a particular key is changed in NetworkTables
 
@@ -173,7 +172,7 @@ var NetworkTables = new function () {
 		} else {
 			listeners.push(f);
 		}
-		
+
 		if (immediateNotify == true) {
 			var v = ntCache.get(key);
 			if (v !== undefined) {
@@ -181,17 +180,17 @@ var NetworkTables = new function () {
 			}
 		}
 	};
-	
+
 	// Returns true/false if key is in NetworkTables
 	this.containsKey = function(key) {
 		return ntCache.has(key);
 	};
-	
+
 	// Returns all the keys in the NetworkTables
 	this.getKeys = function() {
 		return ntCache.getKeys();
 	};
-	
+
 	/**
 		Returns the value that the key maps to. If the websocket is not
 	    open, this will always return the default value specified.
@@ -212,7 +211,7 @@ var NetworkTables = new function () {
 		else
 			return val;
 	};
-	
+
 	// returns true if robot is connected
 	this.isRobotConnected = function() {
 		return robotConnected;
@@ -222,7 +221,7 @@ var NetworkTables = new function () {
 	this.isWsConnected = function() {
 		return socketOpen;
 	};
-	
+
 	/**
 		Sets the value in NetworkTables. If the websocket is not connected, the
 	    value will be discarded.
@@ -247,52 +246,55 @@ var NetworkTables = new function () {
 		if (!socketOpen)
 			return false;
 
-		socket.send(JSON.stringify({'k': key, 'v': value}));
+		socket.send(JSON.stringify({
+			'k': key,
+			'v': value
+		}));
 		return true;
 	};
 
 	// backwards compatibility; depreciated
 	this.setValue = this.putValue;
-	
+
 	//
 	// NetworkTables socket code
 	//
-	
+
 	var socket;
 	var socketOpen = false;
 	var robotConnected = false;
-	
+
 	// construct the websocket URI
 	var loc = window.location;
 	var host;
-	
+
 	if (loc.protocol === "https:") {
 		host = "wss:";
 	} else {
 		host = "ws:";
 	}
-	
+
 	host += "//" + loc.host;
 	host += "/networktables/ws";
-	
+
 	function createSocket() {
-	
+
 		socket = new WebSocket(host);
 		if (socket) {
-			
+
 			socket.onopen = function() {
 				console.log("Socket opened");
-				
+
 				socketOpen = true;
-				
+
 				for (var i in connectionListeners) {
 					connectionListeners[i](true);
 				}
 			};
-			
+
 			socket.onmessage = function(msg) {
 				var data = JSON.parse(msg.data);
-				
+
 				// robot connection event
 				if (data.r !== undefined) {
 					robotConnected = data.r;
@@ -300,19 +302,19 @@ var NetworkTables = new function () {
 						robotConnectionListeners[i](robotConnected);
 					}
 				} else {
-				
+
 					// data changed on websocket
 					var key = data['k'];
 					var value = data['v'];
 					var isNew = data['n'];
-					
+
 					ntCache.set(key, value);
-					
+
 					// notify global listeners
 					for (var i in globalListeners) {
 						globalListeners[i](key, value, isNew);
 					}
-					
+
 					// notify key-specific listeners
 					var listeners = keyListeners.get(key);
 					if (listeners !== undefined) {
@@ -322,35 +324,33 @@ var NetworkTables = new function () {
 					}
 				}
 			};
-			
+
 			socket.onclose = function() {
-				
+
 				if (socketOpen) {
-				
+
 					for (var i in connectionListeners) {
 						connectionListeners[i](false);
 					}
-					
+
 					for (var i in robotConnectionListeners) {
 						robotConnectionListeners[i](false);
 					}
-					
+
 					// clear ntCache, it's no longer valid
 					// TODO: Is this true?
 					ntCache = new d3_map();
-					
+
 					socketOpen = false;
 					robotConnected = false;
 					console.log("Socket closed");
 				}
-				
+
 				// respawn the websocket
 				setTimeout(createSocket, 300);
 			};
 		}
 	}
-	
+
 	createSocket();
 }
-
-

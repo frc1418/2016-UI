@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <title>Practicing</title>
+    <script src="js/networktables.js"></script>
+</head>
+
+<body>
+    <form>
+        <input type="text" placeholder="Name" name="name" id="name">
+        <input type="text" placeholder="Value" name="value" id="value">
+    </form>
+    <button id="set">Set</button>
+    <button id="get">Get</button>
+    <script>
+        document.getElementById('set').onclick = function() {
+            NetworkTables.setValue('/SmartDashboard/name', document.getElementById('name').value);
+        };
+        document.getElementById('get').onclick = function() {
+            document.getElementById('get').value = NetworkTables.getValue('/SmartDashboard/canTo/name', '');
+        };
+    </script>
+</body>
+
+</html>
