@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-
+import sys
 import json
 from os.path import dirname, join
 
@@ -41,7 +41,7 @@ def init_networktables(ipaddr):
     logger.info("Networktables Initialized")
 
 
-def main():
+def main(fileName="practice.html"):
     define("frontcam", default="http://10.14.18.2:5800", help="URL for the front camera", type=str)
     define("backcam", default="http://10.14.18.2:5801", help="URL for the back camera", type=str)
     define("host", default='127.0.0.1', help="Hostname of robot", type=str)
@@ -56,11 +56,11 @@ def main():
     app = tornado.web.Application(
         get_handlers() + [
             (r"/config.js", ConfigHandler),
-            (r"/()", NonCachingStaticFileHandler, {"path": join(dirname(__file__), 'UI_MainPage.html')}),
+            (r"/()", NonCachingStaticFileHandler, {"path": join(dirname(__file__), fileName)}),
             (r"/(.*)", NonCachingStaticFileHandler, {"path": dirname(__file__)}),
         ]
     )
-    
+    logger.info('Current Page is %s'% fileName)
     logger.info("Listening on http://localhost:%s/" % options.port)
 
     app.listen(options.port)
@@ -68,4 +68,7 @@ def main():
 
 
 if __name__ == '__main__':
-    main()
+    if len(sys.argv)>1:
+        main(sys.argv[1])
+    else:
+        main()
