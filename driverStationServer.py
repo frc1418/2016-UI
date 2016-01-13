@@ -2,7 +2,7 @@
 import sys
 import json
 from os.path import dirname, join
-
+import sys
 import tornado.web
 from tornado.ioloop import IOLoop
 from tornado.options import define, options, parse_command_line
@@ -41,7 +41,8 @@ def init_networktables(ipaddr):
     logger.info("Networktables Initialized")
 
 
-def main(fileName="practice.html"):
+def main(fileName='practice.html'):
+    #argument 1 is the filename of the script to be run
     define("frontcam", default="http://10.14.18.2:5800", help="URL for the front camera", type=str)
     define("backcam", default="http://10.14.18.2:5801", help="URL for the back camera", type=str)
     define("host", default='127.0.0.1', help="Hostname of robot", type=str)
@@ -60,7 +61,8 @@ def main(fileName="practice.html"):
             (r"/(.*)", NonCachingStaticFileHandler, {"path": dirname(__file__)}),
         ]
     )
-    logger.info('Current Page is %s'% fileName)
+
+    logger.info('Current Page is %s'%fileName)
     logger.info("Listening on http://localhost:%s/" % options.port)
 
     app.listen(options.port)
