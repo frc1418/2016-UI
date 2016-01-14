@@ -1,19 +1,12 @@
-FRC1418 2015 Driver Station Code
+FRC1418 2016 Driver Station Code
 ================================
 
-* Code: [Robot](https://github.com/frc1418/2015-robot) | **UI** | [Image Processing](https://github.com/frc1418/2015-vision) | [Oculus Rift](https://github.com/frc1418/2015-oculus)
-* Factsheet: [Google Doc](https://docs.google.com/document/d/1irbUm-Qfxz_Ua2XiB5KzYWG2Ec5Xhr038NqL-k4FveA)
 
 Introduction
 ------------
 
-![ScreenShot](ss.png)
 
-We're really excited to release our Driver Station code for 2015! At the
-Greater DC Regional, 1418 won an (awards).
-
-One of the really cool ideas that was a departure from last year's UI
-was using HTML5 & Javascript to create the driver station interface. The
+HTML5 & Javascript driver station interface. The
 UI features:
 
 * Touchscreen web browser interface provides richer control interface
@@ -71,13 +64,11 @@ trying to test.
 Authors
 =======
 
-Students
+Current Students
 
 * Leon Tan, UI Lead
 * Erik Boesen
 * Aki Maher
-* Jacob Hanse
 * Tyler Gogal
-* Cami Borja
 
-Dustin Spicuzza, mentor
+Special Thanks to Dustin Spicuzza, mentor.
