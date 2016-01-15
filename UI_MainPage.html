@@ -4,55 +4,60 @@
 <head>
     <meta charset="utf-8">
     <title>1418 DriverStation</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <script>
+        $(document).ready(function() {
+            // sets a function that will be called when the websocket connects/disconnects
+            NetworkTables.addWsConnectionListener(onNetworkTablesConnection, true);
+
+            // sets a function that will be called when the robot connects/disconnects
+            NetworkTables.addRobotConnectionListener(onRobotConnection, true);
+
+            // sets a function that will be called when any NetworkTables key/value changes
+            NetworkTables.addGlobalListener(onValueChanged, true);
+        });
+        // called when the websocket connects/disconnects
+        function onRobotConnection(connected) { // TODO: change some indicator
+            console.log("Robot connected: " + connected);
+        }
+
+        function onNetworkTablesConnection(connected) {
+            // TODO: change some indicator
+        }
+
+        function onValueChanged(key, value, isNew) {
+            //name, data, has the variable just been created t/f
+
+            // key thing here: we're using the various NetworkTable keys as
+            // the id of the elements that we're appending, for simplicity. However,
+            // the key names aren't always valid HTML identifiers, so we use
+            // the NetworkTables.keyToId() function to convert them appropriately
+            if (isNew) {
+                /*
+                  If the variable is new, then */
+            } else {
+                switch (key) {
+                    /*if the keyname equals on the cases execute the code in the case*/
+
+                }
+            }
+        }
+    </script>
+    <nav>
+        <ul>
+            <li>Lorem</li>
+            <li>Ipsum</li>
+        </ul>
+    </nav>
+    <article>
+        <h1>Lorem</h1>
+    </article>
     <script src="js/jquery.js"></script>
     <script src="js/d3.js"></script>
-    <script src="networktables.js"></script>
-    <link type="text/css" rel="stylesheet" href="MainPageCSS.css"/>
-
-</head>
-<body>
-  <script type="test/javascript">
-  $(document).ready(function(){
-  	// sets a function that will be called when the websocket connects/disconnects
-  	NetworkTables.addWsConnectionListener(onNetworkTablesConnection, true);
-
-  	// sets a function that will be called when the robot connects/disconnects
-  	NetworkTables.addRobotConnectionListener(onRobotConnection, true);
-
-  	// sets a function that will be called when any NetworkTables key/value changes
-  	NetworkTables.addGlobalListener(onValueChanged, true);
-  });
-  // called when the websocket connects/disconnects
-  function onRobotConnection(connected) {            	// TODO: change some indicator
-  	console.log("Robot connected: " + connected);
-  }
-  function onNetworkTablesConnection(connected) {
-  	// TODO: change some indicator
-  }
-  function onValueChanged(key, value, isNew) {
-    //name, data, has the variable just been created t/f
-
-	// key thing here: we're using the various NetworkTable keys as
-	// the id of the elements that we're appending, for simplicity. However,
-	// the key names aren't always valid HTML identifiers, so we use
-	// the NetworkTables.keyToId() function to convert them appropriately
-	if (isNew) {/*
-    If the variable is new, then */
-	} else {
-    switch(key){
-      /*if the keyname equals on the cases execute the code in the case*/
-
-    }
-	}
-}
-  </script>
-  <nav class="NavDiv"><!-- NavigationLinks -->
-      fdsa
-  </nav>
-  <div class="BodyDiv">         <!-- UIbody start -->
-    <div>                 <!-- first bodydiv, fill with stuff -->
-      asdf
-    </div>
-  </div>
+    <script src="js/networktables.js"></script>
 </body>
+
 </html>
