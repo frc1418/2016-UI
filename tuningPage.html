@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="utf-8">
-    <title>1418 DriverStation</title>
+    <title>1418 TuningPage for Variable Tuning</title>
     <script src="js/jquery.js"></script>
     <script src="js/d3.js"></script>
     <script src="networktables.js"></script>
@@ -37,8 +37,12 @@
 	// the key names aren't always valid HTML identifiers, so we use
 	// the NetworkTables.keyToId() function to convert them appropriately
 	if (isNew) {/*
-    If the variable is new, then */
+
+    If the variable is new, then call a function to add a div to the list of divs
+
+    */
 	} else {
+    /*update the variables with new values*/
     switch(key){
       /*if the keyname equals on the cases execute the code in the case*/
 
