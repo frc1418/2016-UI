@@ -27,13 +27,15 @@ nav {
 .selectionDiv{
   /*margin:0 auto;*/
   display:block;
-  position:fixed;
+  position:relative;
 }
 .selectionToggleBox{
   height:100px;
   width:100px;
-  background-color: lightblue;
+  background-color: white;
   margin-left: auto;
     margin-right: auto;
   display:block;
+	border-color:black;
+	border:solid;
 }
