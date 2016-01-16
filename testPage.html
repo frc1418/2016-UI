@@ -5,6 +5,11 @@
     <meta charset="utf-8">
     <title>Test Page</title>
     <link rel="stylesheet" type="text/css" href="style.css" />
+        <!-- This starts the NetworkTables websocket, it can be accessed from multiple
+         pages simultaneously -->
+
+        <script src="js/jquery.js"></script>
+        <script src="js/networktables.js"></script>
 </head>
 
 <body>
@@ -17,11 +22,6 @@
         <a href="UI_MainPage.html">Go to control center</a>
     </div>
 
-    <!-- This starts the NetworkTables websocket, it can be accessed from multiple
-     pages simultaneously -->
-
-    <script src="js/jquery.js"></script>
-    <script src="js/networktables.js"></script>
     <!-- uncomment this is you want to use included utility functions that
          implement common functionality that you might find useful. Requires
          that d3.js and jQuery are included first -->
@@ -73,15 +73,80 @@
     </script>
     <!-- repurposing page to test some stuff-->
     <!--making the shifters stuff work-->
-    <div class="electionDiv">
-    <div class="arrow-up"></div>
-    <img class="selectionToggleBox" src="img/chevy1-0.jpg"></img>
-    <div class="arrow-down"></div>
+    <div>
+    <div class="selectionDiv"></div>
+    <div class="selectionDiv" ></div>
+    <div class="selectionDiv"></div>
+    <div class="selectionDiv" ></div>
+  </div>
     <script>
     /*second script tag to separate some stuff for neatness.
     scroll through abcd, click on the pic to toggle, default to A1,
     change the networkTable Value of currentSelectedMode
     */
+    defenseNames=["A","B","C","D"];
+
+    $(document).ready(function(){
+      //for every selection Div, make the stuff, add a listener to each arrow, the toggleBox,
+      //set the value from networkTables or if no networkTables, get the default value
+      var everySelectionDiv=$(".selectionDiv");   //get every selectionDiv(the div)
+      var everySelectionDivLength=everySelectionDiv.length;
+      var defenseNumber=0;                        //defense number 1 or 0
+      //console.log(everySelectionDivLength);
+      //for(var a=0;a<everySelectionDivLength;a++){
+      everySelectionDiv.each(function(a){
+        //for every selectionDiv add the triangles, set the id,
+        var thisDiv=$(this);
+        thisDiv.attr("defenseClass",a);
+        thisDiv.attr("defenseNumber",defenseNumber);
+        thisDiv.append($('<div></div>')
+            .addClass("arrow-up")
+            .click(function(){
+              //onclick take the value of the current defense from this div, ex"defenseName=(3,0)", ++1
+              var currentDefenseClass=thisDiv.attr("defenseClass");
+              if(currentDefenseClass>=3){
+                currentDefenseClass=0;
+              }
+              else{currentDefenseClass++;}
+              thisDiv.attr("defenseClass",currentDefenseClass);
+              thisDiv.children(".selectionToggleBox")//.find(".selectionToggleBox")
+              .attr("src","img/"+defenseNames[currentDefenseClass]+""+defenseNumber+".jpg");
+            }));
+        thisDiv.append($('<img></img>')
+            .addClass("selectionToggleBox")
+            //.attr('id','selectionToggleBox'+a)
+            .attr('src',"img/"+defenseNames[a]+defenseNumber+".jpg")
+            .click(function(){
+              var currentDefenseNumber=thisDiv.attr("defenseNumber");
+              if(currentDefenseNumber>=1){
+                currentDefenseNumber=0;
+              }
+              else{currentDefenseNumber++;}
+              thisDiv.attr("defenseNumber",currentDefenseNumber);
+              thisDiv.children(".selectionToggleBox")//.find(".selectionToggleBox")
+              .attr("src","img/"+defenseNames[thisDiv.attr("defenseClass")]+""+currentDefenseNumber+".jpg");
+            })
+          );
+        thisDiv.append($('<div></div>')
+            .addClass("arrow-down")
+            .click(function(i,b){
+              //onclick take the value of the current defense from this div, ex"defenseName=(3,0)", ++1
+              var currentDefenseClass=thisDiv.attr("defenseClass");
+              if(currentDefenseClass<=0){
+                currentDefenseClass=3;
+              }
+              else{currentDefenseClass--;}
+              thisDiv.attr("defenseClass",currentDefenseClass);
+              thisDiv.children(".selectionToggleBox")//.find(".selectionToggleBox")
+              .attr("src","img/"+defenseNames[currentDefenseClass]+""+defenseNumber+".jpg");
+            })
+            .addClass("arrow-down"));
+        if(defenseNumber==0){defenseNumber=1;}
+        else{defenseNumber=0;}
+    });
+  });
+    //function(){}
+
     </script>
   </div>
 </body>
