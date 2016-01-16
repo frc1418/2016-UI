@@ -4,6 +4,7 @@
 <head>
     <meta charset="utf-8">
     <title>Test Page</title>
+    <link rel="stylesheet" type="text/css" href="style.css" />
 </head>
 
 <body>
@@ -15,17 +16,12 @@
         <br>
         <a href="UI_MainPage.html">Go to control center</a>
     </div>
-    <hr>
-
-    <table id="nt" border=1>
-        <tbody></tbody>
-    </table>
 
     <!-- This starts the NetworkTables websocket, it can be accessed from multiple
      pages simultaneously -->
 
     <script src="js/jquery.js"></script>
-    <script src="/networktables/networktables.js"></script>
+    <script src="js/networktables.js"></script>
     <!-- uncomment this is you want to use included utility functions that
          implement common functionality that you might find useful. Requires
          that d3.js and jQuery are included first -->
@@ -75,6 +71,19 @@
         }
 
     </script>
+    <!-- repurposing page to test some stuff-->
+    <!--making the shifters stuff work-->
+    <div class="electionDiv">
+    <div class="arrow-up"></div>
+    <img class="selectionToggleBox" src="Resources/chevy1-0.jpg"></img>
+    <div class="arrow-down"></div>
+    <script>
+    /*second script tag to separate some stuff for neatness.
+    scroll through abcd, click on the pic to toggle, default to A1,
+    change the networkTable Value of currentSelectedMode
+    */
+    </script>
+  </div>
 </body>
 
 </html>
