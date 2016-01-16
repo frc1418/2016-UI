@@ -1,0 +1,79 @@
+.UIPage{
+    /*background-image:url("RobotUIBackground.png");*/
+    /*background-color: #EBF8FF;*/
+    background-image:-webkit-linear-gradient(top,#980000 0,##000 100%);
+    background-image:-o-linear-gradient(top,#980000 0,#000 100%);
+    background-image:-webkit-gradient(linear,left top,left bottom,from(#980000),to(#000));
+    background-image:linear-gradient(to bottom,#980000 0,#000 100%);
+    background-size:100vw 100vh;
+    background-repeat: no-repeat;
+}
+
+.MainDivide{
+  border-top: 1vh solid black;
+  border-left: 0.4vw solid black;
+  border-bottom: 1vh solid #200000;
+  border-right: 0.4vw solid #380000;
+  border-radius: 2vmin;
+  padding-left: 0.5vw;
+  padding-right: 0.5vw;
+  padding-top: 0.5vh;
+  padding-bottom: 0.5vh;
+
+}
+
+#topSection{
+  position: fixed;
+  left: 1vw;
+  top: 2vh;
+  right: 1vw;
+
+  height: 15vh;
+}
+
+#leftSection{
+    position: fixed;
+    left: 1vw;
+    top: 22vh;
+    bottom: 2vh;
+    width: 66vw;
+    height: 72vh;
+}
+
+.FieldSelector{
+    display:inline-block;
+    width:12.2vw;
+    height:70vh;
+      border-top: 1vh solid black;
+      border-left: 0.4vw solid black;
+      border-bottom: 1vh solid #200000;
+      border-right: 0.4vw solid #380000;
+}
+
+.ObstacleSelector{
+  display:inline-block;
+  width: 11.8vw;
+  height:34vh;
+  border-left: 0.4vw solid black;
+  border-bottom: 1vh solid #200000;
+  border-right: 0.4vw solid #380000;
+}
+
+.RobotSelector{
+  display:inline-block;
+  width: 11.8vw;
+  height:34vh;
+  border-top: 1vh solid black;
+  border-left: 0.4vw solid black;
+  border-bottom: 1vh solid #200000;
+  border-right: 0.4vw solid #380000;
+}
+
+#rightSection{
+    position: fixed;
+    right: 1vw;
+    top: 22vh;
+    bottom: 2vh;
+    width: 28vw;
+    height: 72vh;
+}
