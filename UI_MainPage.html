@@ -42,10 +42,17 @@
             if (isNew) {
                 var div = $('<div></div>').appendTo($('article'));
                 $('<p></p>').text(key).appendTo(div);
-                $('<input type="text">')
+                if (isNaN(value)) {
+                    $('<input type="number" min="0" max="50">')
                     .attr('id', NetworkTables.keyToId(key))
                     .attr('value', value)
                     .appendTo(div);
+                } else {
+                    $('<input type="text">')
+                    .attr('id', NetworkTables.keyToId(key))
+                    .attr('value', value)
+                    .appendTo(div);
+                }
             } else {
                 // similarly, use keySelector to convert the key to a valid jQuery
                 // selector. This should work for class names also, not just for ids
