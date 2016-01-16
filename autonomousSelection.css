@@ -28,22 +28,22 @@
   top: 2vh;
   right: 1vw;
 
-  height: 15vh;
+  height: 13vh;
 }
 
 #leftSection{
     position: fixed;
     left: 1vw;
-    top: 22vh;
+    top: 19vh;
     bottom: 2vh;
     width: 66vw;
-    height: 72vh;
+    height: 75vh;
 }
 
 .FieldSelector{
     display:inline-block;
     width:12.2vw;
-    height:70vh;
+    height:72vh;
       border-top: 1vh solid black;
       border-left: 0.4vw solid black;
       border-bottom: 1vh solid #200000;
@@ -53,7 +53,7 @@
 .ObstacleSelector{
   display:inline-block;
   width: 11.8vw;
-  height:34vh;
+  height:35vh;
   border-left: 0.4vw solid black;
   border-bottom: 1vh solid #200000;
   border-right: 0.4vw solid #380000;
@@ -62,7 +62,7 @@
 .RobotSelector{
   display:inline-block;
   width: 11.8vw;
-  height:34vh;
+  height:35vh;
   border-top: 1vh solid black;
   border-left: 0.4vw solid black;
   border-bottom: 1vh solid #200000;
@@ -72,8 +72,8 @@
 #rightSection{
     position: fixed;
     right: 1vw;
-    top: 22vh;
+    top: 19vh;
     bottom: 2vh;
     width: 28vw;
-    height: 72vh;
+    height: 75vh;
 }
