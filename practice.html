@@ -16,12 +16,7 @@
     <button id="get">Get</button>
     <script>
         document.getElementById('set').onclick = function() {
-            NetworkTables.setValue('/SmartDashboard/name', document.getElementById('name').value);
-            NetworkTables.setValue('/SmartDashboard/value', document.getElementById('value').value);
-        };
-        document.getElementById('get').onclick = function() {
-            document.getElementById('name').value = NetworkTables.getValue('/SmartDashboard/name', '');
-            document.getElementById('value').value = NetworkTables.getValue('/SmartDashboard/value', '');
+            NetworkTables.setValue('/SmartDashboard/' + document.getElementById('name').value, document.getElementById('value').value);
         };
     </script>
 </body>
