@@ -5,9 +5,10 @@
     <meta charset="utf-8">
     <title>1418 Autonomous Selection</title>
     <link rel="stylesheet" href="style.css">
+    <link type="text/css" rel="stylesheet" href="autonomousSelection.css"/>
 </head>
 
-<body>
+<body class="UIPage">
     <script>
         $(document).ready(function() {
             // sets a function that will be called when the websocket connects/disconnects
@@ -46,15 +47,47 @@
             }
         }
     </script>
-    <nav>
-        <ul>
-            <li>Lorem</li>
-            <li>Ipsum</li>
-        </ul>
-    </nav>
-    <article>
-        <h1>Lorem</h1>
-    </article>
+    <div class="MainDivide" id="topSection">
+      <nav>
+          <ul>
+          </ul>
+      </nav>
+    </div>
+
+    <div class="MainDivide" id="leftSection">
+      <div class="FieldSelector">
+        <div class="ObstacleSelector">
+        </div>
+        <div class="RobotSelector">
+        </div>
+      </div>
+      <div class="FieldSelector">
+        <div class="ObstacleSelector">
+        </div>
+        <div class="RobotSelector">
+        </div>
+      </div>
+      <div class="FieldSelector">
+        <div class="ObstacleSelector">
+        </div>
+        <div class="RobotSelector">
+        </div>
+      </div>
+      <div class="FieldSelector">
+        <div class="ObstacleSelector">
+        </div>
+        <div class="RobotSelector">
+        </div>
+      </div>
+      <div class="FieldSelector">      
+        <div class="ObstacleSelector">
+        </div>
+        <div class="RobotSelector">
+        </div>
+      </div>
+    </div>
+    <div class="MainDivide" id="rightSection">
+    </div>
     <script src="js/jquery.js"></script>
     <script src="js/d3.js"></script>
     <script src="js/networktables.js"></script>
