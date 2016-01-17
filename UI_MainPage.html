@@ -12,6 +12,11 @@
 </head>
 
 <body>
+    <article>
+        <h1>Dashboard</h1>
+        <div class="settings" id="settingContainerDiv"></div>
+        <button id="set">Set</button>
+    </article>
     <script>
         $(document).ready(function() {
             // sets a function that will be called when the websocket connects/disconnects
@@ -33,6 +38,7 @@
         }
 
         function onValueChanged(key, value, isNew) {
+            console.log(key, value, isNew);
             //name, data, has the variable just been created t/f
 
             // key thing here: we're using the various NetworkTable keys as
@@ -44,26 +50,30 @@
                 $('<p></p>').text(key).appendTo(div);
                 if (!isNaN(value)) {
                     $('<input type="number">')
-                    .attr('id', NetworkTables.keyToId(key))
-                    .attr('value', value)
-                    .appendTo(div);
+                        .attr('id', NetworkTables.keyToId(key))
+                        .attr('value', value)
+                        .appendTo(div);
                 } else {
                     $('<input type="text">')
-                    .attr('id', NetworkTables.keyToId(key))
-                    .attr('value', value)
-                    .appendTo(div);
+                        .attr('id', NetworkTables.keyToId(key))
+                        .attr('value', value)
+                        .appendTo(div);
                 }
-            } else {
+            }/*else {
                 // similarly, use keySelector to convert the key to a valid jQuery
                 // selector. This should work for class names also, not just for ids
-                $('#' + NetworkTables.keySelector(key)).text(value);
-            }
+                //$('#' + NetworkTables.keySelector(key)).text(value);
+            }*/
         }
+        $('#set').click(function() {
+            var childInputs = $('#settingContainerDiv input');
+            childInputs.each(function(a) {
+                var thisChild = $(this);
+                NetworkTables.setValue(thisChild.attr('id'), thisChild.val());
+            });
+        });
     </script>
-    <article>
-        <h1>Dashboard</h1>
-        <div class="settings"></div>
-    </article>
+
 </body>
 
 </html>
