@@ -58,6 +58,9 @@
   border-bottom: 1vh solid #200000;
   border-right: 0.4vw solid #380000;
 }
+.DefenseSelector{
+    padding-top: 3vh;
+}
 
 .RobotSelector{
   display:inline-block;
