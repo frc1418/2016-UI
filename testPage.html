@@ -9,7 +9,7 @@
          pages simultaneously -->
 
         <script src="js/jquery.js"></script>
-        <script src="js/networktables.js"></script>
+        <script src="/networktables/networktables.js"></script>
 </head>
 
 <body>
@@ -57,16 +57,34 @@
             // the id of the elements that we're appending, for simplicity. However,
             // the key names aren't always valid HTML identifiers, so we use
             // the NetworkTables.keyToId() function to convert them appropriately
+            //console.log(key,"changed",value,isNew);
+            switch(key){
+              case "defenseSelectionDiv0":
+              case "defenseSelectionDiv1":
+              case "defenseSelectionDiv2":
+              case "defenseSelectionDiv3":
+              var theChangedDiv=$("#"+key);
+              theChangedDiv.attr("defenseClass",defenseNames.indexOf(value.charAt(0)))
+              .attr("defenseNumber",value.charAt(1));
+              theChangedDiv.children(".selectionToggleBox")
+              .attr("src","img/"+value+".jpg");
+
+              break;        //in case we want to add another listener to the swtich afterwards
+            }
             if (isNew) {
-                var tr = $('<tr></tr>').appendTo($('#nt > tbody:last'));
+                /*var tr = $('<tr></tr>').appendTo($('#nt > tbody:last'));
                 $('<td></td>').text(key).appendTo(tr);
                 $('<td></td>').attr('id', NetworkTables.keyToId(key))
                     .text(value)
-                    .appendTo(tr);
+                    .appendTo(tr);*/
             } else {
                 // similarly, use keySelector to convert the key to a valid jQuery
                 // selector. This should work for class names also, not just for ids
-                $('#' + NetworkTables.keySelector(key)).text(value);
+
+                //$('#' + NetworkTables.keySelector(key)).text(value);
+
+                //this messes with the defenseSelections,
+                // it would probalby be better to have it work with the switch
             }
         }
 
@@ -89,15 +107,15 @@
     $(document).ready(function(){
       //for every selection Div, make the stuff, add a listener to each arrow, the toggleBox,
       //set the value from networkTables or if no networkTables, get the default value
-      var everySelectionDiv=$(".selectionDiv");   //get every selectionDiv(the div)
+      var everySelectionDiv=$(".selectionDiv");         //get every defenseSelectionDiv(the div that contains the stuff)
       var everySelectionDivLength=everySelectionDiv.length;
-      var defenseNumber=0;                        //defense number 1 or 0
-      //console.log(everySelectionDivLength);
-      //for(var a=0;a<everySelectionDivLength;a++){
       everySelectionDiv.each(function(a){
-        //for every selectionDiv add the triangles, set the id,
+        //for every selectionDiv add the triangles, set the id, 'a' is the index in the list of divs
         var thisDiv=$(this);
         thisDiv.attr("defenseClass",a);
+        thisDiv.attr("id","defenseSelectionDiv"+a);
+        console.log(thisDiv.attr('id'));
+        var defenseNumber=0;
         thisDiv.attr("defenseNumber",defenseNumber);
         thisDiv.append($('<div></div>')
             .addClass("arrow-up")
@@ -111,6 +129,8 @@
               thisDiv.attr("defenseClass",currentDefenseClass);
               thisDiv.children(".selectionToggleBox")//.find(".selectionToggleBox")
               .attr("src","img/"+defenseNames[currentDefenseClass]+""+defenseNumber+".jpg");
+
+              NetworkTables.setValue(thisDiv.attr("id"),defenseNames[currentDefenseClass]+defenseNumber);
             }));
         thisDiv.append($('<img></img>')
             .addClass("selectionToggleBox")
@@ -125,6 +145,8 @@
               thisDiv.attr("defenseNumber",currentDefenseNumber);
               thisDiv.children(".selectionToggleBox")//.find(".selectionToggleBox")
               .attr("src","img/"+defenseNames[thisDiv.attr("defenseClass")]+""+currentDefenseNumber+".jpg");
+
+              NetworkTables.setValue(thisDiv.attr("id"),defenseNames[thisDiv.attr("defenseClass")]+currentDefenseNumber);
             })
           );
         thisDiv.append($('<div></div>')
@@ -138,14 +160,20 @@
               else{currentDefenseClass--;}
               thisDiv.attr("defenseClass",currentDefenseClass);
               thisDiv.children(".selectionToggleBox")//.find(".selectionToggleBox")
-              .attr("src","img/"+defenseNames[currentDefenseClass]+""+defenseNumber+".jpg");
+              .attr("src","img/"+defenseNames[currentDefenseClass]+defenseNumber+".jpg");
+              NetworkTables.setValue(thisDiv.attr("id"),defenseNames[currentDefenseClass]+defenseNumber);
             })
-            .addClass("arrow-down"));
+          );
         if(defenseNumber==0){defenseNumber=1;}
         else{defenseNumber=0;}
     });
-  });
-    //function(){}
+  });/*
+    function incrementDefenseClass(increment,object){
+
+    }
+    function toggleDefenseNumber(object){
+
+    }*/
 
     </script>
   </div>

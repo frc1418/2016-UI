@@ -4,10 +4,12 @@
 <head>
     <meta charset="utf-8">
     <title>Practicing</title>
-    <script src="js/networktables.js"></script>
+    <script src="/networktables/networktables.js"></script>
 </head>
 
 <body>
+  <a href ="testPage.html">testPage.html</a>
+  <br>
     <form>
         <input type="text" placeholder="Name" name="name" id="name">
         <input type="text" placeholder="Value" name="value" id="value">
@@ -16,8 +18,16 @@
     <button id="get">Get</button>
     <script>
         document.getElementById('set').onclick = function() {
-            NetworkTables.setValue('/SmartDashboard/' + document.getElementById('name').value, document.getElementById('value').value);
+          NetworkTables.setValue(document.getElementById('name').value,
+           document.getElementById("value").value);
         };
+        document.getElementById("get").onclick=function(){
+          document.getElementById('value').value = NetworkTables.getValue(
+                     document.getElementById("name").value);
+        }
+
+        console.log(NetworkTables.containsKey("hello"));
+        console.log(NetworkTables.getKeys());
     </script>
 </body>
 
