@@ -8,6 +8,10 @@
     <link type="text/css" rel="stylesheet" href="autonomousSelection.css"/>
     <script src="js/jquery.js"></script>
     <script src="js/d3.js"></script>
+    <script src="Resources/d3/d3.js"></script>
+    <link href="Resources/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="Resources/dist/css/bootstrap-theme.min.css" rel="stylesheet">
+    <script src="Resources/dist/js/bootstrap.min.js"></script>
     <script src="/networktables/networktables.js"></script>
 </head>
 
@@ -51,13 +55,18 @@
         }
     </script>
     <div class="MainDivide" id="topSection">
-      <nav>
+      <nav class="RobotInfo">
         NetworkTables websocket:
-      <span id="connectstate">Unknown state</span>
+      <span id="connectstate" >Unknown state</span>
       <br>Robot:
       <span id="robotstate">Unknown state</span>
-      <br>
-      <a href="UI_MainPage.html">Go to control center</a>
+      </nav>
+      <nav>
+        <ul class="nav nav-tabs" role="tablist" id="camtab">
+		        <li role="presentation" class="active"><a href="UI_MainPage.html" role="tab" data-toggle="tab">Dashboard</a></li>
+		        <li role="presentation"><a href="tuningPage.html" role="tab" data-toggle="tab">Tuning Page</a></li>
+	     </ul>
+
       </nav>
     </div>
     <script>
@@ -239,6 +248,16 @@
 
       </script>
     <div class="MainDivide" id="rightSection">
+        <form>
+          <select name="Needs something">
+            <option value="Option1">Option1</option>
+            <option value="Option2">Option2</option>
+            <option value="Option3">Option3</option>
+            <option value="Option4">Option4</option>
+          </select>
+          <br><br>
+          <input type="submit">
+        </form>
     </div>
 </body>
 

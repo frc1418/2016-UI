@@ -28,7 +28,11 @@
   top: 2vh;
   right: 1vw;
 
-  height: 13vh;
+  height: 16.5vh;
+}
+
+.RobotInfo{
+  color: white;
 }
 
 #leftSection{
