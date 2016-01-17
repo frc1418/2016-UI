@@ -58,10 +58,10 @@
             // the key names aren't always valid HTML identifiers, so we use
             // the NetworkTables.keyToId() function to convert them appropriately
             switch(key){
-              case "defenseSelectionDiv0":
-              case "defenseSelectionDiv1":
-              case "defenseSelectionDiv2":
-              case "defenseSelectionDiv3":
+              case "defenseDefenseSelector0":
+              case "defenseDefenseSelector1":
+              case "defenseDefenseSelector2":
+              case "defenseDefenseSelector3":
               var theChangedDiv=$("#"+key);
               theChangedDiv.attr("defenseClass",defenseNames.indexOf(value.charAt(0)))
               .attr("defenseNumber",value.charAt(1));
@@ -91,10 +91,10 @@
     <!-- repurposing page to test some stuff-->
     <!--making the shifters stuff work-->
     <div>
-    <div class="selectionDiv"></div>
-    <div class="selectionDiv" ></div>
-    <div class="selectionDiv"></div>
-    <div class="selectionDiv" ></div>
+    <div class="DefenseSelector"></div>
+    <div class="DefenseSelector" ></div>
+    <div class="DefenseSelector"></div>
+    <div class="DefenseSelector" ></div>
   </div>
     <script>
     /*second script tag to separate some stuff for neatness.
@@ -106,13 +106,13 @@
     $(document).ready(function(){
       //for every selection Div, make the stuff, add a listener to each arrow, the toggleBox,
       //set the value from networkTables or if no networkTables, get the default value
-      var everySelectionDiv=$(".selectionDiv");         //get every defenseSelectionDiv(the div that contains the stuff)
-      var everySelectionDivLength=everySelectionDiv.length;
-      everySelectionDiv.each(function(a){
-        //for every selectionDiv add the triangles, set the id, 'a' is the index in the list of divs
+      var everyDefenseSelector=$(".DefenseSelector");         //get every defenseDefenseSelector(the div that contains the stuff)
+      var everyDefenseSelectorLength=everyDefenseSelector.length;
+      everyDefenseSelector.each(function(a){
+        //for every DefenseSelector add the triangles, set the id, 'a' is the index in the list of divs
         var thisDiv=$(this);
         thisDiv.attr("defenseClass",a);
-        thisDiv.attr("id","defenseSelectionDiv"+a);
+        thisDiv.attr("id","defenseDefenseSelector"+a);
         var defenseNumber=0;
         thisDiv.attr("defenseNumber",defenseNumber);
         thisDiv.append($('<div></div>')
