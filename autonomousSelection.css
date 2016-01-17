@@ -33,26 +33,30 @@
 
 #leftSection{
     position: fixed;
+    display: inline-block;
     left: 1vw;
     top: 19vh;
     bottom: 2vh;
-    width: 66vw;
+    width: 67vw;
     height: 75vh;
+    padding-left: 1vw;
+    padding-right: 1vw;
 }
 
 .FieldSelector{
     display:inline-block;
-    width:12.2vw;
+    width:12vw;
     height:72vh;
       border-top: 1vh solid black;
       border-left: 0.4vw solid black;
       border-bottom: 1vh solid #200000;
       border-right: 0.4vw solid #380000;
+
 }
 
 .ObstacleSelector{
   display:inline-block;
-  width: 11.8vw;
+  width: 11.5vw;
   height:35vh;
   border-left: 0.4vw solid black;
   border-bottom: 1vh solid #200000;
@@ -64,7 +68,7 @@
 
 .RobotSelector{
   display:inline-block;
-  width: 11.8vw;
+  width: 11.5vw;
   height:35vh;
   border-top: 1vh solid black;
   border-left: 0.4vw solid black;
@@ -77,6 +81,6 @@
     right: 1vw;
     top: 19vh;
     bottom: 2vh;
-    width: 28vw;
+    width: 24vw;
     height: 75vh;
 }
