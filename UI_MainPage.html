@@ -8,7 +8,7 @@
     <link rel="stylesheet" href="ui.css">
     <script src="js/jquery.js"></script>
     <script src="js/d3.js"></script>
-    <script src="js/networktables.js"></script>
+    <script src="/networktables/networktables.js"></script>
 </head>
 
 <body>
@@ -40,10 +40,10 @@
             // the key names aren't always valid HTML identifiers, so we use
             // the NetworkTables.keyToId() function to convert them appropriately
             if (isNew) {
-                var div = $('<div></div>').appendTo($('article'));
+                var div = $('<div></div>').appendTo($('.settings'));
                 $('<p></p>').text(key).appendTo(div);
-                if (isNaN(value)) {
-                    $('<input type="number" min="0" max="50">')
+                if (!isNaN(value)) {
+                    $('<input type="number">')
                     .attr('id', NetworkTables.keyToId(key))
                     .attr('value', value)
                     .appendTo(div);
@@ -62,7 +62,7 @@
     </script>
     <article>
         <h1>Dashboard</h1>
-        <div></div>
+        <div class="settings"></div>
     </article>
 </body>
 
