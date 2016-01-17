@@ -57,7 +57,6 @@
             // the id of the elements that we're appending, for simplicity. However,
             // the key names aren't always valid HTML identifiers, so we use
             // the NetworkTables.keyToId() function to convert them appropriately
-            //console.log(key,"changed",value,isNew);
             switch(key){
               case "defenseSelectionDiv0":
               case "defenseSelectionDiv1":
@@ -67,7 +66,7 @@
               theChangedDiv.attr("defenseClass",defenseNames.indexOf(value.charAt(0)))
               .attr("defenseNumber",value.charAt(1));
               theChangedDiv.children(".selectionToggleBox")
-              .attr("src","img/"+value+".jpg");
+              .attr("src","img/"+value+".png");
 
               break;        //in case we want to add another listener to the swtich afterwards
             }
@@ -114,7 +113,6 @@
         var thisDiv=$(this);
         thisDiv.attr("defenseClass",a);
         thisDiv.attr("id","defenseSelectionDiv"+a);
-        console.log(thisDiv.attr('id'));
         var defenseNumber=0;
         thisDiv.attr("defenseNumber",defenseNumber);
         thisDiv.append($('<div></div>')
@@ -128,14 +126,14 @@
               else{currentDefenseClass++;}
               thisDiv.attr("defenseClass",currentDefenseClass);
               thisDiv.children(".selectionToggleBox")//.find(".selectionToggleBox")
-              .attr("src","img/"+defenseNames[currentDefenseClass]+""+defenseNumber+".jpg");
+              .attr("src","img/"+defenseNames[currentDefenseClass]+""+defenseNumber+".png");
 
               NetworkTables.setValue(thisDiv.attr("id"),defenseNames[currentDefenseClass]+defenseNumber);
             }));
         thisDiv.append($('<img></img>')
             .addClass("selectionToggleBox")
             //.attr('id','selectionToggleBox'+a)
-            .attr('src',"img/"+defenseNames[a]+defenseNumber+".jpg")
+            .attr('src',"img/"+defenseNames[a]+defenseNumber+".png")
             .click(function(){
               var currentDefenseNumber=thisDiv.attr("defenseNumber");
               if(currentDefenseNumber>=1){
@@ -144,7 +142,7 @@
               else{currentDefenseNumber++;}
               thisDiv.attr("defenseNumber",currentDefenseNumber);
               thisDiv.children(".selectionToggleBox")//.find(".selectionToggleBox")
-              .attr("src","img/"+defenseNames[thisDiv.attr("defenseClass")]+""+currentDefenseNumber+".jpg");
+              .attr("src","img/"+defenseNames[thisDiv.attr("defenseClass")]+""+currentDefenseNumber+".png");
 
               NetworkTables.setValue(thisDiv.attr("id"),defenseNames[thisDiv.attr("defenseClass")]+currentDefenseNumber);
             })
@@ -160,7 +158,7 @@
               else{currentDefenseClass--;}
               thisDiv.attr("defenseClass",currentDefenseClass);
               thisDiv.children(".selectionToggleBox")//.find(".selectionToggleBox")
-              .attr("src","img/"+defenseNames[currentDefenseClass]+defenseNumber+".jpg");
+              .attr("src","img/"+defenseNames[currentDefenseClass]+defenseNumber+".png");
               NetworkTables.setValue(thisDiv.attr("id"),defenseNames[currentDefenseClass]+defenseNumber);
             })
           );
