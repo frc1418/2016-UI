@@ -88,3 +88,11 @@
     width: 24vw;
     height: 75vh;
 }
+
+.NotCoveredUp{
+      position: fixed;
+      display: inline-block;
+      left: 1vw;
+      top: 19vh;
+      bottom: 2vh;
+}
