@@ -41,7 +41,7 @@ def init_networktables(ipaddr):
     logger.info("Networktables Initialized")
 
 
-def main(fileName='practice.html'):
+def main(fileName='autonomousSelection.html'):
     #argument 1 is the filename of the script to be run
     define("frontcam", default="http://10.14.18.2:5800", help="URL for the front camera", type=str)
     define("backcam", default="http://10.14.18.2:5801", help="URL for the back camera", type=str)
