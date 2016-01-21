@@ -107,6 +107,14 @@
                 case "currentlySelectedMode":
                   $("#autonomousOptionSelect").val(value);
                   break;
+                case "attackerState0":
+                case "attackerState1":
+                case "attackerState2":
+                case "attackerState3":
+                case "attackerState4":
+                  var attackerImage=$("#"+key);
+                  attackerImage.attr("state",attackerNames.indexOf(value)).attr("src","img/"+value+".png");;
+                break;
           }
         }
 
@@ -117,6 +125,7 @@
         </div>
         <break>
         <div class="RobotSelector">
+          <img class="attackerState"></img>
         </div>
       </div>
       <div class="FieldSelector">
@@ -124,6 +133,7 @@
           <div class="DefenseSelector"></div>
         </div>
         <div class="RobotSelector">
+          <img class="attackerState"></img>
         </div>
       </div>
       <div class="FieldSelector">
@@ -131,6 +141,7 @@
           <div class="DefenseSelector"></div>
         </div>
         <div class="RobotSelector">
+          <img class="attackerState"></img>
         </div>
       </div>
       <div class="FieldSelector">
@@ -138,6 +149,7 @@
           <div class="DefenseSelector"></div>
         </div>
         <div class="RobotSelector">
+          <img class="attackerState"></img>
         </div>
       </div>
       <div class="FieldSelector">
@@ -145,6 +157,8 @@
           <div class="DefenseSelector"></div>
           </div>
         <div class="RobotSelector">
+          <img class="attackerState"></img>
+
         </div>
       </div>
     </div>
@@ -154,8 +168,32 @@
       scroll through abcd, click on the pic to toggle, default to A1,
       change the networkTable Value of currentSelectedMode
       */
-      defenseNames=["A","B","C","D"];
+      var defenseNames=["A","B","C","D"];
+      var realDefenseNames=[["porticulis","seesaw"],["moat","ramparts"],
+      ["gate","drawbridge"],["wall","roughterrain"]];
+      var attackerNames=["empty","allied","us"];
       $(document).ready(function(){
+        //for every of the 5 attacking positions give the image the attacking toggleswitchcyclethroughimagesthing
+        //thing onclick and make it update networktables
+        var everyOffensiveToggleImage=$(".attackerState");
+        everyOffensiveToggleImage.each(function(a){
+          //set a default value, add the onclick listener, update networktables
+          //
+          var thisImage=$(this);
+          thisImage.attr("id","attackerState"+a).attr("state",0).attr("position",a).attr("src","img/empty.png");
+          thisImage.click(function(){
+            var theImage=$(this);
+            var currentState=theImage.attr("state");
+            if(currentState==2){
+              currentState=0;
+            }else{currentState++}
+            theImage.attr("state",currentState);
+            console.log("thingclicked",theImage.attr("id"),attackerNames[currentState]);
+            NetworkTables.setValue(theImage.attr("id"),attackerNames[currentState]);
+          });
+        });
+
+
 
         //for every selection Div, make the stuff, add a listener to each arrow, the toggleBox,
         //set the value from networkTables or if no networkTables, get the default value
@@ -218,13 +256,7 @@
           if(defenseNumber==0){defenseNumber=1;}
           else{defenseNumber=0;}
       });
-    });/*
-      function incrementDefenseClass(increment,object){
-
-      }
-      function toggleDefenseNumber(object){
-
-      }*/
+    });
 
       </script>
     <div class="MainDivide" id="rightSection">

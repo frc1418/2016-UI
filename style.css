@@ -39,3 +39,10 @@ nav {
 	border-color:black;
 	border:solid;
 }
+.attackerState{
+	background-color: white;
+	border-color:blue;
+
+	height:100px;
+  width:100px;
+}
