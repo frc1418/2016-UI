@@ -16,44 +16,7 @@
 </head>
 
 <body class="UIPage">
-    <script>
-        $(document).ready(function() {
-            // sets a function that will be called when the websocket connects/disconnects
-            NetworkTables.addWsConnectionListener(onNetworkTablesConnection, true);
 
-            // sets a function that will be called when the robot connects/disconnects
-            NetworkTables.addRobotConnectionListener(onRobotConnection, true);
-
-            // sets a function that will be called when any NetworkTables key/value changes
-            NetworkTables.addGlobalListener(onValueChanged, true);
-        });
-        // called when the websocket connects/disconnects
-        function onRobotConnection(connected) { // TODO: change some indicator
-            console.log("Robot connected: " + connected);
-        }
-
-        function onNetworkTablesConnection(connected) {
-            // TODO: change some indicator
-        }
-
-        function onValueChanged(key, value, isNew) {
-            //name, data, has the variable just been created t/f
-
-            // key thing here: we're using the various NetworkTable keys as
-            // the id of the elements that we're appending, for simplicity. However,
-            // the key names aren't always valid HTML identifiers, so we use
-            // the NetworkTables.keyToId() function to convert them appropriately
-            if (isNew) {
-                /*
-                  If the variable is new, then */
-            } else {
-                switch (key) {
-                    /*if the keyname equals on the cases execute the code in the case*/
-
-                }
-            }
-        }
-    </script>
     <div class="MainDivide" id="topSection">
       <nav class="RobotInfo">
         NetworkTables websocket:
@@ -103,34 +66,48 @@
             // the id of the elements that we're appending, for simplicity. However,
             // the key names aren't always valid HTML identifiers, so we use
             // the NetworkTables.keyToId() function to convert them appropriately
-            switch(key){
-              case "defenseDefenseSelector0":
-              case "defenseDefenseSelector1":
-              case "defenseDefenseSelector2":
-              case "defenseDefenseSelector3":
-              var theChangedDiv=$("#"+key);
-              theChangedDiv.attr("defenseClass",defenseNames.indexOf(value.charAt(0)))
-              .attr("defenseNumber",value.charAt(1));
-              theChangedDiv.children(".selectionToggleBox")
-              .attr("src","img/"+value+".png");
 
-              break;        //in case we want to add another listener to the swtich afterwards
-            }
             if (isNew) {
-                /*var tr = $('<tr></tr>').appendTo($('#nt > tbody:last'));
-                $('<td></td>').text(key).appendTo(tr);
-                $('<td></td>').attr('id', NetworkTables.keyToId(key))
-                    .text(value)
-                    .appendTo(tr);*/
+
             } else {
                 // similarly, use keySelector to convert the key to a valid jQuery
                 // selector. This should work for class names also, not just for ids
 
-                //$('#' + NetworkTables.keySelector(key)).text(value);
-
-                //this messes with the defenseSelections,
-                // it would probalby be better to have it work with the switch
             }
+            switch(key){
+                case "defenseDefenseSelector0":
+                case "defenseDefenseSelector1":
+                case "defenseDefenseSelector2":
+                case "defenseDefenseSelector3":
+                var theChangedDiv=$("#"+key);
+                theChangedDiv.attr("defenseClass",defenseNames.indexOf(value.charAt(0)))
+                .attr("defenseNumber",value.charAt(1));
+                theChangedDiv.children(".selectionToggleBox")
+                .attr("src","img/"+value+".png");
+
+                break;        //in case we want to add another listener to the swtich afterwards
+                case "autonomousModeList":
+
+                //if there is a change in the names of the autonomous modes check the select,clear it and rewrite
+                  var autonomousOptionSelect=$("#autonomousOptionSelect");
+                  autonomousOptionSelect.empty();
+                  //autonomousOptionSelect.append("<option id='defaultAutonomousNoMove'>Do Nothing</option>"); //temporarily commented out
+                  var autonomousModeArrayLength=value.length;
+                  for(var a=0;a<autonomousModeArrayLength;a++){
+                    //for each entry, make a option, get the value of currentlySelectedMode if it exists, if not then use the first
+                    autonomousOptionSelect.append("<option id="+value+"AutoMode"+">"+value+"</option>");
+                  }
+                  //if(NetworkTables.containsKey("currentlySelectedMode")){
+                    autonomousOptionSelect.val(networkTables.getValue("currentlySelectedMode"));
+                  //}       //temporary commenting out
+                  //else{
+                    //autonomousOptionSelect.val($("#autonomousOptionSelect option:first").val());
+                  //}
+                break;
+                case "currentlySelectedMode":
+                  $("#autonomousOptionSelect").val(value);
+                  break;
+          }
         }
 
     </script>
@@ -178,8 +155,8 @@
       change the networkTable Value of currentSelectedMode
       */
       defenseNames=["A","B","C","D"];
-
       $(document).ready(function(){
+
         //for every selection Div, make the stuff, add a listener to each arrow, the toggleBox,
         //set the value from networkTables or if no networkTables, get the default value
         var everyDefenseSelector=$(".DefenseSelector");         //get every defenseDefenseSelector(the div that contains the stuff)
@@ -252,11 +229,7 @@
       </script>
     <div class="MainDivide" id="rightSection">
         <form>
-          <select name="Needs something">
-            <option value="Option1">Option1</option>
-            <option value="Option2">Option2</option>
-            <option value="Option3">Option3</option>
-            <option value="Option4">Option4</option>
+          <select id="autonomousOptionSelect">
           </select>
           <br><br>
           <input type="submit">
