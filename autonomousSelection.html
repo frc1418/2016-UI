@@ -35,90 +35,7 @@
 
       </nav>
     </div>
-    <script>
-        "use strict";
 
-        $(document).ready(function() {
-            // sets a function that will be called when the websocket connects/disconnects
-            NetworkTables.addWsConnectionListener(onNetworkTablesConnection, true);
-            // sets a function that will be called when the robot connects/disconnects
-            NetworkTables.addRobotConnectionListener(onRobotConnection, true);
-            // sets a function that will be called when any NetworkTables key/value changes
-            NetworkTables.addGlobalListener(onValueChanged, true);
-        });
-
-        function onRobotConnection(connected) {
-            $('#robotstate').text(connected ? "Connected!" : "Disconnected");
-        }
-
-        function onNetworkTablesConnection(connected) {
-            if (connected) {
-                $("#connectstate").text("Connected!");
-                // clear the table
-                $("#nt tbody > tr").remove();
-            } else {
-                $("#connectstate").text("Disconnected!");
-            }
-        }
-
-        function onValueChanged(key, value, isNew) {
-            // key thing here: we're using the various NetworkTable keys as
-            // the id of the elements that we're appending, for simplicity. However,
-            // the key names aren't always valid HTML identifiers, so we use
-            // the NetworkTables.keyToId() function to convert them appropriately
-
-            if (isNew) {
-
-            } else {
-                // similarly, use keySelector to convert the key to a valid jQuery
-                // selector. This should work for class names also, not just for ids
-
-            }
-            switch(key){
-                case "defenseDefenseSelector0":
-                case "defenseDefenseSelector1":
-                case "defenseDefenseSelector2":
-                case "defenseDefenseSelector3":
-                var theChangedDiv=$("#"+key);
-                theChangedDiv.attr("defenseClass",defenseNames.indexOf(value.charAt(0)))
-                .attr("defenseNumber",value.charAt(1));
-                theChangedDiv.children(".selectionToggleBox")
-                .attr("src","img/"+value+".png");
-
-                break;        //in case we want to add another listener to the swtich afterwards
-                case "autonomousModeList":
-
-                //if there is a change in the names of the autonomous modes check the select,clear it and rewrite
-                  var autonomousOptionSelect=$("#autonomousOptionSelect");
-                  autonomousOptionSelect.empty();
-                  //autonomousOptionSelect.append("<option id='defaultAutonomousNoMove'>Do Nothing</option>"); //temporarily commented out
-                  var autonomousModeArrayLength=value.length;
-                  for(var a=0;a<autonomousModeArrayLength;a++){
-                    //for each entry, make a option, get the value of currentlySelectedMode if it exists, if not then use the first
-                    autonomousOptionSelect.append("<option id="+value+"AutoMode"+">"+value+"</option>");
-                  }
-                  //if(NetworkTables.containsKey("currentlySelectedMode")){
-                    autonomousOptionSelect.val(networkTables.getValue("currentlySelectedMode"));
-                  //}       //temporary commenting out
-                  //else{
-                    //autonomousOptionSelect.val($("#autonomousOptionSelect option:first").val());
-                  //}
-                break;
-                case "currentlySelectedMode":
-                  $("#autonomousOptionSelect").val(value);
-                  break;
-                case "attackerState0":
-                case "attackerState1":
-                case "attackerState2":
-                case "attackerState3":
-                case "attackerState4":
-                  var attackerImage=$("#"+key);
-                  attackerImage.attr("state",attackerNames.indexOf(value)).attr("src","img/"+value+".png");;
-                break;
-          }
-        }
-
-    </script>
     <div class="MainDivide" id="leftSection">
       <div class="FieldSelector">
         <div class="ObstacleSelector">
@@ -164,6 +81,8 @@
     </div>
 
       <script>
+
+                "use strict";
       /*second script tag to separate some stuff for neatness.
       scroll through abcd, click on the pic to toggle, default to A1,
       change the networkTable Value of currentSelectedMode
@@ -181,6 +100,7 @@
           //
           var thisImage=$(this);
           thisImage.attr("id","attackerState"+a).attr("state",0).attr("position",a).attr("src","img/empty.png");
+          //if(NetworkTables.isRobotConnected()){}
           thisImage.click(function(){
             var theImage=$(this);
             var currentState=theImage.attr("state");
@@ -193,12 +113,9 @@
           });
         });
 
-
-
         //for every selection Div, make the stuff, add a listener to each arrow, the toggleBox,
         //set the value from networkTables or if no networkTables, get the default value
-        var everyDefenseSelector=$(".DefenseSelector");         //get every defenseDefenseSelector(the div that contains the stuff)
-        var everyDefenseSelectorLength=everyDefenseSelector.length;
+        var everyDefenseSelector=$(".DefenseSelector");//get every defenseDefenseSelector(the div that contains the stuff)
         everyDefenseSelector.each(function(a){
           //for every DefenseSelector add the triangles, set the id, 'a' is the index in the list of divs
           var thisDiv=$(this);
@@ -219,7 +136,7 @@
                 thisDiv.children(".selectionToggleBox")//.find(".selectionToggleBox")
                 .attr("src","img/"+defenseNames[currentDefenseClass]+""+defenseNumber+".png");
 
-                NetworkTables.setValue(thisDiv.attr("id"),defenseNames[currentDefenseClass]+defenseNumber);
+                NetworkTables.setValue(thisDiv.attr("id"),realDefenseNames[currentDefenseClass][defenseNumber]);
               }));
           thisDiv.append($('<img></img>')
               .addClass("selectionToggleBox")
@@ -232,10 +149,10 @@
                 }
                 else{currentDefenseNumber++;}
                 thisDiv.attr("defenseNumber",currentDefenseNumber);
-                thisDiv.children(".selectionToggleBox")//.find(".selectionToggleBox")
-                .attr("src","img/"+defenseNames[thisDiv.attr("defenseClass")]+""+currentDefenseNumber+".png");
+                thisDiv.children(".selectionToggleBox");//.find(".selectionToggleBox")
+                //.attr("src","img/"+defenseNames[thisDiv.attr("defenseClass")]+""+currentDefenseNumber+".png");
 
-                NetworkTables.setValue(thisDiv.attr("id"),defenseNames[thisDiv.attr("defenseClass")]+currentDefenseNumber);
+                NetworkTables.setValue(thisDiv.attr("id"),realDefenseNames[thisDiv.attr("defenseClass")][currentDefenseNumber]);
               })
             );
           thisDiv.append($('<div></div>')
@@ -250,13 +167,109 @@
                 thisDiv.attr("defenseClass",currentDefenseClass);
                 thisDiv.children(".selectionToggleBox")//.find(".selectionToggleBox")
                 .attr("src","img/"+defenseNames[currentDefenseClass]+defenseNumber+".png");
-                NetworkTables.setValue(thisDiv.attr("id"),defenseNames[currentDefenseClass]+defenseNumber);
+                NetworkTables.setValue(thisDiv.attr("id"),realDefenseNames[currentDefenseClass][defenseNumber]);
               })
             );
           if(defenseNumber==0){defenseNumber=1;}
           else{defenseNumber=0;}
       });
     });
+
+          $(document).ready(function() {
+              // sets a function that will be called when the websocket connects/disconnects
+              NetworkTables.addWsConnectionListener(onNetworkTablesConnection, true);
+              // sets a function that will be called when the robot connects/disconnects
+              NetworkTables.addRobotConnectionListener(onRobotConnection, true);
+              // sets a function that will be called when any NetworkTables key/value changes
+              NetworkTables.addGlobalListener(onValueChanged, true);
+          });
+
+          function onRobotConnection(connected) {
+              $('#robotstate').text(connected ? "Connected!" : "Disconnected");
+          }
+
+          function onNetworkTablesConnection(connected) {
+              if (connected) {
+                  $("#connectstate").text("Connected!");
+                  // clear the table
+                  $("#nt tbody > tr").remove();
+              } else {
+                  $("#connectstate").text("Disconnected!");
+              }
+          }
+
+          function onValueChanged(key, value, isNew) {
+              // key thing here: we're using the various NetworkTable keys as
+              // the id of the elements that we're appending, for simplicity. However,
+              // the key names aren't always valid HTML identifiers, so we use
+              // the NetworkTables.keyToId() function to convert them appropriately
+
+              if (isNew) {
+
+              } else {
+                  // similarly, use keySelector to convert the key to a valid jQuery
+                  // selector. This should work for class names also, not just for ids
+
+              }
+              switch(key){
+                  case "defenseDefenseSelector0":
+                  case "defenseDefenseSelector1":
+                  case "defenseDefenseSelector2":
+                  case "defenseDefenseSelector3":
+                  var theChangedDiv=$("#"+key);
+                  var realDefenseNamesLength=realDefenseNames.length;
+                  var defenseNum=-1;
+                  var defenseClass=-1;
+                  for(var a=0;a<realDefenseNamesLength;a++){
+  //search through the defense classes, check each one for the mode, return the defenseclass=(a) and the defenseNum=(b)
+                    for(var b=0;b<2;b++){
+                      if(realDefenseNames[a][b]==value){
+                        defenseClass=a;
+                        defenseNum=b;
+                      break;
+                      }
+                    }
+                  }
+                  if(defenseClass==-1){
+                    break;
+                  }
+                  theChangedDiv.attr("defenseClass",defenseClass)
+                  .attr("defenseNumber",defenseNum);
+                  theChangedDiv.children(".selectionToggleBox")
+                  .attr("src","img/"+defenseNames[defenseClass]+defenseNum+".png");
+
+                  break;        //in case we want to add another listener to the swtich afterwards
+                  case "autonomousModeList":
+
+                  //if there is a change in the names of the autonomous modes check the select,clear it and rewrite
+                    var autonomousOptionSelect=$("#autonomousOptionSelect");
+                    autonomousOptionSelect.empty();
+                    //autonomousOptionSelect.append("<option id='defaultAutonomousNoMove'>Do Nothing</option>"); //temporarily commented out
+                    var autonomousModeArrayLength=value.length;
+                    for(var a=0;a<autonomousModeArrayLength;a++){
+                      //for each entry, make a option, get the value of currentlySelectedMode if it exists, if not then use the first
+                      autonomousOptionSelect.append("<option id="+value+"AutoMode"+">"+value+"</option>");
+                    }
+                    //if(NetworkTables.containsKey("currentlySelectedMode")){
+                      autonomousOptionSelect.val(networkTables.getValue("currentlySelectedMode"));
+                    //}       //temporary commenting out
+                    //else{
+                      //autonomousOptionSelect.val($("#autonomousOptionSelect option:first").val());
+                    //}
+                  break;
+                  case "currentlySelectedMode":
+                    $("#autonomousOptionSelect").val(value);
+                    break;
+                  case "attackerState0":
+                  case "attackerState1":
+                  case "attackerState2":
+                  case "attackerState3":
+                  case "attackerState4":
+                    var attackerImage=$("#"+key);
+                    attackerImage.attr("state",attackerNames.indexOf(value)).attr("src","img/"+value+".png");;
+                  break;
+            }
+          }
 
       </script>
     <div class="MainDivide" id="rightSection">
