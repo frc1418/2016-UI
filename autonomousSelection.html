@@ -81,12 +81,12 @@
     </div>
 
       <script>
-
-                "use strict";
+  "use strict";
       /*second script tag to separate some stuff for neatness.
       scroll through abcd, click on the pic to toggle, default to A1,
       change the networkTable Value of currentSelectedMode
       */
+
       var defenseNames=["A","B","C","D"];
       var realDefenseNames=[["porticulis","seesaw"],["moat","ramparts"],
       ["gate","drawbridge"],["wall","roughterrain"]];
@@ -108,7 +108,6 @@
               currentState=0;
             }else{currentState++}
             theImage.attr("state",currentState);
-            console.log("thingclicked",theImage.attr("id"),attackerNames[currentState]);
             NetworkTables.setValue(theImage.attr("id"),attackerNames[currentState]);
           });
         });
@@ -128,6 +127,7 @@
               .click(function(){
                 //onclick take the value of the current defense from this div, ex"defenseName=(3,0)", ++1
                 var currentDefenseClass=thisDiv.attr("defenseClass");
+
                 if(currentDefenseClass>=3){
                   currentDefenseClass=0;
                 }
@@ -141,9 +141,10 @@
           thisDiv.append($('<img></img>')
               .addClass("selectionToggleBox")
               //.attr('id','selectionToggleBox'+a)
-              .attr('src',"img/"+defenseNames[a]+defenseNumber+".png")
+              .attr('src',"img/defaultImg.png")
               .click(function(){
                 var currentDefenseNumber=thisDiv.attr("defenseNumber");
+
                 if(currentDefenseNumber>=1){
                   currentDefenseNumber=0;
                 }
@@ -199,6 +200,7 @@
           }
 
           function onValueChanged(key, value, isNew) {
+
               // key thing here: we're using the various NetworkTable keys as
               // the id of the elements that we're appending, for simplicity. However,
               // the key names aren't always valid HTML identifiers, so we use
@@ -216,14 +218,17 @@
                   case "defenseDefenseSelector1":
                   case "defenseDefenseSelector2":
                   case "defenseDefenseSelector3":
-                  var theChangedDiv=$("#"+key);
+
+                  var theChangedDiv=$("#"+NetworkTables.keyToId(key));
                   var realDefenseNamesLength=realDefenseNames.length;
                   var defenseNum=-1;
                   var defenseClass=-1;
                   for(var a=0;a<realDefenseNamesLength;a++){
   //search through the defense classes, check each one for the mode, return the defenseclass=(a) and the defenseNum=(b)
+
                     for(var b=0;b<2;b++){
                       if(realDefenseNames[a][b]==value){
+
                         defenseClass=a;
                         defenseNum=b;
                       break;
