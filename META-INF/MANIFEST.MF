@@ -1,5 +1,0 @@
-Manifest-Version: 1.0
-Bundle-ManifestVersion: 2
-Bundle-Name: 2016-UI
-Bundle-SymbolicName: 2016-UI
-Bundle-Version: 1.0.0.qualifier

@@ -5,62 +5,56 @@
     <meta charset="utf-8">
     <title>1418 TuningPage</title>
     <link rel="stylesheet" href="style.css">
-    <link rel="stylesheet" href="ui.css">
     <script src="js/jquery.js"></script>
     <script src="js/d3.js"></script>
     <script src="/networktables/networktables.js"></script>
-    <script src="Resources/d3/d3.js"></script>
-    <link href="Resources/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link href="Resources/dist/css/bootstrap-theme.min.css" rel="stylesheet">
-    <script src="Resources/dist/js/bootstrap.min.js"></script>
-    <link type="text/css" rel="stylesheet" href="autonomousSelection.css"/>
 </head>
 
-<body  class="UIPage">
-  <div class="MainDivide" id="topSection">
-    <nav class="RobotInfo">
-      NetworkTables websocket:
-    <span id="connectstate" >Unknown state</span>
-    <br>Robot:
-    <span id="robotstate">Unknown state</span>
-    </nav>
-    <nav>
-      <ul class="nav nav-tabs" role="tablist" id="camtab">
-          <li role="presentation"><a href="UI_MainPage.html" role="tab">Dashboard</a></li>
-          <li role="presentation" class ="active"><a href="tuningPage.html" role="tab">Tuning</a></li>
-          <li role="presentation"><a href="testPage.html" role="tab">Test</a></li>
-          <li role="presentation" ><a href="autonomousSelection.html" role="tab">Autonomous</a></li>
+<body class="UIPage">
+    <div class="MainDivide" id="topSection">
+        <nav class="RobotInfo">
+            NetworkTables websocket:
+            <span id="connectstate">Unknown state</span>
+            <br>Robot:
+            <span id="robotstate">Unknown state</span>
+        </nav>
+        <nav>
+            <ul role="tablist" id="camtab">
+                <li role="presentation"><a href="UI_MainPage.html" role="tab">Dashboard</a></li>
+                <li role="presentation" class="active"><a href="tuningPage.html" role="tab">Tuning</a></li>
+                <li role="presentation"><a href="testPage.html" role="tab">Test</a></li>
+                <li role="presentation"><a href="autonomousSelection.html" role="tab">Autonomous</a></li>
 
-     </ul>
+            </ul>
 
-    </nav>
-  </div>
-  <div>
-    <form>
-        <input type="text" placeholder="Name" name="name" id="name">
-        <input type="text" placeholder="Value" name="value" id="value">
-    </form>
-    <button id="setButton">Set</button>
-    <button id="get">Get</button>
-  </div>
-  <div class="MainDivide, NotCoveredUp">
-    <article>
-        <h1>Dashboard</h1>
-        <div class="settings" id="settingContainerDiv"></div>
-        <button id="set">Set</button>
-    </article>
-  </div>
+        </nav>
+    </div>
+    <div>
+        <form>
+            <input type="text" placeholder="Name" name="name" id="name">
+            <input type="text" placeholder="Value" name="value" id="value">
+        </form>
+        <button id="setButton">Set</button>
+        <button id="get">Get</button>
+    </div>
+    <div class="MainDivide, NotCoveredUp">
+        <article>
+            <h1>Dashboard</h1>
+            <div class="settings" id="settingContainerDiv"></div>
+            <button id="set">Set</button>
+        </article>
+    </div>
     <script>
         $(document).ready(function() {
-          document.getElementById('setButton').onclick = function() {
-            NetworkTables.setValue(document.getElementById('name').value,
-                document.getElementById("value").value);
-        };
-        document.getElementById("get").onclick = function() {
-            document.getElementById('value').value = NetworkTables.getValue(
-                document.getElementById("name").value);
-        }
-            // sets a function that will be called when the websocket connects/disconnects
+            document.getElementById('setButton').onclick = function() {
+                NetworkTables.setValue(document.getElementById('name').value,
+                    document.getElementById("value").value);
+            };
+            document.getElementById("get").onclick = function() {
+                    document.getElementById('value').value = NetworkTables.getValue(
+                        document.getElementById("name").value);
+                }
+                // sets a function that will be called when the websocket connects/disconnects
             NetworkTables.addWsConnectionListener(onNetworkTablesConnection, true);
 
             // sets a function that will be called when the robot connects/disconnects
@@ -100,16 +94,17 @@
                         .attr('value', value)
                         .appendTo(div);
                 }
-            }/*else {
-                // similarly, use keySelector to convert the key to a valid jQuery
-                // selector. This should work for class names also, not just for ids
-                //$('#' + NetworkTables.keySelector(key)).text(value);
-            }*/
+            }
+            /*else {
+                            // similarly, use keySelector to convert the key to a valid jQuery
+                            // selector. This should work for class names also, not just for ids
+                            //$('#' + NetworkTables.keySelector(key)).text(value);
+                        }*/
         }
         $('#set').click(function() {
             var childInputs = $('#settingContainerDiv input');
             childInputs.each(function(a) {
-                
+
                 var thisChild = $(this);
                 NetworkTables.setValue(thisChild.attr('id'), thisChild.val());
             });

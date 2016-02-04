@@ -1,48 +1,148 @@
-nav {
-
+body {
+    background-image: -webkit-linear-gradient(top, #980000 0, #000 100%);
+    background-image: linear-gradient(to bottom, #980000 0, #000 100%);
+    background-size: 100vw 100vh;
+    background-repeat: no-repeat;
+}
+nav ul {
+    padding-left: 0;
+    margin-bottom: 0;
+    list-style: none;
+}
+nav li {
+    position: relative;
+    display: block;
+    float: left;
+}
+nav a {
+    position: relative;
+    display: block;
+    padding: 10px 15px;
+    text-decoration: none;
+    color: white;
+}
+nav a:hover,
+nav a:focus {
+    text-decoration: none;
+    background-color: #888;
+}
+nav .active {
+    background: #666;
 }
 .arrow-up {
-	width: 0;
-	height: 0;
-	border-left: 25px solid transparent;
-	border-right: 25px solid transparent;
-
-	border-bottom: 25px solid black;
-  margin-left: auto;
-    margin-right: auto;
-  display:block;
+    width: 0;
+    height: 0;
+    border: 25px solid transparent;
+    border-bottom: 25px solid black;
+    margin: 0 auto;
+    display: block;
 }
-
 .arrow-down {
-	width: 0;
-	height: 0;
-	border-left: 25px solid transparent;
-	border-right: 25px solid transparent;
-
-	border-top: 25px solid #f00;
-  margin-left: auto;
+    width: 0;
+    height: 0;
+    border: 25px solid transparent;
+    border-top: 25px solid red;
+    margin: 0 auto;
+    display: block;
+}
+.selectionDiv {
+    display: block;
+    position: relative;
+}
+.selectionToggleBox {
+    height: 100px;
+    width: 100px;
+    background-color: white;
+    margin-left: auto;
     margin-right: auto;
-  display:block;
+    display: block;
+    border-color: black;
+    border: solid;
 }
-.selectionDiv{
-  /*margin:0 auto;*/
-  display:block;
-  position:relative;
+.attackerState {
+    background-color: white;
+    border-color: blue;
+    height: 100px;
+    width: 100px;
 }
-.selectionToggleBox{
-  height:100px;
-  width:100px;
-  background-color: white;
-  margin-left: auto;
-    margin-right: auto;
-  display:block;
-	border-color:black;
-	border:solid;
+p,
+input {
+    display: inline;
+    margin: 5px;
 }
-.attackerState{
-	background-color: white;
-	border-color:blue;
-
-	height:100px;
-  width:100px;
+.MainDivide {
+    border-top: 1vh solid black;
+    border-left: 0.4vw solid black;
+    border-bottom: 1vh solid #200000;
+    border-right: 0.4vw solid #380000;
+    border-radius: 2vmin;
+    padding-left: 0.5vw;
+    padding-right: 0.5vw;
+    padding-top: 0.5vh;
+    padding-bottom: 0.5vh;
+}
+#topSection {
+    position: fixed;
+    left: 1vw;
+    top: 2vh;
+    right: 1vw;
+    height: 16.5vh;
+}
+.RobotInfo {
+    color: white;
+}
+#leftSection {
+    position: fixed;
+    display: inline-block;
+    left: 1vw;
+    top: 19vh;
+    bottom: 2vh;
+    width: 67vw;
+    height: 75vh;
+    padding-left: 1vw;
+    padding-right: 1vw;
+}
+.FieldSelector {
+    display: inline-block;
+    width: 12vw;
+    height: 72vh;
+    border-top: 1vh solid black;
+    border-left: 0.4vw solid black;
+    border-bottom: 1vh solid #200000;
+    border-right: 0.4vw solid #380000;
+}
+.ObstacleSelector {
+    display: inline-block;
+    width: 11.5vw;
+    height: 35vh;
+    border-left: 0.4vw solid black;
+    border-bottom: 1vh solid #200000;
+    border-right: 0.4vw solid #380000;
+}
+.DefenseSelector {
+    padding-top: 3vh;
+}
+.RobotSelector {
+    display: inline-block;
+    width: 11.5vw;
+    height: 35vh;
+    border-top: 1vh solid black;
+    border-left: 0.4vw solid black;
+    border-bottom: 1vh solid #200000;
+    border-right: 0.4vw solid #380000;
+}
+#rightSection {
+    position: fixed;
+    right: 1vw;
+    top: 19vh;
+    bottom: 2vh;
+    width: 24vw;
+    height: 75vh;
+}
+.NotCoveredUp {
+    position: fixed;
+    display: inline-block;
+    left: 1vw;
+    top: 19vh;
+    bottom: 2vh;
 }
