@@ -40,6 +40,26 @@
         <h1>Teleop</h1>
         <div class="settings" id="settingContainerDiv"></div>
     </article>
+    <div class="verticalDivide">
+      <!-- MAKE THE CSS REMINDER Top Divide -->
+        <div class="CamTab">
+          <img id="camOffline" class="webcam-img" src="img/CamFeedOffline.png"></img><!-- placeholderimage -->
+        </div>
+    </div>
+    <div class="verticalDivide">
+      <!-- MAKE THE CSS REMINDER Bottom Divide -->
+      <div class ="roboWidget">      <!-- MAKE THE CSS REMINDER robowidget -->
+
+        <svg id="widgetCanvas" width="250" height="150">
+          <rect id="robotBody"x="75"y="75"width="110" height="60" style="fill:rgb(155,155,155);stroke-width:3;stroke:rgb(0,0,0)" />
+          <rect id="robotArm"x="35"y="75" width="80" height="10" style="fill:rgb(195,125,195);stroke-width:3;stroke:rgb(0,0,0)" />
+          <circle id="ballWidget" cx="50" cy="110" r="20" stroke="black" stroke-width="3" style="fill:rgb(240,25,95);stroke-width:3;stroke:rgb(0,0,0)" visibility="hidden"/>
+
+
+        </svg>
+      </div>
+      <div></div>
+    </div>
   </div>
     <script>
         $(document).ready(function() {
@@ -51,10 +71,23 @@
 
             // sets a function that will be called when any NetworkTables key/value changes
             NetworkTables.addGlobalListener(onValueChanged, true);
+
+
         });
         // called when the websocket connects/disconnects
         function onRobotConnection(connected) { // TODO: change some indicator
-            console.log("Robot connected: " + connected);
+
+            //config.frontcam should be set to http://roborio-1418-frc.local:5800/
+            //
+            if (connected) {
+          		$('#camOffline').hide();
+
+          		$('#CamTab').prepend('<img class="webcamImage" id="webcamImage" src="' + "http://roborio-1418-frc.local:5800/" + '/?action=stream" />');
+          	} else {
+          		$('#webcamImage').remove();
+
+          		$('#camOfflineImage').show();
+          	}
         }
 
         function onNetworkTablesConnection(connected) {
@@ -62,6 +95,36 @@
         }
 
         function onValueChanged(key, value, isNew) {
+
+          if (isNew) {
+
+          } else {
+              // similarly, use keySelector to convert the key to a valid jQuery
+              // selector. This should work for class names also, not just for ids
+
+          }
+          switch(key){
+            //raw arm value and is the ball in
+            case "ballIn"://not the actual networktablesValue
+              if(value){
+                $("#ballWidget").show();
+              }
+              else if(value==false){
+                $("#ballWidget").hide();
+              }
+              else{console.log("somethingisdefinitelyWrong")}
+              break;
+            case "Arm|FWDCinclosed"://checkspelling
+              if(value=true){ //recheck valuetype, this should set it to 0 or max
+
+              }
+              break;
+            case "armValue":
+              var rotationValue=225-value*225/1140;//225degrees minus value*225/1140
+              $("#robotArm").attr("transform","rotate("+rotationValue+")");
+              break;
+
+          }
         }
     </script>
 
