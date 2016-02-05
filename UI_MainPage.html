@@ -28,10 +28,18 @@
         <h1>Teleop</h1>
         <div class="settings"></div>
         <div>
-            <input id="EncoderSlider" type="range" min="230" max="270" value="230" step="10">
-            <button onclick="myFunction()">Game Start</button>
+            <input id="EncoderSlider" type="range" min="0" max="3" value="1" step="1" list="stepList">
+            <span id="encoderValueDisplaySpan">EncoderValue:1</span>
+            <datalist id="steplist">
+              <option>0</option>
+              <option>1</option>
+              <option>2</option>
+          </datalist>
             <script>
-                function myFunction() {
+                $("#EncoderSlider").change(function(){
+                  $("#encoderValueDisplaySpan").text("EncoderValue:"+$("#EncoderSlider").val());
+                });
+                function startTheTimer() {  //reminder, find the networktables value, add networktables support
                     var d = new Date();
 
                     var mEnd = 2;
@@ -48,7 +56,7 @@
                 }
 
             </script>
-            <p id="GameTimer"></p>
+            <p id="GameTimer">GameTime:00:00</p>
         </div>
         <div class="verticalDivide">
             <!-- MAKE THE CSS REMINDER Top Divide -->
@@ -105,10 +113,11 @@
             switch (key) {
                 //raw arm value and is the ball in
                 case "ballIn": //not the actual networktablesValue
-                    if (value) {
-                        $("#ballWidget").show();
-                    } else if (value == false) {
-                        $("#ballWidget").hide();
+                    if (value==true||value=="true") {                     //BOOLEANS ARE NOT WORKING WITH NETWORKTABLES AT THE MOMENT(or with testing at the very least)
+                        $("#ballWidget").attr("visibility","visible");
+                    } else if (value == false||value=="false") {
+                        console.log("visibilityFalse");
+                        $("#ballWidget").attr("visibility","hidden");
                     } else {
                         console.log("somethingisdefinitelyWrong")
                     }
@@ -118,8 +127,16 @@
                     }
                     break;
                 case "armValue":
-                    var rotationValue = 225 - value * 225 / 1140; //225degrees minus value*225/1140
-                    $("#robotArm").attr("transform", "rotate(" + rotationValue + ")");
+                    if(value>1140){
+                      value=1140;
+                    }
+                    else if(value<0){
+                      value=0;
+                    }
+                    var $robotArm=$("#robotArm");
+                    var rotationValue = -45 + value * 225 / 1140; //-45 plus value*225/1140, value between 0 and 1140
+                    var rotationPointx=parseInt($robotArm.attr("width"))+parseInt($robotArm.attr("x"));
+                    $robotArm.attr("transform", "rotate(" + rotationValue +" "+rotationPointx+" "+$robotArm.attr("y")+")");
                     break;
             }
         }
