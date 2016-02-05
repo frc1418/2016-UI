@@ -10,40 +10,32 @@
     <script src="/networktables/networktables.js"></script>
 </head>
 
-<body class="UIPage">
-    <div class="MainDivide" id="topSection">
-        <nav class="RobotInfo">
-            NetworkTables websocket:
-            <span id="connectstate">Unknown state</span>
-            <br>Robot:
-            <span id="robotstate">Unknown state</span>
-        </nav>
+<body>
+    <header>
+        NetworkTables websocket:
+        <span id="connectstate">Unknown state</span>
+        <br>Robot:
+        <span id="robotstate">Unknown state</span>
         <nav>
-            <ul role="tablist" id="camtab">
-                <li role="presentation"><a href="UI_MainPage.html" role="tab">Dashboard</a></li>
-                <li role="presentation" class="active"><a href="tuningPage.html" role="tab">Tuning</a></li>
-                <li role="presentation"><a href="testPage.html" role="tab">Test</a></li>
-                <li role="presentation"><a href="autonomousSelection.html" role="tab">Autonomous</a></li>
-
+            <ul>
+                <li><a href="UI_MainPage.html">Dashboard</a></li>
+                <li class="active"><a href="tuningPage.html">Tuning</a></li>
+                <li><a href="autonomousSelection.html">Autonomous</a></li>
             </ul>
-
         </nav>
-    </div>
-    <div>
+    </header>
+
+    <article>
         <form>
             <input type="text" placeholder="Name" name="name" id="name">
             <input type="text" placeholder="Value" name="value" id="value">
         </form>
         <button id="setButton">Set</button>
         <button id="get">Get</button>
-    </div>
-    <div class="MainDivide, NotCoveredUp">
-        <article>
-            <h1>Dashboard</h1>
-            <div class="settings" id="settingContainerDiv"></div>
-            <button id="set">Set</button>
-        </article>
-    </div>
+        <h1>Dashboard</h1>
+        <div class="settings"></div>
+        <button id="set">Set</button>
+    </article>
     <script>
         $(document).ready(function() {
             document.getElementById('setButton').onclick = function() {
@@ -111,7 +103,6 @@
         });
 
     </script>
-
 </body>
 
 </html>
