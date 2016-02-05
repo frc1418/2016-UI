@@ -5,30 +5,26 @@
     <meta charset="utf-8">
     <title>Test Page</title>
     <link rel="stylesheet" href="style.css">
-    <!-- This starts the NetworkTables websocket, it can be accessed from multiple
-         pages simultaneously -->
     <script src="js/jquery.js"></script>
     <script src="/networktables/networktables.js"></script>
     <script src="js/d3.js"></script>
 </head>
 
-<body class="UIPage">
-    <div class="MainDivide" id="topSection">
-        <nav class="RobotInfo">
-            NetworkTables websocket:
-            <span id="connectstate">Unknown state</span>
-            <br>Robot:
-            <span id="robotstate">Unknown state</span>
-        </nav>
+<body>
+    <header>
+        NetworkTables websocket:
+        <span id="connectstate">Unknown state</span>
+        <br>Robot:
+        <span id="robotstate">Unknown state</span>
         <nav>
-            <ul role="tablist" id="camtab">
-                <li role="presentation"><a href="UI_MainPage.html" role="tab">Dashboard</a></li>
-                <li role="presentation"><a href="tuningPage.html" role="tab">Tuning</a></li>
-                <li role="presentation" class="active"><a href="testPage.html" role="tab">Test</a></li>
-                <li role="presentation"><a href="autonomousSelection.html" role="tab">Autonomous</a></li>
+            <ul>
+                <li><a href="UI_MainPage.html">Dashboard</a></li>
+                <li><a href="tuningPage.html">Tuning</a></li>
+                <li class="active"><a href="testPage.html">Test</a></li>
+                <li><a href="autonomousSelection.html">Autonomous</a></li>
             </ul>
         </nav>
-    </div>
+    </header>
 
     <!-- uncomment this is you want to use included utility functions that
          implement common functionality that you might find useful. Requires
@@ -104,11 +100,12 @@
         <div class="DefenseSelector"></div>
         <div class="DefenseSelector"></div>
     </div>
+    </article>
     <script>
         /*second script tag to separate some stuff for neatness.
-                                    scroll through abcd, click on the pic to toggle, default to A1,
-                                    change the networkTable Value of currentSelectedMode
-                                    */
+                                                                            scroll through abcd, click on the pic to toggle, default to A1,
+                                                                            change the networkTable Value of currentSelectedMode
+                                                                            */
         defenseNames = ["A", "B", "C", "D"];
 
         $(document).ready(function() {
@@ -139,7 +136,7 @@
 
                         NetworkTables.setValue(thisDiv.attr("id"), defenseNames[currentDefenseClass] + defenseNumber);
                     }));
-                thisDiv.append($('<img></img>')
+                thisDiv.append($('<img>')
                     .addClass("selectionToggleBox")
                     //.attr('id','selectionToggleBox'+a)
                     .attr('src', "img/" + defenseNames[a] + defenseNumber + ".png")
@@ -189,7 +186,6 @@
             }*/
 
     </script>
-    </div>
 </body>
 
 </html>

@@ -10,32 +10,50 @@
     <script src="/networktables/networktables.js"></script>
 </head>
 
-<body class="UIPage">
-    <div class="MainDivide" id="topSection">
-        <nav class="RobotInfo">
-            NetworkTables websocket:
-            <span id="connectstate">Unknown state</span>
-            <br>Robot:
-            <span id="robotstate">Unknown state</span>
-        </nav>
+<body>
+    <header>
+        NetworkTables websocket:
+        <span id="connectstate">Unknown state</span>
+        <br>Robot:
+        <span id="robotstate">Unknown state</span>
         <nav>
-            <ul role="tablist" id="camtab">
-                <li role="presentation" class="active"><a href="UI_MainPage.html" role="tab">Teleop</a></li>
-                <li role="presentation"><a href="tuningPage.html" role="tab">Tuning</a></li>
-                <li role="presentation"><a href="testPage.html" role="tab">Test</a></li>
-                <li role="presentation"><a href="autonomousSelection.html" role="tab">Autonomous</a></li>
+            <ul>
+                <li class="active"><a href="UI_MainPage.html">Teleop</a></li>
+                <li><a href="tuningPage.html">Tuning</a></li>
+                <li><a href="autonomousSelection.html">Autonomous</a></li>
             </ul>
         </nav>
-    </div>
-    <div class="MainDivide, NotCoveredUp">
-        <article>
-            <h1>Teleop</h1>
-            <div class="settings" id="settingContainerDiv"></div>
-        </article>
+    </header>
+    <article>
+        <h1>Teleop</h1>
+        <div class="settings"></div>
+        <div>
+            <input id="EncoderSlider" type="range" min="230" max="270" value="230" step="10">
+            <button onclick="myFunction()">Game Start</button>
+            <script>
+                function myFunction() {
+                    var d = new Date();
+
+                    var mEnd = 2;
+                    var sEnd = 30;
+                    var x = document.getElementById("GameTimer");
+                    for (var i = 0; i < 150; i++) {
+                        sEnd = sEnd - 1;
+                        if (sEnd < 0) {
+                            sEnd = sEnd + 60;
+                            mEnd = mEnd - 1;
+                        }
+                        x.innerHTML = mEnd + ":" + sEnd;
+                    }
+                }
+
+            </script>
+            <p id="GameTimer"></p>
+        </div>
         <div class="verticalDivide">
             <!-- MAKE THE CSS REMINDER Top Divide -->
             <div class="CamTab">
-                <img id="camOffline" class="webcam-img" src="img/CamFeedOffline.png"></img>
+                <img id="camOffline" class="webcam-img" src="img/CamFeedOffline.png">
                 <!-- placeholderimage -->
             </div>
         </div>
@@ -43,40 +61,31 @@
             <!-- MAKE THE CSS REMINDER Bottom Divide -->
             <div class="roboWidget">
                 <!-- MAKE THE CSS REMINDER robowidget -->
-
                 <svg id="widgetCanvas" width="250" height="150">
                     <rect id="robotBody" x="75" y="75" width="110" height="60" style="fill:rgb(155,155,155);stroke-width:3;stroke:rgb(0,0,0)" />
                     <rect id="robotArm" x="35" y="75" width="80" height="10" style="fill:rgb(195,125,195);stroke-width:3;stroke:rgb(0,0,0)" />
                     <circle id="ballWidget" cx="50" cy="110" r="20" stroke="black" stroke-width="3" style="fill:rgb(240,25,95);stroke-width:3;stroke:rgb(0,0,0)" visibility="hidden" />
-
-
                 </svg>
             </div>
-            <div></div>
         </div>
-    </div>
+    </article>
     <script>
         $(document).ready(function() {
             // sets a function that will be called when the websocket connects/disconnects
             NetworkTables.addWsConnectionListener(onNetworkTablesConnection, true);
-
             // sets a function that will be called when the robot connects/disconnects
             NetworkTables.addRobotConnectionListener(onRobotConnection, true);
-
             // sets a function that will be called when any NetworkTables key/value changes
             NetworkTables.addGlobalListener(onValueChanged, true);
-
-
         });
         // called when the websocket connects/disconnects
         function onRobotConnection(connected) { // TODO: change some indicator
-
             //config.frontcam should be set to http://roborio-1418-frc.local:5800/
             //
             if (connected) {
                 $('#camOffline').hide();
 
-                $('#CamTab').prepend('<img class="webcamImage" id="webcamImage" src="' + "http://roborio-1418-frc.local:5800/" + '/?action=stream" />');
+                $('#CamTab').prepend('<img class="webcamImage" id="webcamImage" src="' + "http://roborio-1418-frc.local:5800/" + '/?action=stream">');
             } else {
                 $('#webcamImage').remove();
 
@@ -89,13 +98,9 @@
         }
 
         function onValueChanged(key, value, isNew) {
-
-            if (isNew) {
-
-            } else {
+            if (isNew) {} else {
                 // similarly, use keySelector to convert the key to a valid jQuery
                 // selector. This should work for class names also, not just for ids
-
             }
             switch (key) {
                 //raw arm value and is the ball in
@@ -110,14 +115,12 @@
                     break;
                 case "Arm|FWDCinclosed": //checkspelling
                     if (value = true) { //recheck valuetype, this should set it to 0 or max
-
                     }
                     break;
                 case "armValue":
                     var rotationValue = 225 - value * 225 / 1140; //225degrees minus value*225/1140
                     $("#robotArm").attr("transform", "rotate(" + rotationValue + ")");
                     break;
-
             }
         }
 
