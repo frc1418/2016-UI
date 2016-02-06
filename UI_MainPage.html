@@ -29,15 +29,19 @@
         <div class="settings"></div>
         <div>
             <input id="EncoderSlider" type="range" min="0" max="3" value="1" step="1" list="stepList">
-            <span id="encoderValueDisplaySpan">EncoderValue:1</span>
-            <datalist id="steplist">
+            <datalist id="stepList">
               <option>0</option>
               <option>1</option>
               <option>2</option>
-          </datalist>
+              <option>3</option>
+            </datalist>
+            <span id="encoderValueDisplaySpan">EncoderValue:1</span>
+
             <script>
                 $("#EncoderSlider").change(function(){
-                  $("#encoderValueDisplaySpan").text("EncoderValue:"+$("#EncoderSlider").val());
+                  var encoderVal=$("#EncoderSlider").val();
+                  $("#encoderValueDisplaySpan").text("EncoderValue:"+encoderVal);
+                  NetworkTables.setValue("EncoderSliderValue",encoderVal);
                 });
                 function startTheTimer() {  //reminder, find the networktables value, add networktables support
                     var d = new Date();
@@ -76,6 +80,12 @@
                 </svg>
             </div>
         </div>
+        <div id="autoButtonDiv">
+          <img id="gateButton" class="autoButton"src="/img/gate.jpg" activeState=false>
+          <img id="chevyButton" class="autoButton" src="/img/cheval.gif" activeState=false>
+          <img id="ladderButton" class="autoButton"src="/img/ladder.png" activeState=false>
+
+        </div>
     </article>
     <script>
         $(document).ready(function() {
@@ -85,6 +95,22 @@
             NetworkTables.addRobotConnectionListener(onRobotConnection, true);
             // sets a function that will be called when any NetworkTables key/value changes
             NetworkTables.addGlobalListener(onValueChanged, true);
+
+            $(".autoButton").click(function(){
+              var $thisButton=$(this);
+              var activeState=$thisButton.attr("activeState");
+              if(activeState==true||activeState=="true"){
+                activeState=false;
+              }
+              else if(activeState==false||activeState=="false"){
+                activeState=true;
+              }
+              else{
+                console.log("activeStateButtonBug");
+              }
+              NetworkTables.setValue($thisButton.attr("id"),activeState);      //onclick set the things id to true
+            });
+
         });
         // called when the websocket connects/disconnects
         function onRobotConnection(connected) { // TODO: change some indicator
@@ -122,11 +148,16 @@
                         console.log("somethingisdefinitelyWrong")
                     }
                     break;
-                case "Arm|FWDCinclosed": //checkspelling
-                    if (value = true) { //recheck valuetype, this should set it to 0 or max
+                case "Arm | Forward Limit Switch": //checkspelling
+                    if (value == true) { //recheck valuetype, this should set it to 0 or max
                     }
                     break;
-                case "armValue":
+                case "Arm | Reverse Limit Switch":
+                  if(value==true){//what is this supposed to do again?
+
+                  }
+                  break;
+                case "Arm | Encoder":
                     if(value>1140){
                       value=1140;
                     }
@@ -138,8 +169,56 @@
                     var rotationPointx=parseInt($robotArm.attr("width"))+parseInt($robotArm.attr("x"));
                     $robotArm.attr("transform", "rotate(" + rotationValue +" "+rotationPointx+" "+$robotArm.attr("y")+")");
                     break;
+                case "chevyButton":
+                case "gateButton":
+                case "ladderButton":
+                  //set the images border to something bright like orange if it equals true
+                  //do acheck to see if all 4 are false, if so, then make them black border and slectable
+                  var autoButtonSelection=$(".autoButton");
+
+                  var buttonValueList=
+                  autoButtonSelection.map(function(){return $(this).attr("activeState");}).get();
+                  var isButtonActive=false;
+                  var buttonValueListLength=buttonValueList.length;
+                  for(var a=0;a< buttonValueListLength;a++){
+                    if(buttonValueList[a]==true){           //==true is intended, was always returning true without the ==true
+                      isButtonActive=true;
+                    }
+                  }
+                  if(isButtonActive){
+
+                  }
+                  else{
+                    autoButtonSelection.css({
+                      "pointer-events": "auto",
+                      "border-color":"black"
+                    });
+                  }
+
+                  var setBorderColorTo="black";
+                  $button=$("#"+key);
+                  if(value==true ||value=="true"){      //string check is for testing purposes, remove later
+                    setBorderColorTo="#ff66ff";
+                    $button.attr("activeState",true);
+                    $(".autoButton").not(document.getElementById(key)).each(function(){
+                      /*in the event that one of them is true, check the other classes for true
+                      if there is 2 trues then output a console and keep them both pink,
+                      set all of the falses to unclickable and grayed out.
+                      */var theNewButton=$(this);
+                      theNewButton.css({
+                        "pointer-events": "none",
+                        "border-color":"#306860"
+                      });
+                    });
+                  }
+                  else if(value==false ||value=="false"){
+                    $button.attr("activeState",false);
+                  }
+                  $button.css({"border-color":setBorderColorTo});
+
+                  break;
+              }
             }
-        }
 
     </script>
 </body>

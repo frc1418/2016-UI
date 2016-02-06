@@ -253,7 +253,7 @@
                         .attr("src", "img/" + defenseNames[defenseClass] + defenseNum + ".png");
 
                     break; //in case we want to add another listener to the swtich afterwards
-                case "autonomousModeList":
+                case "Autonomous Mode":
 
                     //if there is a change in the names of the autonomous modes check the select,clear it and rewrite
                     var autonomousOptionSelect = $("#autonomousOptionSelect");
@@ -262,7 +262,7 @@
                     var autonomousModeArrayLength = value.length;
                     for (var a = 0; a < autonomousModeArrayLength; a++) {
                         //for each entry, make a option, get the value of currentlySelectedMode if it exists, if not then use the first
-                        autonomousOptionSelect.append("<option id=" + value + "AutoMode" + ">" + value + "</option>");
+                        autonomousOptionSelect.append("<option id=" + value[a] + "AutoMode" + ">" + value[a] + "</option>");
                     }
                     //if(NetworkTables.containsKey("currentlySelectedMode")){
                     autonomousOptionSelect.val(networkTables.getValue("currentlySelectedMode"));

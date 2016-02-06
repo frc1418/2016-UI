@@ -36,6 +36,12 @@ nav a:focus {
 nav .active {
     background: #666;
 }
+.autoButton{
+	width:100px;
+	height:100px;
+	border-weight:2px;
+  border-style:solid;
+}
 .arrow-up {
     width: 0;
     height: 0;
