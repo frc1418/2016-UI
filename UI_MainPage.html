@@ -12,10 +12,6 @@
 
 <body>
     <header>
-        NetworkTables websocket:
-        <span id="connectstate">Unknown state</span>
-        <br>Robot:
-        <span id="robotstate">Unknown state</span>
         <nav>
             <ul>
                 <li class="active"><a href="UI_MainPage.html">Teleop</a></li>
@@ -23,6 +19,13 @@
                 <li><a href="autonomousSelection.html">Autonomous</a></li>
             </ul>
         </nav>
+        <div display="inline-block">
+            NetworkTables:
+            <span id="connectstate">Unknown state</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span id="GameTimer">GameTime:00:00</span>
+
+            <br>Robot:
+            <span id="robotstate">Unknown state</span>
+      </div>
     </header>
     <article>
         <h1>Teleop</h1>
@@ -42,25 +45,10 @@
                   $("#encoderValueDisplaySpan").text("EncoderValue:"+encoderVal);
                   NetworkTables.setValue("EncoderSliderValue",encoderVal);
                 });
-                function startTheTimer() {  //reminder, find the networktables value, add networktables support
-                    var d = new Date();
 
-                    var mEnd = 2;
-                    var sEnd = 30;
-                    var x = document.getElementById("GameTimer");
-                    for (var i = 0; i < 150; i++) {
-                        sEnd = sEnd - 1;
-                        if (sEnd < 0) {
-                            sEnd = sEnd + 60;
-                            mEnd = mEnd - 1;
-                        }
-                        x.innerHTML = mEnd + ":" + sEnd;
-                    }
-                }
 
             </script>
 
-            <p id="GameTimer">GameTime:00:00</p>
         </div>
         <div class="verticalDivide">
             <!-- MAKE THE CSS REMINDER Top Divide -->
@@ -88,6 +76,8 @@
         </div>
     </article>
     <script>
+        var currentSeconds=150;
+        var timerVar;           //the timer
         $(document).ready(function() {
             // sets a function that will be called when the websocket connects/disconnects
             NetworkTables.addWsConnectionListener(onNetworkTablesConnection, true);
@@ -122,6 +112,8 @@
               newVal+=tickDistance;
             }
             $('#displayDiv').hide().show(0);      //element refresh
+
+
         });
         // called when the websocket connects/disconnects
         function onRobotConnection(connected) { // TODO: change some indicator
@@ -140,8 +132,15 @@
 
         function onNetworkTablesConnection(connected) {
             // TODO: change some indicator
+            if (connected) {
+                $("#connectstate").text("Connected!");
+                // clear the table
+                $("#nt tbody > tr").remove();
+            } else {
+                $("#connectstate").text("Disconnected!");
+            }
         }
-
+        var gameStarted=false;
         function onValueChanged(key, value, isNew) {
             if (isNew) {} else {
                 // similarly, use keySelector to convert the key to a valid jQuery
@@ -235,7 +234,29 @@
                   $button.css({"border-color":setBorderColorTo});
 
                   break;
+              case "startTheTimer":
+                if(value==true||value=="true"){
+                document.getElementById("GameTimer").style.color="black";
+                timerVar=setInterval(function(){
+                  currentSeconds--;
+                  var currentMinutes=parseInt(currentSeconds/60);
+                  var actualSeconds=currentSeconds-60*currentMinutes;
+                  if(currentSeconds<0){
+                    window.clearTimeout(timerVar);
+                    return;
+                  }
+                  else if(currentSeconds<30)
+                  {
+                    document.getElementById("GameTimer").style.color="#FF3030";
+                  }
+
+                  document.getElementById("GameTimer").innerHTML = "GameTime:"+currentMinutes + ":" + actualSeconds;
+                },1000);
+
               }
+              NetworkTables.setValue("startTheTimer","false");      //CHANGE TO A BOOLEAN LATER
+              break;
+            }
             }
 
     </script>

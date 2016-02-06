@@ -7,7 +7,7 @@ header, article, aside {
 }
 header {
     width: 100vw;
-    height: 20vh;
+    height: 14vh;
     top: 0;
     left: 0;
     background: grey;
@@ -77,7 +77,7 @@ nav .active {
 article {
     left: 0;
     bottom: 0;
-    height: 80vh;
+    height: 86vh;
     width: 75vw;
     overflow: scroll;
     background: lightgrey;
@@ -86,7 +86,7 @@ aside {
     right: 0;
     bottom: 0;
     width: 25vw;
-    height: 80vh;
+    height: 86vh;
     background: darkgrey;
 }
 .FieldSelector {
@@ -108,7 +108,7 @@ aside {
     height: 35vh;
 }
 #EncoderSlider{
-	width:400px !important;
+	width:200px !important;
 }
 .encoderLimitSwitchSpan{
 	color:red;
