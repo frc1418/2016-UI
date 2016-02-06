@@ -12,9 +12,7 @@
 
 <body>
     <header>
-        NetworkTables websocket:
-        <span id="connectstate">Unknown state</span>
-        <br>Robot:
+        Robot:
         <span id="robotstate">Unknown state</span>
         <nav>
             <ul>
@@ -36,6 +34,7 @@
         <div class="settings" id="settingsContainerDiv"></div>
         <button id="set">Set</button>
     </article>
+    <div id="time"><span>00:00</span></div>
     <script>
         $(document).ready(function() {
             document.getElementById('setButton').onclick = function() {
