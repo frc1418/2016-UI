@@ -33,7 +33,7 @@
         <button id="setButton">Set</button>
         <button id="get">Get</button>
         <h1>Dashboard</h1>
-        <div class="settings"></div>
+        <div class="settings" id="settingsContainerDiv"></div>
         <button id="set">Set</button>
     </article>
     <script>
@@ -94,7 +94,7 @@
                         }*/
         }
         $('#set').click(function() {
-            var childInputs = $('#settingContainerDiv input');
+            var childInputs = $('#settingsContainerDiv input');
             childInputs.each(function(a) {
 
                 var thisChild = $(this);
