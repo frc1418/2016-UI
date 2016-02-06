@@ -66,9 +66,9 @@ Authors
 
 Current Students
 
-* Leon Tan, UI Lead
-* Erik Boesen
-* Aki Maher
+* [Leon Tan](https://github.com/lleontan), UI Lead
+* [Erik Boesen](https://github.com/ErikBoesen)
+* [Aki Maher](https://github.com/17mahera)
 * Tyler Gogal
 
-Special Thanks to Dustin Spicuzza, mentor.
+Special Thanks to [Dustin Spicuzza](https://github.com/virtuald), mentor.
