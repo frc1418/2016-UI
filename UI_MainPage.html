@@ -10,7 +10,6 @@
             width: 20vw;
             height: 20vw;
         }
-
         #gyroArm {
             transform-origin: bottom;
         }
@@ -21,6 +20,9 @@
     <header>
         Robot:
         <span id="robotstate">Unknown state</span>
+        <br>
+        Battery:
+        <span id="battery">??%</span>
         <nav>
             <ul>
                 <li class="active"><a href="UI_MainPage.html">Teleop</a></li>
@@ -31,7 +33,7 @@
     </header>
     <div class="camera"></div>
     <article>
-        <div id="displayDiv">
+        <div id="encoder">
             <input id="EncoderSlider" type="range" min="150" max="350" value="200" step="10" list="stepList">
             <datalist id="stepList"></datalist>
             <span id="encoderValueDisplaySpan">Encoder value: 200</span>
@@ -41,13 +43,11 @@
             <span class="encoderLimitSwitchSpan" id="reverseEncoderSpan">ReverseEncoder</span>
         </div>
         <div class="roboWidget">
-            <!-- MAKE THE CSS REMINDER robowidget -->
             <svg id="widgetCanvas">
                 <rect id="robotBody" x="75" y="75" width="110" height="60" style="fill:#9c9c9c;stroke-width:3;stroke:rgb(0,0,0)" />
                 <rect id="robotArm" x="35" y="75" width="80" height="10" style="fill:#c37dc3;stroke-width:3;stroke:black" />
                 <circle id="ballWidget" cx="50" cy="110" r="20" stroke="black" stroke-width="3" style="fill:#f0195f;stroke-width:3;stroke:black" visibility="hidden" />
             </svg>
-        </div>
         </div>
         <div id="autoButtons">
             <img id="gateButton" class="autoButton" src="/img/gate.jpg" activeState=false>

@@ -51,7 +51,7 @@ $(document).ready(function() {
 		dataList.append('<option>' + newVal + '</option>');
 		newVal += tickDistance;
 	}
-	$('#displayDiv').hide().show(0); //element refresh
+	$('#encoder').hide().show(0); //element refresh
 });
 // called when the websocket connects/disconnects
 function onRobotConnection(connected) { // TODO: change some indicator
