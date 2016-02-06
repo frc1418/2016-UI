@@ -106,3 +106,9 @@ aside {
     width: 11.5vw;
     height: 35vh;
 }
+#EncoderSlider{
+	width:400px !important;
+}
+.encoderLimitSwitchSpan{
+	color:red;
+}

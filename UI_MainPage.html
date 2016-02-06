@@ -26,17 +26,16 @@
     </header>
     <article>
         <h1>Teleop</h1>
-        <div class="settings"></div>
-        <div>
-            <input id="EncoderSlider" type="range" min="0" max="3" value="1" step="1" list="stepList">
+        <div class="settings"></div><!-- what does this placeholder do?-->
+        <div id="displayDiv">
+            <input id="EncoderSlider"  type="range" min="150" max="350" value="200" step="10" list="stepList">
             <datalist id="stepList">
-              <option>0</option>
-              <option>1</option>
-              <option>2</option>
-              <option>3</option>
             </datalist>
-            <span id="encoderValueDisplaySpan">EncoderValue:1</span>
-
+            <span id="encoderValueDisplaySpan">EncoderValue:200</span>
+            <br>
+            <span class="encoderLimitSwitchSpan" id="forwardEncoderSpan">ForwardEncoder</span>
+            <br>
+            <span class="encoderLimitSwitchSpan" id="reverseEncoderSpan">ReverseEncoder</span>
             <script>
                 $("#EncoderSlider").change(function(){
                   var encoderVal=$("#EncoderSlider").val();
@@ -60,6 +59,7 @@
                 }
 
             </script>
+
             <p id="GameTimer">GameTime:00:00</p>
         </div>
         <div class="verticalDivide">
@@ -110,7 +110,18 @@
               }
               NetworkTables.setValue($thisButton.attr("id"),activeState);      //onclick set the things id to true
             });
-
+            var EncoderSlider=$("#EncoderSlider");
+            var min=EncoderSlider.attr("min");
+            var max=EncoderSlider.attr("max");
+            var dataList=$("#stepList");
+            var tickDistance=10;
+            var numberOfTicks=(parseInt(max)-parseInt(min))/tickDistance;
+            var newVal=parseInt(min);
+            for(var a=0;a<numberOfTicks;a++){
+              dataList.append("<option>"+newVal+"</option>");
+              newVal+=tickDistance;
+            }
+            $('#displayDiv').hide().show(0);      //element refresh
         });
         // called when the websocket connects/disconnects
         function onRobotConnection(connected) { // TODO: change some indicator
@@ -149,12 +160,19 @@
                     }
                     break;
                 case "Arm | Forward Limit Switch": //checkspelling
-                    if (value == true) { //recheck valuetype, this should set it to 0 or max
+                    if (value == true||value=="true") { //recheck valuetype, this display a bool
+                      $("#forwardEncoderSpan").css({"color":"green"});
+                    }
+                    else if(value==false||value=="false"){
+                      $("#forwardEncoderSpan").css({"color":"red"});
                     }
                     break;
                 case "Arm | Reverse Limit Switch":
-                  if(value==true){//what is this supposed to do again?
-
+                  if (value == true||value=="true") { //recheck valuetype, this display a bool
+                    $("#reverseEncoderSpan").css({"color":"green"});
+                  }
+                  else if(value==false||value=="false"){
+                    $("#reverseEncoderSpan").css({"color":"red"});
                   }
                   break;
                 case "Arm | Encoder":
