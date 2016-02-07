@@ -74,32 +74,48 @@
             if (isNew) {
                 var div = $('<div></div>').appendTo($('.settings'));
                 $('<p></p>').text(key).appendTo(div);
-                if (!isNaN(value)) {
-                    $('<input type="number">')
-                        .attr('id', NetworkTables.keyToId(key))
-                        .attr('value', value)
-                        .appendTo(div);
-                } else {
-                    $('<input type="text">')
-                        .attr('id', NetworkTables.keyToId(key))
-                        .attr('value', value)
-                        .appendTo(div);
+                if (value === true || value === false) {
+                    var boolSlider = $("<div class='bool-slider " + value + "'></div>");
+                    var innerInset = $('<div class="inset" ></div>');
+                    innerInset.append('<div class="control"></div>')
+                        .click(function() {
+                            if (boolSlider.hasClass('true')) {
+                                NetworkTables.setValue(key, false);
+                                boolSlider.addClass('false').removeClass('true');
+                            } else {
+                                NetworkTables.setValue(key, true);
+                                boolSlider.addClass('true').removeClass('false');
+                            }
+                        });
+                    innerInset.appendTo(boolSlider);
+                    boolSlider.appendTo(div);
+                } else if (!isNaN(value)) {
+                    if (!isNaN(value)) {
+                        $('<input type="number">')
+                            .attr('id', NetworkTables.keyToId(key))
+                            .attr('value', value)
+                            .appendTo(div);
+                    } else {
+                        $('<input type="text">')
+                            .attr('id', NetworkTables.keyToId(key))
+                            .attr('value', value)
+                            .appendTo(div);
+                    }
                 }
+                /*else {
+                                // similarly, use keySelector to convert the key to a valid jQuery
+                                // selector. This should work for class names also, not just for ids
+                                //$('#' + NetworkTables.keySelector(key)).text(value);
+                            }*/
             }
-            /*else {
-                            // similarly, use keySelector to convert the key to a valid jQuery
-                            // selector. This should work for class names also, not just for ids
-                            //$('#' + NetworkTables.keySelector(key)).text(value);
-                        }*/
-        }
-        $('#set').click(function() {
-            var childInputs = $('#settingsContainerDiv input');
-            childInputs.each(function(a) {
+            $('#set').click(function() {
+                var childInputs = $('#settingsContainerDiv input');
+                childInputs.each(function(a) {
 
-                var thisChild = $(this);
-                NetworkTables.setValue(thisChild.attr('id'), thisChild.val());
+                    var thisChild = $(this);
+                    NetworkTables.setValue(thisChild.attr('id'), thisChild.val());
+                });
             });
-        });
 
     </script>
 </body>

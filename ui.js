@@ -4,6 +4,10 @@ $('#EncoderSlider').change(function() {
 	NetworkTables.setValue('EncoderSliderValue', encoderVal);
 });
 
+var currentSeconds = 150;
+var timerVar;
+var gameStarted = false;
+
 function startTheTimer() { //reminder, find the networktables value, add networktables support
 	var d = new Date();
 
@@ -31,13 +35,14 @@ $(document).ready(function() {
 	$('.autoButton').click(function() {
 		var $thisButton = $(this);
 		var activeState = $thisButton.attr('activeState');
-		if (activeState === true || activeState == 'true') {
+		if (activeState == true || activeState == 'true') {
 			activeState = false;
 		} else if (activeState === false || activeState == 'false') {
 			activeState = true;
 		} else {
 			console.log('activeStateButtonBug');
 		}
+		console.log($thisButton.attr("id"));
 		NetworkTables.setValue($thisButton.attr('id'), activeState); //onclick set the things id to true
 	});
 	var EncoderSlider = $('#EncoderSlider');
@@ -52,6 +57,11 @@ $(document).ready(function() {
 		newVal += tickDistance;
 	}
 	$('#encoder').hide().show(0); //element refresh
+	$("#EncoderSlider").change(function() {
+		var encoderVal = $("#EncoderSlider").val();
+		$("#encoderValueDisplaySpan").text("EncoderValue:" + encoderVal);
+		NetworkTables.setValue("EncoderSliderValue", encoderVal);
+	});
 });
 // called when the websocket connects/disconnects
 function onRobotConnection(connected) { // TODO: change some indicator
@@ -80,12 +90,12 @@ function onValueChanged(key, value, isNew) {
 	switch (key) {
 		//raw arm value and is the ball in
 		case 'ballIn': //not the actual networktablesValue
-			if (value === true || value == 'true') { //BOOLEANS ARE NOT WORKING WITH NETWORKTABLES AT THE MOMENT(or with testing at the very least)
+			if (value == true || value == 'true') { //BOOLEANS ARE NOT WORKING WITH NETWORKTABLES AT THE MOMENT(or with testing at the very least)
 				$('#ballWidget').attr('visibility', 'visible');
 			} else if (value === false || value == 'false') {
 				console.log('visibilityFalse');
 				$('#ballWidget').attr('visibility', 'hidden');
-            }
+			}
 			break;
 		case 'gyro':
 			$('#gyroArm').css({
@@ -93,7 +103,7 @@ function onValueChanged(key, value, isNew) {
 			});
 			break;
 		case 'Arm | Forward Limit Switch': //checkspelling
-			if (value === true || value == 'true') { //recheck valuetype, this display a bool
+			if (value == true || value == 'true') { //recheck valuetype, this display a bool
 				$('#forwardEncoderSpan').css({
 					'color': 'green'
 				});
@@ -104,7 +114,7 @@ function onValueChanged(key, value, isNew) {
 			}
 			break;
 		case 'Arm | Reverse Limit Switch':
-			if (value === true || value == 'true') { //recheck valuetype, this display a bool
+			if (value == true || value == 'true') { //recheck valuetype, this display a bool
 				$('#reverseEncoderSpan').css({
 					'color': 'green'
 				});
@@ -139,7 +149,7 @@ function onValueChanged(key, value, isNew) {
 			var isButtonActive = false;
 			var buttonValueListLength = buttonValueList.length;
 			for (var a = 0; a < buttonValueListLength; a++) {
-				if (buttonValueList[a] === true) { //==true is intended, was always returning true without the ==true
+				if (buttonValueList[a] == true) { //==true is intended, was always returning true without the ==true
 					isButtonActive = true;
 				}
 			}
@@ -154,7 +164,7 @@ function onValueChanged(key, value, isNew) {
 
 			var setBorderColorTo = 'black';
 			$button = $('#' + key);
-			if (value === true || value == 'true') { //string check is for testing purposes, remove later
+			if (value == true || value == 'true') { //string check is for testing purposes, remove later
 				setBorderColorTo = '#ff66ff';
 				$button.attr('activeState', true);
 				$('.autoButton').not(document.getElementById(key)).each(function() {
@@ -174,12 +184,42 @@ function onValueChanged(key, value, isNew) {
 			$button.css({
 				'border-color': setBorderColorTo
 			});
+			break;
+		case "startTheTimer":
+			if (value == true || value == "true") {
+				document.getElementById("GameTimer").style.color = "white";
+				timerVar = setInterval(function() {
+					currentSeconds--;
+					var currentMinutes = parseInt(currentSeconds / 60);
+					var actualSeconds = currentSeconds - 60 * currentMinutes;
+					if (currentSeconds < 0) {
+						window.clearTimeout(timerVar);
+						return;
+					} else if (currentSeconds < 30) {
+						document.getElementById("GameTimer").style.color = "#FF3030";
+					}
 
+					document.getElementById("GameTimer").innerHTML = "GameTime:" + currentMinutes + ":" + actualSeconds;
+				}, 1000);
+
+			}
+			NetworkTables.setValue("startTheTimer", "false"); //CHANGE TO A BOOLEAN LATER
+			break;
+		case "EncoderSliderValue":
+			if (value > 350) {
+				value = 350;
+			} else if (value < 150) {
+				value = 150;
+			} else {
+				console.log("oh god no, something is wrong with the encoder");
+			}
+			$("#EncoderSlider").val(value);
+			$('#encoderValueDisplaySpan').text('Encoder value: ' + value);
 			break;
 	}
 }
 
-// This is just for demonstration. Remove this once we have actual rotation data from the robot! ****
+// **** This is just for demonstration. Remove this once we have actual rotation data from the robot! ****
 var gyroRotation = 0;
 $('#gyro').click(function() {
 	gyroRotation += 5;
