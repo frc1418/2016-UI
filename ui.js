@@ -1,8 +1,4 @@
-$('#EncoderSlider').change(function() {
-	var encoderVal = $('#EncoderSlider').val();
-	$('#encoderValueDisplaySpan').text('Encoder value: ' + encoderVal);
-	NetworkTables.setValue('EncoderSliderValue', encoderVal);
-});
+
 
 var currentSeconds=150;
 var timerVar;
@@ -23,6 +19,10 @@ $(document).ready(function() {
 			activeState = false;
 		} else if (activeState === false || activeState == 'false') {
 			activeState = true;
+			//set all of the other values to false
+			$('.autoButton').not(document.getElementById($thisButton.attr("id"))).each(function() {
+				NetworkTables.setValue($(this).attr("id"),false);
+			});
 		} else {
 			console.log('activeStateButtonBug');
 		}
@@ -44,7 +44,7 @@ $(document).ready(function() {
 	$("#EncoderSlider").change(function(){
 		var encoderVal=$("#EncoderSlider").val();
 		$("#encoderValueDisplaySpan").text("EncoderValue:"+encoderVal);
-		NetworkTables.setValue("EncoderSliderValue",encoderVal);
+		NetworkTables.setValue("EncoderSliderValue",parseInt(encoderVal));
 	});
 });
 // called when the websocket connects/disconnects
@@ -134,7 +134,7 @@ function onValueChanged(key, value, isNew) {
 			var isButtonActive = false;
 			var buttonValueListLength = buttonValueList.length;
 			for (var a = 0; a < buttonValueListLength; a++) {
-				if (buttonValueList[a] == true) { //==true is intended, was always returning true without the ==true
+				if (buttonValueList[a] === true) { //==true is intended, was always returning true without the ==true
 					isButtonActive = true;
 				}
 			}
@@ -149,7 +149,7 @@ function onValueChanged(key, value, isNew) {
 
 			var setBorderColorTo = 'white';
 			$button = $('#' + key);
-			if (value == true || value == 'true') { //string check is for testing purposes, remove later
+			if (value === true || value == 'true') { //string check is for testing purposes, remove later
 				setBorderColorTo = '#ff66ff';
 				$button.attr('activeState', true);
 				$('.autoButton').not(document.getElementById(key)).each(function() {
@@ -157,19 +157,21 @@ function onValueChanged(key, value, isNew) {
 					if there is 2 trues then output a console and keep them both pink,
 					set all of the falses to unclickable and grayed out.
 					*/
+
 					var theNewButton = $(this);
+					console.log(theNewButton.attr("id"));
+					console.log(setBorderColorTo);
 					theNewButton.css({
 						'pointer-events': 'none',
 						'border-color': '#306860'
 					});
 				});
-			} else if (value == false || value == 'false') {
+			} else if (value === false || value == 'false') {
 				$button.attr('activeState', false);
 			}
 			$button.css({
 				'border-color': setBorderColorTo
 			});
-
 			break;
 			case "startTheTimer":
 				if(value==true||value=="true"){
@@ -194,13 +196,13 @@ function onValueChanged(key, value, isNew) {
 			NetworkTables.setValue("startTheTimer","false");      //CHANGE TO A BOOLEAN LATER
 			break;
 			case "EncoderSliderValue":
+
 				if(value>350){
 					value=350;
 				}
 				else if(value<150){
 					value=150;
 				}
-				else{console.log("oh god no, something is wrong with the encoder");}
 				$("#EncoderSlider").val(value);
 				$('#encoderValueDisplaySpan').text('Encoder value: ' + value);
 			break
