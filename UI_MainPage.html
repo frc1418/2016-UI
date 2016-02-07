@@ -21,6 +21,8 @@
         Robot:
         <span id="robotstate">Unknown state</span>
         <br>
+        <br>
+        <br>
         <nav>
             <ul>
                 <li class="active"><a href="UI_MainPage.html">Teleop</a></li>
@@ -30,16 +32,14 @@
         </nav>
     </header>
     <div class="camera"></div>
-    <article>
-        <div id="encoder">
-            <input id="EncoderSlider" type="range" min="150" max="350" value="200" step="10" list="stepList">
-            <datalist id="stepList"></datalist>
-            <span id="encoderValueDisplaySpan">Encoder value: 200</span>
-            <br>
-            <span class="encoderLimitSwitchSpan" id="forwardEncoderSpan">ForwardEncoder</span>
-            <br>
-            <span class="encoderLimitSwitchSpan" id="reverseEncoderSpan">ReverseEncoder</span>
-        </div>
+    <div id="GameTimer">
+      <span id="GameTimerSpan">00:00</span>
+    </div>
+    <div id="GyroBox">
+      <svg id="gyro">
+          <circle id="gyroCircle" cx="120" cy="120" r="100" stroke="aqua" stroke-width="3" />
+          <rect id="gyroArm" x="115" y="40" width="10" height="80" stroke="aqua" stroke-width="3" />
+      </svg>
         <div class="roboWidget">
             <svg id="widgetCanvas">
                 <rect id="robotBody" x="75" y="75" width="110" height="60" style="fill:#9c9c9c;stroke-width:3;stroke:rgb(0,0,0)" />
@@ -47,20 +47,25 @@
                 <circle id="ballWidget" cx="50" cy="110" r="20" stroke="black" stroke-width="3" style="fill:#f0195f;stroke-width:3;stroke:black" visibility="hidden" />
             </svg>
         </div>
+
+    </div>
+    <aside>
+        <div id="encoder">
+            <input id="EncoderSlider" type="range" min="150" max="350" value="200" step="10" list="stepList">
+            <datalist id="stepList"></datalist>
+            <br>
+            <span class="encodertext" id="encoderValueDisplaySpan">Encoder value: 200</span>
+            <br>
+            <span class="encodertext encoderLimitSwitchSpan" id="forwardEncoderSpan">ForwardEncoder</span>
+            <br>
+            <span class="encodertext encoderLimitSwitchSpan" id="reverseEncoderSpan">ReverseEncoder</span>
+        </div>
+
         <div id="autoButtons">
             <img id="gateButton" class="autoButton" src="/img/gate.jpg" activeState=false>
             <img id="chevyButton" class="autoButton" src="/img/cheval.gif" activeState=false>
             <img id="ladderButton" class="autoButton" src="/img/ladder.png" activeState=false>
         </div>
-    </article>
-    <div id="GameTimer">
-      <span id="GameTimerSpan">00:00</span>
-    </div>
-    <aside>
-        <svg id="gyro">
-            <circle id="gyroCircle" cx="120" cy="120" r="100" stroke="aqua" stroke-width="3" />
-            <rect id="gyroArm" x="115" y="40" width="10" height="80" stroke="aqua" stroke-width="3" />
-        </svg>
     </aside>
     <script src="js/jquery.js"></script>
     <script src="js/d3.js"></script>
