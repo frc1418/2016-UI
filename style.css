@@ -33,7 +33,7 @@ header {
     width: 50vw;
     overflow: hidden;
     height: 60vh;
-    background: url(img/static.gif);
+    /*background: url(img/static.gif);*/
 }
 nav ul {
     padding-left: 0;
