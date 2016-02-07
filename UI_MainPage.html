@@ -5,6 +5,16 @@
     <meta charset="utf-8">
     <title>1418 DriverStation</title>
     <link rel="stylesheet" href="style.css">
+    <style>
+        #gyro {
+            width: 20vw;
+            height: 20vw;
+        }
+        #gyroArm {
+            transform-origin: bottom;
+        }
+    </style>
+
     <script src="js/jquery.js"></script>
     <script src="js/d3.js"></script>
     <script src="/networktables/networktables.js"></script>
@@ -27,28 +37,16 @@
             <span id="robotstate">Unknown state</span>
       </div>
     </header>
+    <div class="camera"></div>
     <article>
-        <h1>Teleop</h1>
-        <div class="settings"></div><!-- what does this placeholder do?-->
-        <div id="displayDiv">
-            <input id="EncoderSlider"  type="range" min="150" max="350" value="200" step="10" list="stepList">
-            <datalist id="stepList">
-            </datalist>
-            <span id="encoderValueDisplaySpan">EncoderValue:200</span>
+        <div id="encoder">
+            <input id="EncoderSlider" type="range" min="150" max="350" value="200" step="10" list="stepList">
+            <datalist id="stepList"></datalist>
+            <span id="encoderValueDisplaySpan">Encoder value: 200</span>
             <br>
             <span class="encoderLimitSwitchSpan" id="forwardEncoderSpan">ForwardEncoder</span>
             <br>
             <span class="encoderLimitSwitchSpan" id="reverseEncoderSpan">ReverseEncoder</span>
-            <script>
-                $("#EncoderSlider").change(function(){
-                  var encoderVal=$("#EncoderSlider").val();
-                  $("#encoderValueDisplaySpan").text("EncoderValue:"+encoderVal);
-                  NetworkTables.setValue("EncoderSliderValue",encoderVal);
-                });
-
-
-            </script>
-
         </div>
         <div class="verticalDivide">
             <!-- MAKE THE CSS REMINDER Top Divide -->
@@ -57,209 +55,27 @@
                 <!-- placeholderimage -->
             </div>
         </div>
-        <div class="verticalDivide">
-            <!-- MAKE THE CSS REMINDER Bottom Divide -->
-            <div class="roboWidget">
-                <!-- MAKE THE CSS REMINDER robowidget -->
-                <svg id="widgetCanvas" width="250" height="150">
-                    <rect id="robotBody" x="75" y="75" width="110" height="60" style="fill:rgb(155,155,155);stroke-width:3;stroke:rgb(0,0,0)" />
-                    <rect id="robotArm" x="35" y="75" width="80" height="10" style="fill:rgb(195,125,195);stroke-width:3;stroke:rgb(0,0,0)" />
-                    <circle id="ballWidget" cx="50" cy="110" r="20" stroke="black" stroke-width="3" style="fill:rgb(240,25,95);stroke-width:3;stroke:rgb(0,0,0)" visibility="hidden" />
-                </svg>
-            </div>
+        <div class="roboWidget">
+            <svg id="widgetCanvas">
+                <rect id="robotBody" x="75" y="75" width="110" height="60" style="fill:#9c9c9c;stroke-width:3;stroke:rgb(0,0,0)" />
+                <rect id="robotArm" x="35" y="75" width="80" height="10" style="fill:#c37dc3;stroke-width:3;stroke:black" />
+                <circle id="ballWidget" cx="50" cy="110" r="20" stroke="black" stroke-width="3" style="fill:#f0195f;stroke-width:3;stroke:black" visibility="hidden" />
+            </svg>
         </div>
-        <div id="autoButtonDiv">
-          <img id="gateButton" class="autoButton"src="/img/gate.jpg" activeState=false>
-          <img id="chevyButton" class="autoButton" src="/img/cheval.gif" activeState=false>
-          <img id="ladderButton" class="autoButton"src="/img/ladder.png" activeState=false>
-
+        <div id="autoButtons">
+            <img id="gateButton" class="autoButton" src="/img/gate.jpg" activeState=false>
+            <img id="chevyButton" class="autoButton" src="/img/cheval.gif" activeState=false>
+            <img id="ladderButton" class="autoButton" src="/img/ladder.png" activeState=false>
         </div>
     </article>
-    <script>
-        var currentSeconds=150;
-        var timerVar;           //the timer
-        $(document).ready(function() {
-            // sets a function that will be called when the websocket connects/disconnects
-            NetworkTables.addWsConnectionListener(onNetworkTablesConnection, true);
-            // sets a function that will be called when the robot connects/disconnects
-            NetworkTables.addRobotConnectionListener(onRobotConnection, true);
-            // sets a function that will be called when any NetworkTables key/value changes
-            NetworkTables.addGlobalListener(onValueChanged, true);
-
-            $(".autoButton").click(function(){
-              var $thisButton=$(this);
-              var activeState=$thisButton.attr("activeState");
-              if(activeState==true||activeState=="true"){
-                activeState=false;
-              }
-              else if(activeState==false||activeState=="false"){
-                activeState=true;
-              }
-              else{
-                console.log("activeStateButtonBug");
-              }
-              NetworkTables.setValue($thisButton.attr("id"),activeState);      //onclick set the things id to true
-            });
-            var EncoderSlider=$("#EncoderSlider");
-            var min=EncoderSlider.attr("min");
-            var max=EncoderSlider.attr("max");
-            var dataList=$("#stepList");
-            var tickDistance=10;
-            var numberOfTicks=(parseInt(max)-parseInt(min))/tickDistance;
-            var newVal=parseInt(min);
-            for(var a=0;a<numberOfTicks;a++){
-              dataList.append("<option>"+newVal+"</option>");
-              newVal+=tickDistance;
-            }
-            $('#displayDiv').hide().show(0);      //element refresh
-
-
-        });
-        // called when the websocket connects/disconnects
-        function onRobotConnection(connected) { // TODO: change some indicator
-            //config.frontcam should be set to http://roborio-1418-frc.local:5800/
-            //
-            if (connected) {
-                $('#camOffline').hide();
-
-                $('#CamTab').prepend('<img class="webcamImage" id="webcamImage" src="' + "http://roborio-1418-frc.local:5800/" + '/?action=stream">');
-            } else {
-                $('#webcamImage').remove();
-
-                $('#camOfflineImage').show();
-            }
-        }
-
-        function onNetworkTablesConnection(connected) {
-            // TODO: change some indicator
-            if (connected) {
-                $("#connectstate").text("Connected!");
-                // clear the table
-                $("#nt tbody > tr").remove();
-            } else {
-                $("#connectstate").text("Disconnected!");
-            }
-        }
-        var gameStarted=false;
-        function onValueChanged(key, value, isNew) {
-            if (isNew) {} else {
-                // similarly, use keySelector to convert the key to a valid jQuery
-                // selector. This should work for class names also, not just for ids
-            }
-            switch (key) {
-                //raw arm value and is the ball in
-                case "ballIn": //not the actual networktablesValue
-                    if (value==true||value=="true") {                     //BOOLEANS ARE NOT WORKING WITH NETWORKTABLES AT THE MOMENT(or with testing at the very least)
-                        $("#ballWidget").attr("visibility","visible");
-                    } else if (value == false||value=="false") {
-                        console.log("visibilityFalse");
-                        $("#ballWidget").attr("visibility","hidden");
-                    } else {
-                        console.log("somethingisdefinitelyWrong")
-                    }
-                    break;
-                case "Arm | Forward Limit Switch": //checkspelling
-                    if (value == true||value=="true") { //recheck valuetype, this display a bool
-                      $("#forwardEncoderSpan").css({"color":"green"});
-                    }
-                    else if(value==false||value=="false"){
-                      $("#forwardEncoderSpan").css({"color":"red"});
-                    }
-                    break;
-                case "Arm | Reverse Limit Switch":
-                  if (value == true||value=="true") { //recheck valuetype, this display a bool
-                    $("#reverseEncoderSpan").css({"color":"green"});
-                  }
-                  else if(value==false||value=="false"){
-                    $("#reverseEncoderSpan").css({"color":"red"});
-                  }
-                  break;
-                case "Arm | Encoder":
-                    if(value>1140){
-                      value=1140;
-                    }
-                    else if(value<0){
-                      value=0;
-                    }
-                    var $robotArm=$("#robotArm");
-                    var rotationValue = -45 + value * 225 / 1140; //-45 plus value*225/1140, value between 0 and 1140
-                    var rotationPointx=parseInt($robotArm.attr("width"))+parseInt($robotArm.attr("x"));
-                    $robotArm.attr("transform", "rotate(" + rotationValue +" "+rotationPointx+" "+$robotArm.attr("y")+")");
-                    break;
-                case "chevyButton":
-                case "gateButton":
-                case "ladderButton":
-                  //set the images border to something bright like orange if it equals true
-                  //do acheck to see if all 4 are false, if so, then make them black border and slectable
-                  var autoButtonSelection=$(".autoButton");
-
-                  var buttonValueList=
-                  autoButtonSelection.map(function(){return $(this).attr("activeState");}).get();
-                  var isButtonActive=false;
-                  var buttonValueListLength=buttonValueList.length;
-                  for(var a=0;a< buttonValueListLength;a++){
-                    if(buttonValueList[a]==true){           //==true is intended, was always returning true without the ==true
-                      isButtonActive=true;
-                    }
-                  }
-                  if(isButtonActive){
-
-                  }
-                  else{
-                    autoButtonSelection.css({
-                      "pointer-events": "auto",
-                      "border-color":"black"
-                    });
-                  }
-
-                  var setBorderColorTo="black";
-                  $button=$("#"+key);
-                  if(value==true ||value=="true"){      //string check is for testing purposes, remove later
-                    setBorderColorTo="#ff66ff";
-                    $button.attr("activeState",true);
-                    $(".autoButton").not(document.getElementById(key)).each(function(){
-                      /*in the event that one of them is true, check the other classes for true
-                      if there is 2 trues then output a console and keep them both pink,
-                      set all of the falses to unclickable and grayed out.
-                      */var theNewButton=$(this);
-                      theNewButton.css({
-                        "pointer-events": "none",
-                        "border-color":"#306860"
-                      });
-                    });
-                  }
-                  else if(value==false ||value=="false"){
-                    $button.attr("activeState",false);
-                  }
-                  $button.css({"border-color":setBorderColorTo});
-
-                  break;
-              case "startTheTimer":
-                if(value==true||value=="true"){
-                document.getElementById("GameTimer").style.color="black";
-                timerVar=setInterval(function(){
-                  currentSeconds--;
-                  var currentMinutes=parseInt(currentSeconds/60);
-                  var actualSeconds=currentSeconds-60*currentMinutes;
-                  if(currentSeconds<0){
-                    window.clearTimeout(timerVar);
-                    return;
-                  }
-                  else if(currentSeconds<30)
-                  {
-                    document.getElementById("GameTimer").style.color="#FF3030";
-                  }
-
-                  document.getElementById("GameTimer").innerHTML = "GameTime:"+currentMinutes + ":" + actualSeconds;
-                },1000);
-
-              }
-              NetworkTables.setValue("startTheTimer","false");      //CHANGE TO A BOOLEAN LATER
-              break;
-            }
-            }
-
-    </script>
+    <div id="time"><span>00:00</span></div>
+    <aside>
+        <svg id="gyro">
+            <circle id="gyroCircle" cx="120" cy="120" r="100" stroke="aqua" stroke-width="3" />
+            <rect id="gyroArm" x="115" y="40" width="10" height="80" stroke="aqua" stroke-width="3" />
+        </svg>
+    </aside>
+    <script src="ui.js"></script>
 </body>
 
 </html>
