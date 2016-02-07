@@ -22,13 +22,11 @@ $(document).ready(function() {
 			activeState = true;
 			//set all of the other values to false
 			$('.autoButton').not(document.getElementById($thisButton.attr("id"))).each(function() {
-				NetworkTables.setValue($(this).attr("id"),false);
+				NetworkTables.setValue("/SmartDashboard/"+$(this).attr("id"),false);
 			});
 		} else {
-			console.log('activeStateButtonBug');
 		}
-		console.log($thisButton.attr("id"));
-		NetworkTables.setValue($thisButton.attr('id'), activeState); //onclick set the things id to true
+		NetworkTables.setValue("/SmartDashboard/"+$thisButton.attr('id'), activeState); //onclick set the things id to true
 	});
 	var EncoderSlider = $('#EncoderSlider');
 	var min = EncoderSlider.attr('min');
@@ -45,7 +43,7 @@ $(document).ready(function() {
 	$("#EncoderSlider").change(function(){
 		var encoderVal=$("#EncoderSlider").val();
 		$("#encoderValueDisplaySpan").text("EncoderValue:"+encoderVal);
-		NetworkTables.setValue("EncoderSliderValue",parseInt(encoderVal));
+		NetworkTables.setValue("/SmartDashboard/"+"EncoderSliderValue",parseInt(encoderVal));
 	});
 });
 // called when the websocket connects/disconnects
@@ -68,48 +66,49 @@ function onNetworkTablesConnection(connected) {
 }
 
 function onValueChanged(key, value, isNew) {
+	console.log("valueChange",key,value);
 	if (isNew) {} else {
 		// similarly, use keySelector to convert the key to a valid jQuery
 		// selector. This should work for class names also, not just for ids
 	}
 	switch (key) {
 		//raw arm value and is the ball in
-		case 'ballIn': //not the actual networktablesValue
+		case '/SmartDashboard/ballIn': //not the actual networktablesValue
 			if (value == true || value == 'true') { //BOOLEANS ARE NOT WORKING WITH NETWORKTABLES AT THE MOMENT(or with testing at the very least)
 				$('#ballWidget').attr('visibility', 'visible');
 			} else if (value === false || value == 'false') {
-				console.log('visibilityFalse');
 				$('#ballWidget').attr('visibility', 'hidden');
 			}
 			break;
-		case 'gyro':
+		case '/SmartDashboard/gyro':
 			$('#gyroArm').css({
 				'transform': 'rotate(' + value + 'deg)'
 			});
 			break;
-		case 'Arm | Forward Limit Switch': //checkspelling
+		case '/SmartDashboard/Arm | Forward Limit Switch': //checkspelling
 			if (value == true || value == 'true') { //recheck valuetype, this display a bool
-				$('#forwardEncoderSpan').css({
+				$('#forwardEncoderSpan').text("Forward Encoder:True").css({
 					'color': 'green'
+
 				});
 			} else if (value === false || value == 'false') {
-				$('#forwardEncoderSpan').css({
+				$('#forwardEncoderSpan').text("Forward Encoder:False").css({
 					'color': 'red'
 				});
 			}
 			break;
-		case 'Arm | Reverse Limit Switch':
+		case '/SmartDashboard/Arm | Reverse Limit Switch':
 			if (value == true || value == 'true') { //recheck valuetype, this display a bool
-				$('#reverseEncoderSpan').css({
+				$('#reverseEncoderSpan').text("Forward Encoder:True").css({
 					'color': 'green'
 				});
 			} else if (value === false || value == 'false') {
-				$('#reverseEncoderSpan').css({
+				$('#reverseEncoderSpan').text("Forward Encoder:False").css({
 					'color': 'red'
 				});
 			}
 			break;
-		case 'Arm | Encoder':
+		case '/SmartDashboard/Arm | Encoder':
 			if (value > 1140) {
 				value = 1140;
 			} else if (value < 0) {
@@ -120,9 +119,9 @@ function onValueChanged(key, value, isNew) {
 			var rotationPointx = parseInt($robotArm.attr('width')) + parseInt($robotArm.attr('x'));
 			$robotArm.attr('transform', 'rotate(' + rotationValue + ' ' + rotationPointx + ' ' + $robotArm.attr('y') + ')');
 			break;
-		case 'chevyButton':
-		case 'gateButton':
-		case 'ladderButton':
+		case '/SmartDashboard/chevyButton':
+		case '/SmartDashboard/gateButton':
+		case '/SmartDashboard/ladderButton':
 			//set the images border to something bright like orange if it equals true
 			//do acheck to see if all 4 are false, if so, then make them black border and slectable
 			var autoButtonSelection = $('.autoButton');
@@ -173,7 +172,7 @@ function onValueChanged(key, value, isNew) {
 				'border-color': setBorderColorTo
 			});
 			break;
-		case "startTheTimer":
+		case "/SmartDashboard/startTheTimer":
 			if (value == true || value == "true") {
 				document.getElementById("GameTimerSpan").style.color = "white";
 				timerVar = setInterval(function() {
@@ -187,13 +186,13 @@ function onValueChanged(key, value, isNew) {
 						document.getElementById("GameTimer").style.color = "#FF3030";
 					}
 
-					document.getElementById("GameTimerSpan").innerHTML = "GameTime:" + currentMinutes + ":" + actualSeconds;
+					document.getElementById("GameTimerSpan").innerHTML =  currentMinutes + ":" + actualSeconds;
 				}, 1000);
 
 			}
-			NetworkTables.setValue("startTheTimer", "false"); //CHANGE TO A BOOLEAN LATER
+			NetworkTables.setValue("/SmartDashboard/startTheTimer", "false"); //CHANGE TO A BOOLEAN LATER
 			break;
-		case "EncoderSliderValue":
+		case "/SmartDashboard/EncoderSliderValue":
 			if (value > 350) {
 				value = 350;
 			} else if (value < 150) {
@@ -203,7 +202,7 @@ function onValueChanged(key, value, isNew) {
 			$("#EncoderSlider").val(value);
 			$('#encoderValueDisplaySpan').text('Encoder value: ' + value);
 			break;
-			case "EncoderSliderValue":
+		case "/SmartDashboard/EncoderSliderValue":
 
 				if(value>350){
 					value=350;
