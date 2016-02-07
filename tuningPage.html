@@ -34,7 +34,6 @@
         <div class="settings" id="settingsContainerDiv"></div>
         <button id="set">Set</button>
     </article>
-    <div id="time"><span>00:00</span></div>
     <script>
         $(document).ready(function() {
             document.getElementById('setButton').onclick = function() {
@@ -95,19 +94,21 @@
                             .attr('id', NetworkTables.keyToId(key))
                             .attr('value', value)
                             .appendTo(div);
-                    } else {
+                    }
+                  }else {
                         $('<input type="text">')
                             .attr('id', NetworkTables.keyToId(key))
                             .attr('value', value)
                             .appendTo(div);
                     }
-                }
+
                 /*else {
                                 // similarly, use keySelector to convert the key to a valid jQuery
                                 // selector. This should work for class names also, not just for ids
                                 //$('#' + NetworkTables.keySelector(key)).text(value);
                             }*/
             }
+          }
             $('#set').click(function() {
                 var childInputs = $('#settingsContainerDiv input');
                 childInputs.each(function(a) {

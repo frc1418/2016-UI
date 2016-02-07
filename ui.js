@@ -1,28 +1,9 @@
-$('#EncoderSlider').change(function() {
-	var encoderVal = $('#EncoderSlider').val();
-	$('#encoderValueDisplaySpan').text('Encoder value: ' + encoderVal);
-	NetworkTables.setValue('EncoderSliderValue', encoderVal);
-});
+
 
 var currentSeconds = 150;
 var timerVar;
 var gameStarted = false;
 
-function startTheTimer() { //reminder, find the networktables value, add networktables support
-	var d = new Date();
-
-	var mEnd = 2;
-	var sEnd = 30;
-	var x = document.getElementById('GameTimer');
-	for (var i = 0; i < 150; i++) {
-		sEnd = sEnd - 1;
-		if (sEnd < 0) {
-			sEnd = sEnd + 60;
-			mEnd = mEnd - 1;
-		}
-		x.innerHTML = mEnd + ':' + sEnd;
-	}
-}
 
 $(document).ready(function() {
 	// sets a function that will be called when the websocket connects/disconnects
@@ -39,6 +20,10 @@ $(document).ready(function() {
 			activeState = false;
 		} else if (activeState === false || activeState == 'false') {
 			activeState = true;
+			//set all of the other values to false
+			$('.autoButton').not(document.getElementById($thisButton.attr("id"))).each(function() {
+				NetworkTables.setValue($(this).attr("id"),false);
+			});
 		} else {
 			console.log('activeStateButtonBug');
 		}
@@ -57,10 +42,10 @@ $(document).ready(function() {
 		newVal += tickDistance;
 	}
 	$('#encoder').hide().show(0); //element refresh
-	$("#EncoderSlider").change(function() {
-		var encoderVal = $("#EncoderSlider").val();
-		$("#encoderValueDisplaySpan").text("EncoderValue:" + encoderVal);
-		NetworkTables.setValue("EncoderSliderValue", encoderVal);
+	$("#EncoderSlider").change(function(){
+		var encoderVal=$("#EncoderSlider").val();
+		$("#encoderValueDisplaySpan").text("EncoderValue:"+encoderVal);
+		NetworkTables.setValue("EncoderSliderValue",parseInt(encoderVal));
 	});
 });
 // called when the websocket connects/disconnects
@@ -149,7 +134,7 @@ function onValueChanged(key, value, isNew) {
 			var isButtonActive = false;
 			var buttonValueListLength = buttonValueList.length;
 			for (var a = 0; a < buttonValueListLength; a++) {
-				if (buttonValueList[a] == true) { //==true is intended, was always returning true without the ==true
+				if (buttonValueList[a] === true) { //==true is intended, was always returning true without the ==true
 					isButtonActive = true;
 				}
 			}
@@ -164,7 +149,7 @@ function onValueChanged(key, value, isNew) {
 
 			var setBorderColorTo = 'black';
 			$button = $('#' + key);
-			if (value == true || value == 'true') { //string check is for testing purposes, remove later
+			if (value === true || value == 'true') { //string check is for testing purposes, remove later
 				setBorderColorTo = '#ff66ff';
 				$button.attr('activeState', true);
 				$('.autoButton').not(document.getElementById(key)).each(function() {
@@ -172,7 +157,10 @@ function onValueChanged(key, value, isNew) {
 					if there is 2 trues then output a console and keep them both pink,
 					set all of the falses to unclickable and grayed out.
 					*/
+
 					var theNewButton = $(this);
+					console.log(theNewButton.attr("id"));
+					console.log(setBorderColorTo);
 					theNewButton.css({
 						'pointer-events': 'none',
 						'border-color': '#306860'
@@ -187,7 +175,7 @@ function onValueChanged(key, value, isNew) {
 			break;
 		case "startTheTimer":
 			if (value == true || value == "true") {
-				document.getElementById("GameTimer").style.color = "white";
+				document.getElementById("GameTimerSpan").style.color = "white";
 				timerVar = setInterval(function() {
 					currentSeconds--;
 					var currentMinutes = parseInt(currentSeconds / 60);
@@ -199,7 +187,7 @@ function onValueChanged(key, value, isNew) {
 						document.getElementById("GameTimer").style.color = "#FF3030";
 					}
 
-					document.getElementById("GameTimer").innerHTML = "GameTime:" + currentMinutes + ":" + actualSeconds;
+					document.getElementById("GameTimerSpan").innerHTML = "GameTime:" + currentMinutes + ":" + actualSeconds;
 				}, 1000);
 
 			}
@@ -211,11 +199,21 @@ function onValueChanged(key, value, isNew) {
 			} else if (value < 150) {
 				value = 150;
 			} else {
-				console.log("oh god no, something is wrong with the encoder");
 			}
 			$("#EncoderSlider").val(value);
 			$('#encoderValueDisplaySpan').text('Encoder value: ' + value);
 			break;
+			case "EncoderSliderValue":
+
+				if(value>350){
+					value=350;
+				}
+				else if(value<150){
+					value=150;
+				}
+				$("#EncoderSlider").val(value);
+				$('#encoderValueDisplaySpan').text('Encoder value: ' + value);
+			break
 	}
 }
 
