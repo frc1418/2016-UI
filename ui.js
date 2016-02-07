@@ -193,7 +193,17 @@ function onValueChanged(key, value, isNew) {
 			}
 			NetworkTables.setValue("startTheTimer","false");      //CHANGE TO A BOOLEAN LATER
 			break;
-
+			case "EncoderSliderValue":
+				if(value>350){
+					value=350;
+				}
+				else if(value<150){
+					value=150;
+				}
+				else{console.log("oh god no, something is wrong with the encoder");}
+				$("#EncoderSlider").val(value);
+				$('#encoderValueDisplaySpan').text('Encoder value: ' + value);
+			break
 	}
 }
 
