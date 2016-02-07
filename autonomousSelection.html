@@ -102,7 +102,7 @@
                 //set a default value, add the onclick listener, update networktables
                 //
                 var thisImage = $(this);
-                thisImage.attr("id", "attackerState" + a).attr("state", 0).attr("position", a).attr("src", "img/defaultImg.png");
+                thisImage.attr("id", "/SmartDashboard/attackerState" + a).attr("state", 0).attr("position", a).attr("src", "img/defaultImg.png");
                 //if(NetworkTables.isRobotConnected()){}
                 thisImage.click(function() {
                     var theImage = $(this);
@@ -124,7 +124,7 @@
                 //for every DefenseSelector add the triangles, set the id, 'a' is the index in the list of divs
                 var thisDiv = $(this);
                 thisDiv.attr("defenseClass", a);
-                thisDiv.attr("id", "defenseDefenseSelector" + a);
+                thisDiv.attr("id", "/SmartDashboard/defenseDefenseSelector" + a);
                 var defenseNumber = 0;
                 thisDiv.attr("defenseNumber", defenseNumber);
                 thisDiv.append($('<div></div>')
@@ -225,10 +225,10 @@
 
             }
             switch (key) {
-                case "defenseDefenseSelector0":
-                case "defenseDefenseSelector1":
-                case "defenseDefenseSelector2":
-                case "defenseDefenseSelector3":
+                case "/SmartDashboard/defenseDefenseSelector0":
+                case "/SmartDashboard/defenseDefenseSelector1":
+                case "/SmartDashboard/defenseDefenseSelector2":
+                case "/SmartDashboard/defenseDefenseSelector3":
 
                     var theChangedDiv = $("#" + NetworkTables.keyToId(key));
                     var realDefenseNamesLength = realDefenseNames.length;
@@ -255,7 +255,7 @@
                         .attr("src", "img/" + defenseNames[defenseClass] + defenseNum + ".png");
 
                     break; //in case we want to add another listener to the swtich afterwards
-                case "Autonomous Mode":
+                case "/SmartDashboard/Autonomous Mode/options":
 
                     //if there is a change in the names of the autonomous modes check the select,clear it and rewrite
                     var autonomousOptionSelect = $("#autonomousOptionSelect");
@@ -273,14 +273,14 @@
                     //autonomousOptionSelect.val($("#autonomousOptionSelect option:first").val());
                     //}
                     break;
-                case "currentlySelectedMode":
+                case "/SmartDashboard/currentlySelectedMode":
                     $("#autonomousOptionSelect").val(value);
                     break;
-                case "attackerState0":
-                case "attackerState1":
-                case "attackerState2":
-                case "attackerState3":
-                case "attackerState4":
+                case "/SmartDashboard/attackerState0":
+                case "/SmartDashboard/attackerState1":
+                case "/SmartDashboard/attackerState2":
+                case "/SmartDashboard/attackerState3":
+                case "/SmartDashboard/NeattackerState4":
                     var attackerImage = $("#" + key);
                     if (value == "us") {
                         //if value is us then get all of the other things and set anything equal to us to none
