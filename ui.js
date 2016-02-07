@@ -4,9 +4,21 @@ $('#EncoderSlider').change(function() {
 	NetworkTables.setValue('EncoderSliderValue', encoderVal);
 });
 
-var currentSeconds=150;
-var timerVar;
-var gameStarted=false;
+function startTheTimer() { //reminder, find the networktables value, add networktables support
+	var d = new Date();
+
+	var mEnd = 2;
+	var sEnd = 30;
+	var x = document.getElementById('GameTimer');
+	for (var i = 0; i < 150; i++) {
+		sEnd = sEnd - 1;
+		if (sEnd < 0) {
+			sEnd = sEnd + 60;
+			mEnd = mEnd - 1;
+		}
+		x.innerHTML = mEnd + ':' + sEnd;
+	}
+}
 
 $(document).ready(function() {
 	// sets a function that will be called when the websocket connects/disconnects
@@ -26,7 +38,6 @@ $(document).ready(function() {
 		} else {
 			console.log('activeStateButtonBug');
 		}
-		console.log($thisButton.attr("id"));
 		NetworkTables.setValue($thisButton.attr('id'), activeState); //onclick set the things id to true
 	});
 	var EncoderSlider = $('#EncoderSlider');
@@ -41,11 +52,6 @@ $(document).ready(function() {
 		newVal += tickDistance;
 	}
 	$('#encoder').hide().show(0); //element refresh
-	$("#EncoderSlider").change(function(){
-		var encoderVal=$("#EncoderSlider").val();
-		$("#encoderValueDisplaySpan").text("EncoderValue:"+encoderVal);
-		NetworkTables.setValue("EncoderSliderValue",encoderVal);
-	});
 });
 // called when the websocket connects/disconnects
 function onRobotConnection(connected) { // TODO: change some indicator
@@ -130,11 +136,10 @@ function onValueChanged(key, value, isNew) {
 				autoButtonSelection.map(function() {
 					return $(this).attr('activeState');
 				}).get();
-
 			var isButtonActive = false;
 			var buttonValueListLength = buttonValueList.length;
 			for (var a = 0; a < buttonValueListLength; a++) {
-				if (buttonValueList[a] == true) { //==true is intended, was always returning true without the ==true
+				if (buttonValueList[a] === true) { //==true is intended, was always returning true without the ==true
 					isButtonActive = true;
 				}
 			}
@@ -143,13 +148,13 @@ function onValueChanged(key, value, isNew) {
 			} else {
 				autoButtonSelection.css({
 					'pointer-events': 'auto',
-					'border-color': 'white'
+					'border-color': 'black'
 				});
 			}
 
-			var setBorderColorTo = 'white';
+			var setBorderColorTo = 'black';
 			$button = $('#' + key);
-			if (value == true || value == 'true') { //string check is for testing purposes, remove later
+			if (value === true || value == 'true') { //string check is for testing purposes, remove later
 				setBorderColorTo = '#ff66ff';
 				$button.attr('activeState', true);
 				$('.autoButton').not(document.getElementById(key)).each(function() {
@@ -163,7 +168,7 @@ function onValueChanged(key, value, isNew) {
 						'border-color': '#306860'
 					});
 				});
-			} else if (value == false || value == 'false') {
+			} else if (value === false || value == 'false') {
 				$button.attr('activeState', false);
 			}
 			$button.css({
@@ -171,39 +176,6 @@ function onValueChanged(key, value, isNew) {
 			});
 
 			break;
-			case "startTheTimer":
-				if(value==true||value=="true"){
-				document.getElementById("GameTimer").style.color="white";
-				timerVar=setInterval(function(){
-					currentSeconds--;
-					var currentMinutes=parseInt(currentSeconds/60);
-					var actualSeconds=currentSeconds-60*currentMinutes;
-					if(currentSeconds<0){
-						window.clearTimeout(timerVar);
-						return;
-					}
-					else if(currentSeconds<30)
-					{
-						document.getElementById("GameTimer").style.color="#FF3030";
-					}
-
-					document.getElementById("GameTimer").innerHTML = "GameTime:"+currentMinutes + ":" + actualSeconds;
-				},1000);
-
-			}
-			NetworkTables.setValue("startTheTimer","false");      //CHANGE TO A BOOLEAN LATER
-			break;
-			case "EncoderSliderValue":
-				if(value>350){
-					value=350;
-				}
-				else if(value<150){
-					value=150;
-				}
-				else{console.log("oh god no, something is wrong with the encoder");}
-				$("#EncoderSlider").val(value);
-				$('#encoderValueDisplaySpan').text('Encoder value: ' + value);
-			break
 	}
 }
 
