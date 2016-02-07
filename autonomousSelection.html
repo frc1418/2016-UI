@@ -73,7 +73,6 @@
                 <option>Lorem</option>
                 <option>Ipsum</option>
             </select>
-            <input type="submit">
         </form>
     </aside>
 
@@ -93,8 +92,14 @@
         ];
         var attackerNames = ["empty", "allied", "us"];
         $(document).ready(function() {
+
+          $("#autonomousOptionSelect").change(function(){
+            NetworkTables.setValue("/SmartDashboard/currentlySelectedMode",$(this).val());
+          });
+
             //for every of the 5 attacking positions give the image the attacking toggleswitchcyclethroughimagesthing
             //thing onclick and make it update networktables
+
             var everyOffensiveToggleImage = $(".attackerState");
             everyOffensiveToggleImage.each(function(a) {
                 //set a default value, add the onclick listener, update networktables
@@ -265,7 +270,7 @@
                         autonomousOptionSelect.append("<option id=" + value[a] + "AutoMode" + ">" + value[a] + "</option>");
                     }
                     //if(NetworkTables.containsKey("currentlySelectedMode")){
-                    autonomousOptionSelect.val(networkTables.getValue("currentlySelectedMode"));
+                    autonomousOptionSelect.val(networkTables.getValue("/SmartDashboard/currentlySelectedMode"));
                     //}       //temporary commenting out
                     //else{
                     //autonomousOptionSelect.val($("#autonomousOptionSelect option:first").val());
@@ -278,7 +283,7 @@
                 case "/SmartDashboard/attackerState1":
                 case "/SmartDashboard/attackerState2":
                 case "/SmartDashboard/attackerState3":
-                case "/SmartDashboard/NeattackerState4":
+                case "/SmartDashboard/attackerState4":
                     var attackerImage = $("#" + name);
                     if (value == "us") {
                         //if value is us then get all of the other things and set anything equal to us to none
