@@ -21,8 +21,6 @@
         Robot:
         <span id="robotstate">Unknown state</span>
         <br>
-        Battery:
-        <span id="battery">??%</span>
         <nav>
             <ul>
                 <li class="active"><a href="UI_MainPage.html">Teleop</a></li>
@@ -55,7 +53,9 @@
             <img id="ladderButton" class="autoButton" src="/img/ladder.png" activeState=false>
         </div>
     </article>
-    <div id="time"><span>00:00</span></div>
+    <div id="GameTimer">
+      <span id="GameTimerSpan">00:00</span>
+    </div>
     <aside>
         <svg id="gyro">
             <circle id="gyroCircle" cx="120" cy="120" r="100" stroke="aqua" stroke-width="3" />
@@ -66,6 +66,7 @@
     <script src="js/d3.js"></script>
     <script src="/networktables/networktables.js"></script>
     <script src="ui.js"></script>
+
 </body>
 
 </html>
