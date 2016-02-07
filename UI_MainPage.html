@@ -20,9 +20,6 @@
     <header>
         Robot:
         <span id="robotstate">Unknown state</span>
-        <br>
-        <br>
-        <br>
         <nav>
             <ul>
                 <li class="active"><a href="UI_MainPage.html">Teleop</a></li>
@@ -31,15 +28,15 @@
             </ul>
         </nav>
     </header>
-    <div class="camera"></div>
-    <div id="GameTimer">
-      <span id="GameTimerSpan">00:00</span>
+    <div class="camera">
+        <img src="?action=stream">
     </div>
+    <div id="gameTimer">00:00</div>
     <div id="GyroBox">
-      <svg id="gyro">
-          <circle id="gyroCircle" cx="120" cy="120" r="100" stroke="aqua" stroke-width="3" />
-          <rect id="gyroArm" x="115" y="40" width="10" height="80" stroke="aqua" stroke-width="3" />
-      </svg>
+        <svg id="gyro">
+            <circle id="gyroCircle" cx="120" cy="120" r="100" stroke="aqua" stroke-width="3" />
+            <rect id="gyroArm" x="115" y="40" width="10" height="80" stroke="aqua" stroke-width="3" />
+        </svg>
         <div class="roboWidget">
             <svg id="widgetCanvas">
                 <rect id="robotBody" x="75" y="75" width="110" height="60" style="fill:#9c9c9c;stroke-width:3;stroke:rgb(0,0,0)" />
@@ -47,7 +44,6 @@
                 <circle id="ballWidget" cx="50" cy="110" r="20" stroke="black" stroke-width="3" style="fill:#f0195f;stroke-width:3;stroke:black" visibility="hidden" />
             </svg>
         </div>
-
     </div>
     <aside>
         <div id="encoder">
@@ -56,11 +52,10 @@
             <br>
             <span class="encodertext" id="encoderValueDisplaySpan">Encoder value: 200</span>
             <br>
-            <span class="encodertext encoderLimitSwitchSpan" id="forwardEncoderSpan">ForwardEncoder</span>
+            <span class="encodertext encoderLimitSwitchSpan" id="forwardEncoderSpan">Forward Encoder:False</span>
             <br>
-            <span class="encodertext encoderLimitSwitchSpan" id="reverseEncoderSpan">ReverseEncoder</span>
+            <span class="encodertext encoderLimitSwitchSpan" id="reverseEncoderSpan">Reverse Encoder:False</span>
         </div>
-
         <div id="autoButtons">
             <img id="gateButton" class="autoButton" src="/img/gate.jpg" activeState=false>
             <img id="chevyButton" class="autoButton" src="/img/cheval.gif" activeState=false>
