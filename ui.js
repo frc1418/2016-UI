@@ -1,9 +1,6 @@
-
-
 var currentSeconds = 150;
 var timerVar;
 var gameStarted = false;
-
 
 $(document).ready(function() {
 	// sets a function that will be called when the websocket connects/disconnects
@@ -16,18 +13,18 @@ $(document).ready(function() {
 	$('.autoButton').click(function() {
 		var $thisButton = $(this);
 		var activeState = $thisButton.attr('activeState');
-		if (activeState == true || activeState == 'true') {
+		if (activeState === true || activeState == 'true') {
 			activeState = false;
 		} else if (activeState === false || activeState == 'false') {
 			activeState = true;
 			//set all of the other values to false
-			$('.autoButton').not(document.getElementById($thisButton.attr("id"))).each(function() {
-				NetworkTables.setValue($(this).attr("id"),false);
+			$('.autoButton').not(document.getElementById($thisButton.attr('id'))).each(function() {
+				NetworkTables.setValue($(this).attr('id'), false);
 			});
 		} else {
 			console.log('activeStateButtonBug');
 		}
-		console.log($thisButton.attr("id"));
+		console.log($thisButton.attr('id'));
 		NetworkTables.setValue($thisButton.attr('id'), activeState); //onclick set the things id to true
 	});
 	var EncoderSlider = $('#EncoderSlider');
@@ -42,10 +39,10 @@ $(document).ready(function() {
 		newVal += tickDistance;
 	}
 	$('#encoder').hide().show(0); //element refresh
-	$("#EncoderSlider").change(function(){
-		var encoderVal=$("#EncoderSlider").val();
-		$("#encoderValueDisplaySpan").text("EncoderValue:"+encoderVal);
-		NetworkTables.setValue("EncoderSliderValue",parseInt(encoderVal));
+	$('#EncoderSlider').change(function() {
+		var encoderVal = $('#EncoderSlider').val();
+		$('#encoderValueDisplaySpan').text('EncoderValue:' + encoderVal);
+		NetworkTables.setValue('EncoderSliderValue', parseInt(encoderVal));
 	});
 });
 // called when the websocket connects/disconnects
@@ -55,7 +52,7 @@ function onRobotConnection(connected) { // TODO: change some indicator
 	if (connected) {
 		$('#camOffline').hide();
 
-		$('#camera').prepend('<img class="webcamImage" id="webcamImage" src="" + "http://roborio-1418-frc.local:5800/" + "/?action=stream">');
+		$('#camera').prepend('<img class="webcamImage" id="webcamImage" src=" + "http://roborio-1418-frc.local:5800/" + "/?action=stream">');
 	} else {
 		$('#webcamImage').remove();
 
@@ -75,9 +72,9 @@ function onValueChanged(key, value, isNew) {
 	switch (key) {
 		//raw arm value and is the ball in
 		case 'ballIn': //not the actual networktablesValue
-			if (value == true || value == 'true') { //BOOLEANS ARE NOT WORKING WITH NETWORKTABLES AT THE MOMENT(or with testing at the very least)
+			if (value) { //BOOLEANS ARE NOT WORKING WITH NETWORKTABLES AT THE MOMENT(or with testing at the very least)
 				$('#ballWidget').attr('visibility', 'visible');
-			} else if (value === false || value == 'false') {
+			} else {
 				console.log('visibilityFalse');
 				$('#ballWidget').attr('visibility', 'hidden');
 			}
@@ -88,22 +85,22 @@ function onValueChanged(key, value, isNew) {
 			});
 			break;
 		case 'Arm | Forward Limit Switch': //checkspelling
-			if (value == true || value == 'true') { //recheck valuetype, this display a bool
+			if (value) { //recheck valuetype, this display a bool
 				$('#forwardEncoderSpan').css({
 					'color': 'green'
 				});
-			} else if (value === false || value == 'false') {
+			} else {
 				$('#forwardEncoderSpan').css({
 					'color': 'red'
 				});
 			}
 			break;
 		case 'Arm | Reverse Limit Switch':
-			if (value == true || value == 'true') { //recheck valuetype, this display a bool
+			if (value) { //recheck valuetype, this display a bool
 				$('#reverseEncoderSpan').css({
 					'color': 'green'
 				});
-			} else if (value === false || value == 'false') {
+			} else {
 				$('#reverseEncoderSpan').css({
 					'color': 'red'
 				});
@@ -149,7 +146,7 @@ function onValueChanged(key, value, isNew) {
 
 			var setBorderColorTo = 'black';
 			$button = $('#' + key);
-			if (value === true || value == 'true') { //string check is for testing purposes, remove later
+			if (value) {
 				setBorderColorTo = '#ff66ff';
 				$button.attr('activeState', true);
 				$('.autoButton').not(document.getElementById(key)).each(function() {
@@ -159,23 +156,23 @@ function onValueChanged(key, value, isNew) {
 					*/
 
 					var theNewButton = $(this);
-					console.log(theNewButton.attr("id"));
+					console.log(theNewButton.attr('id'));
 					console.log(setBorderColorTo);
 					theNewButton.css({
 						'pointer-events': 'none',
 						'border-color': '#306860'
 					});
 				});
-			} else if (value === false || value == 'false') {
+			} else {
 				$button.attr('activeState', false);
 			}
 			$button.css({
 				'border-color': setBorderColorTo
 			});
 			break;
-		case "startTheTimer":
-			if (value == true || value == "true") {
-				document.getElementById("GameTimerSpan").style.color = "white";
+		case 'startTheTimer':
+			if (value) {
+				document.getElementById('gameTimer').style.color = 'white';
 				timerVar = setInterval(function() {
 					currentSeconds--;
 					var currentMinutes = parseInt(currentSeconds / 60);
@@ -184,36 +181,33 @@ function onValueChanged(key, value, isNew) {
 						window.clearTimeout(timerVar);
 						return;
 					} else if (currentSeconds < 30) {
-						document.getElementById("GameTimer").style.color = "#FF3030";
+						document.getElementById('GameTimer').style.color = '#FF3030';
 					}
 
-					document.getElementById("GameTimerSpan").innerHTML = "GameTime:" + currentMinutes + ":" + actualSeconds;
+					document.getElementById('gameTimer').innerHTML = 'GameTime:' + currentMinutes + ':' + actualSeconds;
 				}, 1000);
-
 			}
-			NetworkTables.setValue("startTheTimer", "false"); //CHANGE TO A BOOLEAN LATER
+			NetworkTables.setValue('startTheTimer', 'false'); //CHANGE TO A BOOLEAN LATER
 			break;
-		case "EncoderSliderValue":
+		case 'EncoderSliderValue':
 			if (value > 350) {
 				value = 350;
 			} else if (value < 150) {
 				value = 150;
-			} else {
-			}
-			$("#EncoderSlider").val(value);
+			} else {}
+			$('#EncoderSlider').val(value);
 			$('#encoderValueDisplaySpan').text('Encoder value: ' + value);
 			break;
-			case "EncoderSliderValue":
+		case 'EncoderSliderValue':
 
-				if(value>350){
-					value=350;
-				}
-				else if(value<150){
-					value=150;
-				}
-				$("#EncoderSlider").val(value);
-				$('#encoderValueDisplaySpan').text('Encoder value: ' + value);
-			break
+			if (value > 350) {
+				value = 350;
+			} else if (value < 150) {
+				value = 150;
+			}
+			$('#EncoderSlider').val(value);
+			$('#encoderValueDisplaySpan').text('Encoder value: ' + value);
+			break;
 	}
 }
 
