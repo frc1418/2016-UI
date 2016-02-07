@@ -12,6 +12,8 @@
 
 <body>
     <header>
+        Robot:
+        <span id="robotstate">Unknown state</span>
         <nav>
             <ul>
                 <li><a href="UI_MainPage.html">Teleop</a></li>
@@ -19,10 +21,6 @@
                 <li><a href="autonomousSelection.html">Autonomous</a></li>
             </ul>
         </nav>
-            NetworkTables websocket:
-            <span id="connectstate">Unknown state</span>
-            <br>Robot:
-            <span id="robotstate">Unknown state</span>
     </header>
 
     <article>
@@ -36,6 +34,7 @@
         <div class="settings" id="settingsContainerDiv"></div>
         <button id="set">Set</button>
     </article>
+    <div id="time"><span>00:00</span></div>
     <script>
         $(document).ready(function() {
             document.getElementById('setButton').onclick = function() {
@@ -75,29 +74,12 @@
             if (isNew) {
                 var div = $('<div></div>').appendTo($('.settings'));
                 $('<p></p>').text(key).appendTo(div);
-                if (value===true||value===false) {
-                  var boolSlider=$("<div class='bool-slider "+value+"'></div>");
-                  var innerInset=$('<div class="inset" ></div>');
-                  innerInset.append('<div class="control"></div>')
-                  .click(function() {
-                        if (boolSlider.hasClass('true')) {
-                            NetworkTables.setValue(key,false);
-                            boolSlider.addClass('false').removeClass('true');
-                        } else {
-                            NetworkTables.setValue(key,true);
-                            boolSlider.addClass('true').removeClass('false');
-                        }
-                  });
-                  innerInset.appendTo(boolSlider);
-                  boolSlider.appendTo(div);
-                }
-                else if (!isNaN(value)) {
+                if (!isNaN(value)) {
                     $('<input type="number">')
                         .attr('id', NetworkTables.keyToId(key))
                         .attr('value', value)
                         .appendTo(div);
-                }
-                  else{
+                } else {
                     $('<input type="text">')
                         .attr('id', NetworkTables.keyToId(key))
                         .attr('value', value)

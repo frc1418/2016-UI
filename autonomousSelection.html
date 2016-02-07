@@ -12,7 +12,10 @@
 
 <body>
     <header>
-
+        NetworkTables websocket:
+        <span id="connectstate">Unknown state</span>
+        <br>Robot:
+        <span id="robotstate">Unknown state</span>
         <nav>
             <ul>
                 <li><a href="UI_MainPage.html">Teleop</a></li>
@@ -20,16 +23,11 @@
                 <li class="active"><a href="autonomousSelection.html">Autonomous</a></li>
             </ul>
         </nav>
-        NetworkTables websocket:
-        <span id="connectstate">Unknown state</span>
-        <br>Robot:
-        <span id="robotstate">Unknown state</span>
     </header>
 
     <article>
         <div class="FieldSelector">
             <div class="ObstacleSelector">
-              <img id="lowBarImg" src="/img/lowbar.jpg"/>
             </div>
             <div class="RobotSelector">
                 <img class="attackerState">
@@ -282,16 +280,6 @@
                 case "attackerState3":
                 case "attackerState4":
                     var attackerImage = $("#" + key);
-                    if(value=="us"){
-                      //if value is us then get all of the other things and set anything equal to us to none
-                      $(".attackerState").not(document.getElementById(key)).each(function(){
-                        var thisAttacker=$(this);
-                        if(attackerNames[thisAttacker.attr("state")]=="us"){
-                          NetworkTables.setValue(thisAttacker.attr("id"),"empty");
-                        }
-                      });
-                    }
-
                     attackerImage.attr("state", attackerNames.indexOf(value)).attr("src", "img/" + value + ".png");;
                     break;
             }

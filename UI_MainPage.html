@@ -14,14 +14,15 @@
             transform-origin: bottom;
         }
     </style>
-
-    <script src="js/jquery.js"></script>
-    <script src="js/d3.js"></script>
-    <script src="/networktables/networktables.js"></script>
 </head>
 
 <body>
     <header>
+        Robot:
+        <span id="robotstate">Unknown state</span>
+        <br>
+        Battery:
+        <span id="battery">??%</span>
         <nav>
             <ul>
                 <li class="active"><a href="UI_MainPage.html">Teleop</a></li>
@@ -29,13 +30,6 @@
                 <li><a href="autonomousSelection.html">Autonomous</a></li>
             </ul>
         </nav>
-        <div display="inline-block">
-            NetworkTables:
-            <span id="connectstate">Unknown state</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span id="GameTimer">GameTime:00:00</span>
-
-            <br>Robot:
-            <span id="robotstate">Unknown state</span>
-      </div>
     </header>
     <div class="camera"></div>
     <article>
@@ -47,13 +41,6 @@
             <span class="encoderLimitSwitchSpan" id="forwardEncoderSpan">ForwardEncoder</span>
             <br>
             <span class="encoderLimitSwitchSpan" id="reverseEncoderSpan">ReverseEncoder</span>
-        </div>
-        <div class="verticalDivide">
-            <!-- MAKE THE CSS REMINDER Top Divide -->
-            <div class="CamTab">
-                <img id="camOffline" class="webcam-img" src="img/CamFeedOffline.png">
-                <!-- placeholderimage -->
-            </div>
         </div>
         <div class="roboWidget">
             <svg id="widgetCanvas">
@@ -75,6 +62,9 @@
             <rect id="gyroArm" x="115" y="40" width="10" height="80" stroke="aqua" stroke-width="3" />
         </svg>
     </aside>
+    <script src="js/jquery.js"></script>
+    <script src="js/d3.js"></script>
+    <script src="/networktables/networktables.js"></script>
     <script src="ui.js"></script>
 </body>
 
