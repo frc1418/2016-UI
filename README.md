@@ -1,10 +1,8 @@
 FRC1418 2016 Driver Station Code
 ================================
 
-
 Introduction
 ------------
-
 
 HTML5 & Javascript driver station interface. The
 UI features:
@@ -18,10 +16,9 @@ UI features:
 * Select one of multiple autonomous modes
 * Live streaming camera views to assist operators when view is blocked
 
-The HTML/JavaScript interface is made possible by using [pynetworktables2js]
-(https://github.com/robotpy/pynetworktables2js) to forward NetworkTables
+The HTML/JavaScript interface is made possible by using [pynetworktables2js](https://github.com/robotpy/pynetworktables2js) to forward NetworkTables
 traffic to the webpage. pynetworktables2js was initially prototyped by
-Leon Tan, our lead UI student, but it is now maintained by the RobotPy
+[Leon Tan](https://github.com/lleontan), our lead UI student, but it is now maintained by the RobotPy
 project so that other teams can benefit from our work.
 
 Running the code
@@ -66,9 +63,9 @@ Authors
 
 Current Students
 
-* Leon Tan, UI Lead
-* Erik Boesen
-* Aki Maher
+* [Leon Tan](https://github.com/lleontan), UI Lead
+* [Erik Boesen](https://github.com/ErikBoesen)
+* [Aki Maher](https://github.com/17mahera)
 * Tyler Gogal
 
-Special Thanks to Dustin Spicuzza, mentor.
+Special Thanks to [Dustin Spicuzza](https://github.com/virtuald), mentor.

@@ -3,80 +3,123 @@
 
 <head>
     <meta charset="utf-8">
-    <title>1418 TuningPage for Variable Tuning</title>
+    <title>1418 TuningPage</title>
+    <link rel="stylesheet" href="style.css">
     <script src="js/jquery.js"></script>
     <script src="js/d3.js"></script>
     <script src="/networktables/networktables.js"></script>
-    <link type="text/css" rel="stylesheet" href="MainPageCSS.css"/>
-    <script src="Resources/d3/d3.js"></script>
-    <link href="Resources/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link href="Resources/dist/css/bootstrap-theme.min.css" rel="stylesheet">
-    <script src="Resources/dist/js/bootstrap.min.js"></script>
-    <link type="text/css" rel="stylesheet" href="autonomousSelection.css"/>
-
 </head>
-<body  class="UIPage">
-  <script type="test/javascript">
-  $(document).ready(function(){
-  	// sets a function that will be called when the websocket connects/disconnects
-  	NetworkTables.addWsConnectionListener(onNetworkTablesConnection, true);
 
-  	// sets a function that will be called when the robot connects/disconnects
-  	NetworkTables.addRobotConnectionListener(onRobotConnection, true);
+<body>
+    <header>
+        <nav>
+            <ul>
+                <li><a href="UI_MainPage.html">Teleop</a></li>
+                <li class="active"><a href="tuningPage.html">Tuning</a></li>
+                <li><a href="autonomousSelection.html">Autonomous</a></li>
+            </ul>
+        </nav>
+            NetworkTables websocket:
+            <span id="connectstate">Unknown state</span>
+            <br>Robot:
+            <span id="robotstate">Unknown state</span>
+    </header>
 
-  	// sets a function that will be called when any NetworkTables key/value changes
-  	NetworkTables.addGlobalListener(onValueChanged, true);
-  });
-  // called when the websocket connects/disconnects
-  function onRobotConnection(connected) {            	// TODO: change some indicator
-  	console.log("Robot connected: " + connected);
-  }
-  function onNetworkTablesConnection(connected) {
-  	// TODO: change some indicator
-  }
-  function onValueChanged(key, value, isNew) {
-    //name, data, has the variable just been created t/f
+    <article>
+        <form>
+            <input type="text" placeholder="Name" name="name" id="name">
+            <input type="text" placeholder="Value" name="value" id="value">
+        </form>
+        <button id="setButton">Set</button>
+        <button id="get">Get</button>
+        <h1>Dashboard</h1>
+        <div class="settings" id="settingsContainerDiv"></div>
+        <button id="set">Set</button>
+    </article>
+    <script>
+        $(document).ready(function() {
+            document.getElementById('setButton').onclick = function() {
+                NetworkTables.setValue(document.getElementById('name').value,
+                    document.getElementById("value").value);
+            };
+            document.getElementById("get").onclick = function() {
+                    document.getElementById('value').value = NetworkTables.getValue(
+                        document.getElementById("name").value);
+                }
+                // sets a function that will be called when the websocket connects/disconnects
+            NetworkTables.addWsConnectionListener(onNetworkTablesConnection, true);
 
-	// key thing here: we're using the various NetworkTable keys as
-	// the id of the elements that we're appending, for simplicity. However,
-	// the key names aren't always valid HTML identifiers, so we use
-	// the NetworkTables.keyToId() function to convert them appropriately
-	if (isNew) {/*
+            // sets a function that will be called when the robot connects/disconnects
+            NetworkTables.addRobotConnectionListener(onRobotConnection, true);
 
-    If the variable is new, then call a function to add a div to the list of divs
+            // sets a function that will be called when any NetworkTables key/value changes
+            NetworkTables.addGlobalListener(onValueChanged, true);
+        });
+        // called when the websocket connects/disconnects
+        function onRobotConnection(connected) { // TODO: change some indicator
+            console.log("Robot connected: " + connected);
+        }
 
-    */
-	} else {
-    /*update the variables with new values*/
-    switch(key){
-      /*if the keyname equals on the cases execute the code in the case*/
+        function onNetworkTablesConnection(connected) {
+            // TODO: change some indicator
+        }
 
-    }
-	}
-}
-  </script>
-  <div class="MainDivide" id="topSection">
-    <nav class="RobotInfo">
-      NetworkTables websocket:
-    <span id="connectstate" >Unknown state</span>
-    <br>Robot:
-    <span id="robotstate">Unknown state</span>
-    </nav>
-    <nav>
-      <ul class="nav nav-tabs" role="tablist" id="camtab">
-          <li role="presentation"><a href="UI_MainPage.html" role="tab">Dashboard</a></li>
-          <li role="presentation" class ="active"><a href="tuningPage.html" role="tab">Tuning</a></li>
-          <li role="presentation"><a href="testPage.html" role="tab">Test</a></li>
-          <li role="presentation"><a href="autonomousSelection.html" role="tab">Autonomous</a></li>
+        function onValueChanged(key, value, isNew) {
+            console.log(key, value, isNew);
+            //name, data, has the variable just been created t/f
 
-     </ul>
+            // key thing here: we're using the various NetworkTable keys as
+            // the id of the elements that we're appending, for simplicity. However,
+            // the key names aren't always valid HTML identifiers, so we use
+            // the NetworkTables.keyToId() function to convert them appropriately
+            if (isNew) {
+                var div = $('<div></div>').appendTo($('.settings'));
+                $('<p></p>').text(key).appendTo(div);
+                if (value===true||value===false) {
+                  var boolSlider=$("<div class='bool-slider "+value+"'></div>");
+                  var innerInset=$('<div class="inset" ></div>');
+                  innerInset.append('<div class="control"></div>')
+                  .click(function() {
+                        if (boolSlider.hasClass('true')) {
+                            NetworkTables.setValue(key,false);
+                            boolSlider.addClass('false').removeClass('true');
+                        } else {
+                            NetworkTables.setValue(key,true);
+                            boolSlider.addClass('true').removeClass('false');
+                        }
+                  });
+                  innerInset.appendTo(boolSlider);
+                  boolSlider.appendTo(div);
+                }
+                else if (!isNaN(value)) {
+                    $('<input type="number">')
+                        .attr('id', NetworkTables.keyToId(key))
+                        .attr('value', value)
+                        .appendTo(div);
+                }
+                  else{
+                    $('<input type="text">')
+                        .attr('id', NetworkTables.keyToId(key))
+                        .attr('value', value)
+                        .appendTo(div);
+                }
+            }
+            /*else {
+                            // similarly, use keySelector to convert the key to a valid jQuery
+                            // selector. This should work for class names also, not just for ids
+                            //$('#' + NetworkTables.keySelector(key)).text(value);
+                        }*/
+        }
+        $('#set').click(function() {
+            var childInputs = $('#settingsContainerDiv input');
+            childInputs.each(function(a) {
 
-    </nav>
-  </div>
-  <div class="BodyDiv, MainDivide, NotCoveredUp">         <!-- UIbody start -->
-    <div>                 <!-- first bodydiv, fill with stuff -->
-      asdf
-    </div>
-  </div>
+                var thisChild = $(this);
+                NetworkTables.setValue(thisChild.attr('id'), thisChild.val());
+            });
+        });
+
+    </script>
 </body>
+
 </html>

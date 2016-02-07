@@ -5,75 +5,187 @@
     <meta charset="utf-8">
     <title>1418 Autonomous Selection</title>
     <link rel="stylesheet" href="style.css">
-    <link type="text/css" rel="stylesheet" href="autonomousSelection.css"/>
     <script src="js/jquery.js"></script>
     <script src="js/d3.js"></script>
-    <script src="Resources/d3/d3.js"></script>
-    <link href="Resources/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link href="Resources/dist/css/bootstrap-theme.min.css" rel="stylesheet">
-    <script src="Resources/dist/js/bootstrap.min.js"></script>
     <script src="/networktables/networktables.js"></script>
 </head>
 
-<body class="UIPage">
-    <script>
-        $(document).ready(function() {
-            // sets a function that will be called when the websocket connects/disconnects
-            NetworkTables.addWsConnectionListener(onNetworkTablesConnection, true);
+<body>
+    <header>
 
-            // sets a function that will be called when the robot connects/disconnects
-            NetworkTables.addRobotConnectionListener(onRobotConnection, true);
-
-            // sets a function that will be called when any NetworkTables key/value changes
-            NetworkTables.addGlobalListener(onValueChanged, true);
-        });
-        // called when the websocket connects/disconnects
-        function onRobotConnection(connected) { // TODO: change some indicator
-            console.log("Robot connected: " + connected);
-        }
-
-        function onNetworkTablesConnection(connected) {
-            // TODO: change some indicator
-        }
-
-        function onValueChanged(key, value, isNew) {
-            //name, data, has the variable just been created t/f
-
-            // key thing here: we're using the various NetworkTable keys as
-            // the id of the elements that we're appending, for simplicity. However,
-            // the key names aren't always valid HTML identifiers, so we use
-            // the NetworkTables.keyToId() function to convert them appropriately
-            if (isNew) {
-                /*
-                  If the variable is new, then */
-            } else {
-                switch (key) {
-                    /*if the keyname equals on the cases execute the code in the case*/
-
-                }
-            }
-        }
-    </script>
-    <div class="MainDivide" id="topSection">
-      <nav class="RobotInfo">
+        <nav>
+            <ul>
+                <li><a href="UI_MainPage.html">Teleop</a></li>
+                <li><a href="tuningPage.html">Tuning</a></li>
+                <li class="active"><a href="autonomousSelection.html">Autonomous</a></li>
+            </ul>
+        </nav>
         NetworkTables websocket:
-      <span id="connectstate" >Unknown state</span>
-      <br>Robot:
-      <span id="robotstate">Unknown state</span>
-      </nav>
-      <nav>
-        <ul class="nav nav-tabs" role="tablist" id="camtab">
-		        <li role="presentation"><a href="UI_MainPage.html" role="tab">Dashboard</a></li>
-		        <li role="presentation"><a href="tuningPage.html" role="tab">Tuning</a></li>
-		        <li role="presentation"><a href="testPage.html" role="tab">Test</a></li>
-		        <li role="presentation" class ="active"><a href="autonomousSelection.html" role="tab">Autonomous</a></li>
+        <span id="connectstate">Unknown state</span>
+        <br>Robot:
+        <span id="robotstate">Unknown state</span>
+    </header>
 
-	     </ul>
+    <article>
+        <div class="FieldSelector">
+            <div class="ObstacleSelector">
+              <img id="lowBarImg" src="/img/lowbar.jpg"/>
+            </div>
+            <div class="RobotSelector">
+                <img class="attackerState">
+            </div>
+        </div>
+        <div class="FieldSelector">
+            <div class="ObstacleSelector">
+                <div class="DefenseSelector"></div>
+            </div>
+            <div class="RobotSelector">
+                <img class="attackerState">
+            </div>
+        </div>
+        <div class="FieldSelector">
+            <div class="ObstacleSelector">
+                <div class="DefenseSelector"></div>
+            </div>
+            <div class="RobotSelector">
+                <img class="attackerState">
+            </div>
+        </div>
+        <div class="FieldSelector">
+            <div class="ObstacleSelector">
+                <div class="DefenseSelector"></div>
+            </div>
+            <div class="RobotSelector">
+                <img class="attackerState">
+            </div>
+        </div>
+        <div class="FieldSelector">
+            <div class="ObstacleSelector">
+                <div class="DefenseSelector"></div>
+            </div>
+            <div class="RobotSelector">
+                <img class="attackerState">
 
-      </nav>
-    </div>
+            </div>
+        </div>
+    </article>
+    <aside>
+        <form>
+            <select id="autonomousOptionSelect">
+                <option>Lorem</option>
+                <option>Ipsum</option>
+            </select>
+            <input type="submit">
+        </form>
+    </aside>
+
     <script>
         "use strict";
+        /*second script tag to separate some stuff for neatness.
+        scroll through abcd, click on the pic to toggle, default to A1,
+        change the networkTable Value of currentSelectedMode
+        */
+
+        var defenseNames = ["A", "B", "C", "D"];
+        var realDefenseNames = [
+            ["porticulis", "seesaw"],
+            ["moat", "ramparts"],
+            ["gate", "drawbridge"],
+            ["wall", "roughterrain"]
+        ];
+        var attackerNames = ["empty", "allied", "us"];
+        $(document).ready(function() {
+            //for every of the 5 attacking positions give the image the attacking toggleswitchcyclethroughimagesthing
+            //thing onclick and make it update networktables
+            var everyOffensiveToggleImage = $(".attackerState");
+            everyOffensiveToggleImage.each(function(a) {
+                //set a default value, add the onclick listener, update networktables
+                //
+                var thisImage = $(this);
+                thisImage.attr("id", "attackerState" + a).attr("state", 0).attr("position", a).attr("src", "img/defaultImg.png");
+                //if(NetworkTables.isRobotConnected()){}
+                thisImage.click(function() {
+                    var theImage = $(this);
+                    var currentState = theImage.attr("state");
+                    if (currentState == 2) {
+                        currentState = 0;
+                    } else {
+                        currentState++
+                    }
+                    theImage.attr("state", currentState);
+                    NetworkTables.setValue(theImage.attr("id"), attackerNames[currentState]);
+                });
+            });
+
+            //for every selection Div, make the stuff, add a listener to each arrow, the toggleBox,
+            //set the value from networkTables or if no networkTables, get the default value
+            var everyDefenseSelector = $(".DefenseSelector"); //get every defenseDefenseSelector(the div that contains the stuff)
+            everyDefenseSelector.each(function(a) {
+                //for every DefenseSelector add the triangles, set the id, 'a' is the index in the list of divs
+                var thisDiv = $(this);
+                thisDiv.attr("defenseClass", a);
+                thisDiv.attr("id", "defenseDefenseSelector" + a);
+                var defenseNumber = 0;
+                thisDiv.attr("defenseNumber", defenseNumber);
+                thisDiv.append($('<div></div>')
+                    .addClass("arrow-up")
+                    .click(function() {
+                        //onclick take the value of the current defense from this div, ex"defenseName=(3,0)", ++1
+                        var currentDefenseClass = thisDiv.attr("defenseClass");
+
+                        if (currentDefenseClass >= 3) {
+                            currentDefenseClass = 0;
+                        } else {
+                            currentDefenseClass++;
+                        }
+                        thisDiv.attr("defenseClass", currentDefenseClass);
+                        thisDiv.children(".selectionToggleBox") //.find(".selectionToggleBox")
+                            .attr("src", "img/" + defenseNames[currentDefenseClass] + "" + defenseNumber + ".png");
+
+                        NetworkTables.setValue(thisDiv.attr("id"), realDefenseNames[currentDefenseClass][defenseNumber]);
+                    }));
+                thisDiv.append($('<img>')
+                    .addClass("selectionToggleBox")
+                    //.attr('id','selectionToggleBox'+a)
+                    .attr('src', "img/defaultImg.png")
+                    .click(function() {
+                        var currentDefenseNumber = thisDiv.attr("defenseNumber");
+
+                        if (currentDefenseNumber >= 1) {
+                            currentDefenseNumber = 0;
+                        } else {
+                            currentDefenseNumber++;
+                        }
+                        thisDiv.attr("defenseNumber", currentDefenseNumber);
+                        thisDiv.children(".selectionToggleBox"); //.find(".selectionToggleBox")
+                        //.attr("src","img/"+defenseNames[thisDiv.attr("defenseClass")]+""+currentDefenseNumber+".png");
+
+                        NetworkTables.setValue(thisDiv.attr("id"), realDefenseNames[thisDiv.attr("defenseClass")][currentDefenseNumber]);
+                    })
+                );
+                thisDiv.append($('<div></div>')
+                    .addClass("arrow-down")
+                    .click(function(i, b) {
+                        //onclick take the value of the current defense from this div, ex"defenseName=(3,0)", ++1
+                        var currentDefenseClass = thisDiv.attr("defenseClass");
+                        if (currentDefenseClass <= 0) {
+                            currentDefenseClass = 3;
+                        } else {
+                            currentDefenseClass--;
+                        }
+                        thisDiv.attr("defenseClass", currentDefenseClass);
+                        thisDiv.children(".selectionToggleBox") //.find(".selectionToggleBox")
+                            .attr("src", "img/" + defenseNames[currentDefenseClass] + defenseNumber + ".png");
+                        NetworkTables.setValue(thisDiv.attr("id"), realDefenseNames[currentDefenseClass][defenseNumber]);
+                    })
+                );
+                if (defenseNumber == 0) {
+                    defenseNumber = 1;
+                } else {
+                    defenseNumber = 0;
+                }
+            });
+        });
 
         $(document).ready(function() {
             // sets a function that will be called when the websocket connects/disconnects
@@ -99,169 +211,92 @@
         }
 
         function onValueChanged(key, value, isNew) {
+
             // key thing here: we're using the various NetworkTable keys as
             // the id of the elements that we're appending, for simplicity. However,
             // the key names aren't always valid HTML identifiers, so we use
             // the NetworkTables.keyToId() function to convert them appropriately
-            switch(key){
-              case "defenseDefenseSelector0":
-              case "defenseDefenseSelector1":
-              case "defenseDefenseSelector2":
-              case "defenseDefenseSelector3":
-              var theChangedDiv=$("#"+key);
-              theChangedDiv.attr("defenseClass",defenseNames.indexOf(value.charAt(0)))
-              .attr("defenseNumber",value.charAt(1));
-              theChangedDiv.children(".selectionToggleBox")
-              .attr("src","img/"+value+".png");
 
-              break;        //in case we want to add another listener to the swtich afterwards
-            }
             if (isNew) {
-                /*var tr = $('<tr></tr>').appendTo($('#nt > tbody:last'));
-                $('<td></td>').text(key).appendTo(tr);
-                $('<td></td>').attr('id', NetworkTables.keyToId(key))
-                    .text(value)
-                    .appendTo(tr);*/
+
             } else {
                 // similarly, use keySelector to convert the key to a valid jQuery
                 // selector. This should work for class names also, not just for ids
 
-                //$('#' + NetworkTables.keySelector(key)).text(value);
+            }
+            switch (key) {
+                case "defenseDefenseSelector0":
+                case "defenseDefenseSelector1":
+                case "defenseDefenseSelector2":
+                case "defenseDefenseSelector3":
 
-                //this messes with the defenseSelections,
-                // it would probalby be better to have it work with the switch
+                    var theChangedDiv = $("#" + NetworkTables.keyToId(key));
+                    var realDefenseNamesLength = realDefenseNames.length;
+                    var defenseNum = -1;
+                    var defenseClass = -1;
+                    for (var a = 0; a < realDefenseNamesLength; a++) {
+                        //search through the defense classes, check each one for the mode, return the defenseclass=(a) and the defenseNum=(b)
+
+                        for (var b = 0; b < 2; b++) {
+                            if (realDefenseNames[a][b] == value) {
+
+                                defenseClass = a;
+                                defenseNum = b;
+                                break;
+                            }
+                        }
+                    }
+                    if (defenseClass == -1) {
+                        break;
+                    }
+                    theChangedDiv.attr("defenseClass", defenseClass)
+                        .attr("defenseNumber", defenseNum);
+                    theChangedDiv.children(".selectionToggleBox")
+                        .attr("src", "img/" + defenseNames[defenseClass] + defenseNum + ".png");
+
+                    break; //in case we want to add another listener to the swtich afterwards
+                case "Autonomous Mode":
+
+                    //if there is a change in the names of the autonomous modes check the select,clear it and rewrite
+                    var autonomousOptionSelect = $("#autonomousOptionSelect");
+                    autonomousOptionSelect.empty();
+                    //autonomousOptionSelect.append("<option id='defaultAutonomousNoMove'>Do Nothing</option>"); //temporarily commented out
+                    var autonomousModeArrayLength = value.length;
+                    for (var a = 0; a < autonomousModeArrayLength; a++) {
+                        //for each entry, make a option, get the value of currentlySelectedMode if it exists, if not then use the first
+                        autonomousOptionSelect.append("<option id=" + value[a] + "AutoMode" + ">" + value[a] + "</option>");
+                    }
+                    //if(NetworkTables.containsKey("currentlySelectedMode")){
+                    autonomousOptionSelect.val(networkTables.getValue("currentlySelectedMode"));
+                    //}       //temporary commenting out
+                    //else{
+                    //autonomousOptionSelect.val($("#autonomousOptionSelect option:first").val());
+                    //}
+                    break;
+                case "currentlySelectedMode":
+                    $("#autonomousOptionSelect").val(value);
+                    break;
+                case "attackerState0":
+                case "attackerState1":
+                case "attackerState2":
+                case "attackerState3":
+                case "attackerState4":
+                    var attackerImage = $("#" + key);
+                    if(value=="us"){
+                      //if value is us then get all of the other things and set anything equal to us to none
+                      $(".attackerState").not(document.getElementById(key)).each(function(){
+                        var thisAttacker=$(this);
+                        if(attackerNames[thisAttacker.attr("state")]=="us"){
+                          NetworkTables.setValue(thisAttacker.attr("id"),"empty");
+                        }
+                      });
+                    }
+
+                    attackerImage.attr("state", attackerNames.indexOf(value)).attr("src", "img/" + value + ".png");;
+                    break;
             }
         }
-
     </script>
-    <div class="MainDivide" id="leftSection">
-      <div class="FieldSelector">
-        <div class="ObstacleSelector">
-        </div>
-        <break>
-        <div class="RobotSelector">
-        </div>
-      </div>
-      <div class="FieldSelector">
-        <div class="ObstacleSelector">
-          <div class="DefenseSelector"></div>
-        </div>
-        <div class="RobotSelector">
-        </div>
-      </div>
-      <div class="FieldSelector">
-        <div class="ObstacleSelector">
-          <div class="DefenseSelector"></div>
-        </div>
-        <div class="RobotSelector">
-        </div>
-      </div>
-      <div class="FieldSelector">
-        <div class="ObstacleSelector">
-          <div class="DefenseSelector"></div>
-        </div>
-        <div class="RobotSelector">
-        </div>
-      </div>
-      <div class="FieldSelector">
-        <div class="ObstacleSelector">
-          <div class="DefenseSelector"></div>
-          </div>
-        <div class="RobotSelector">
-        </div>
-      </div>
-    </div>
-
-      <script>
-      /*second script tag to separate some stuff for neatness.
-      scroll through abcd, click on the pic to toggle, default to A1,
-      change the networkTable Value of currentSelectedMode
-      */
-      defenseNames=["A","B","C","D"];
-
-      $(document).ready(function(){
-        //for every selection Div, make the stuff, add a listener to each arrow, the toggleBox,
-        //set the value from networkTables or if no networkTables, get the default value
-        var everyDefenseSelector=$(".DefenseSelector");         //get every defenseDefenseSelector(the div that contains the stuff)
-        var everyDefenseSelectorLength=everyDefenseSelector.length;
-        everyDefenseSelector.each(function(a){
-          //for every DefenseSelector add the triangles, set the id, 'a' is the index in the list of divs
-          var thisDiv=$(this);
-          thisDiv.attr("defenseClass",a);
-          thisDiv.attr("id","defenseDefenseSelector"+a);
-          var defenseNumber=0;
-          thisDiv.attr("defenseNumber",defenseNumber);
-          thisDiv.append($('<div></div>')
-              .addClass("arrow-up")
-              .click(function(){
-                //onclick take the value of the current defense from this div, ex"defenseName=(3,0)", ++1
-                var currentDefenseClass=thisDiv.attr("defenseClass");
-                if(currentDefenseClass>=3){
-                  currentDefenseClass=0;
-                }
-                else{currentDefenseClass++;}
-                thisDiv.attr("defenseClass",currentDefenseClass);
-                thisDiv.children(".selectionToggleBox")//.find(".selectionToggleBox")
-                .attr("src","img/"+defenseNames[currentDefenseClass]+""+defenseNumber+".png");
-
-                NetworkTables.setValue(thisDiv.attr("id"),defenseNames[currentDefenseClass]+defenseNumber);
-              }));
-          thisDiv.append($('<img></img>')
-              .addClass("selectionToggleBox")
-              //.attr('id','selectionToggleBox'+a)
-              .attr('src',"img/"+defenseNames[a]+defenseNumber+".png")
-              .click(function(){
-                var currentDefenseNumber=thisDiv.attr("defenseNumber");
-                if(currentDefenseNumber>=1){
-                  currentDefenseNumber=0;
-                }
-                else{currentDefenseNumber++;}
-                thisDiv.attr("defenseNumber",currentDefenseNumber);
-                thisDiv.children(".selectionToggleBox")//.find(".selectionToggleBox")
-                .attr("src","img/"+defenseNames[thisDiv.attr("defenseClass")]+""+currentDefenseNumber+".png");
-
-                NetworkTables.setValue(thisDiv.attr("id"),defenseNames[thisDiv.attr("defenseClass")]+currentDefenseNumber);
-              })
-            );
-          thisDiv.append($('<div></div>')
-              .addClass("arrow-down")
-              .click(function(i,b){
-                //onclick take the value of the current defense from this div, ex"defenseName=(3,0)", ++1
-                var currentDefenseClass=thisDiv.attr("defenseClass");
-                if(currentDefenseClass<=0){
-                  currentDefenseClass=3;
-                }
-                else{currentDefenseClass--;}
-                thisDiv.attr("defenseClass",currentDefenseClass);
-                thisDiv.children(".selectionToggleBox")//.find(".selectionToggleBox")
-                .attr("src","img/"+defenseNames[currentDefenseClass]+defenseNumber+".png");
-                NetworkTables.setValue(thisDiv.attr("id"),defenseNames[currentDefenseClass]+defenseNumber);
-              })
-            );
-          if(defenseNumber==0){defenseNumber=1;}
-          else{defenseNumber=0;}
-      });
-    });/*
-      function incrementDefenseClass(increment,object){
-
-      }
-      function toggleDefenseNumber(object){
-
-      }*/
-
-      </script>
-    <div class="MainDivide" id="rightSection">
-        <form>
-          <select name="Needs something">
-            <option value="Option1">Option1</option>
-            <option value="Option2">Option2</option>
-            <option value="Option3">Option3</option>
-            <option value="Option4">Option4</option>
-          </select>
-          <br><br>
-          <input type="submit">
-        </form>
-    </div>
 </body>
 
 </html>
