@@ -4,9 +4,25 @@ $('#EncoderSlider').change(function() {
 	NetworkTables.setValue('EncoderSliderValue', encoderVal);
 });
 
-var currentSeconds=150;
+var currentSeconds = 150;
 var timerVar;
-var gameStarted=false;
+var gameStarted = false;
+
+function startTheTimer() { //reminder, find the networktables value, add networktables support
+	var d = new Date();
+
+	var mEnd = 2;
+	var sEnd = 30;
+	var x = document.getElementById('GameTimer');
+	for (var i = 0; i < 150; i++) {
+		sEnd = sEnd - 1;
+		if (sEnd < 0) {
+			sEnd = sEnd + 60;
+			mEnd = mEnd - 1;
+		}
+		x.innerHTML = mEnd + ':' + sEnd;
+	}
+}
 
 $(document).ready(function() {
 	// sets a function that will be called when the websocket connects/disconnects
@@ -19,7 +35,7 @@ $(document).ready(function() {
 	$('.autoButton').click(function() {
 		var $thisButton = $(this);
 		var activeState = $thisButton.attr('activeState');
-		if (activeState === true || activeState == 'true') {
+		if (activeState == true || activeState == 'true') {
 			activeState = false;
 		} else if (activeState === false || activeState == 'false') {
 			activeState = true;
@@ -41,10 +57,10 @@ $(document).ready(function() {
 		newVal += tickDistance;
 	}
 	$('#encoder').hide().show(0); //element refresh
-	$("#EncoderSlider").change(function(){
-		var encoderVal=$("#EncoderSlider").val();
-		$("#encoderValueDisplaySpan").text("EncoderValue:"+encoderVal);
-		NetworkTables.setValue("EncoderSliderValue",encoderVal);
+	$("#EncoderSlider").change(function() {
+		var encoderVal = $("#EncoderSlider").val();
+		$("#encoderValueDisplaySpan").text("EncoderValue:" + encoderVal);
+		NetworkTables.setValue("EncoderSliderValue", encoderVal);
 	});
 });
 // called when the websocket connects/disconnects
@@ -74,12 +90,12 @@ function onValueChanged(key, value, isNew) {
 	switch (key) {
 		//raw arm value and is the ball in
 		case 'ballIn': //not the actual networktablesValue
-			if (value === true || value == 'true') { //BOOLEANS ARE NOT WORKING WITH NETWORKTABLES AT THE MOMENT(or with testing at the very least)
+			if (value == true || value == 'true') { //BOOLEANS ARE NOT WORKING WITH NETWORKTABLES AT THE MOMENT(or with testing at the very least)
 				$('#ballWidget').attr('visibility', 'visible');
 			} else if (value === false || value == 'false') {
 				console.log('visibilityFalse');
 				$('#ballWidget').attr('visibility', 'hidden');
-            }
+			}
 			break;
 		case 'gyro':
 			$('#gyroArm').css({
@@ -87,7 +103,7 @@ function onValueChanged(key, value, isNew) {
 			});
 			break;
 		case 'Arm | Forward Limit Switch': //checkspelling
-			if (value === true || value == 'true') { //recheck valuetype, this display a bool
+			if (value == true || value == 'true') { //recheck valuetype, this display a bool
 				$('#forwardEncoderSpan').css({
 					'color': 'green'
 				});
@@ -98,7 +114,7 @@ function onValueChanged(key, value, isNew) {
 			}
 			break;
 		case 'Arm | Reverse Limit Switch':
-			if (value === true || value == 'true') { //recheck valuetype, this display a bool
+			if (value == true || value == 'true') { //recheck valuetype, this display a bool
 				$('#reverseEncoderSpan').css({
 					'color': 'green'
 				});
@@ -130,7 +146,6 @@ function onValueChanged(key, value, isNew) {
 				autoButtonSelection.map(function() {
 					return $(this).attr('activeState');
 				}).get();
-
 			var isButtonActive = false;
 			var buttonValueListLength = buttonValueList.length;
 			for (var a = 0; a < buttonValueListLength; a++) {
@@ -143,11 +158,11 @@ function onValueChanged(key, value, isNew) {
 			} else {
 				autoButtonSelection.css({
 					'pointer-events': 'auto',
-					'border-color': 'white'
+					'border-color': 'black'
 				});
 			}
 
-			var setBorderColorTo = 'white';
+			var setBorderColorTo = 'black';
 			$button = $('#' + key);
 			if (value == true || value == 'true') { //string check is for testing purposes, remove later
 				setBorderColorTo = '#ff66ff';
@@ -163,51 +178,48 @@ function onValueChanged(key, value, isNew) {
 						'border-color': '#306860'
 					});
 				});
-			} else if (value == false || value == 'false') {
+			} else if (value === false || value == 'false') {
 				$button.attr('activeState', false);
 			}
 			$button.css({
 				'border-color': setBorderColorTo
 			});
-
 			break;
-			case "startTheTimer":
-				if(value==true||value=="true"){
-				document.getElementById("GameTimer").style.color="white";
-				timerVar=setInterval(function(){
+		case "startTheTimer":
+			if (value == true || value == "true") {
+				document.getElementById("GameTimer").style.color = "white";
+				timerVar = setInterval(function() {
 					currentSeconds--;
-					var currentMinutes=parseInt(currentSeconds/60);
-					var actualSeconds=currentSeconds-60*currentMinutes;
-					if(currentSeconds<0){
+					var currentMinutes = parseInt(currentSeconds / 60);
+					var actualSeconds = currentSeconds - 60 * currentMinutes;
+					if (currentSeconds < 0) {
 						window.clearTimeout(timerVar);
 						return;
-					}
-					else if(currentSeconds<30)
-					{
-						document.getElementById("GameTimer").style.color="#FF3030";
+					} else if (currentSeconds < 30) {
+						document.getElementById("GameTimer").style.color = "#FF3030";
 					}
 
-					document.getElementById("GameTimer").innerHTML = "GameTime:"+currentMinutes + ":" + actualSeconds;
-				},1000);
+					document.getElementById("GameTimer").innerHTML = "GameTime:" + currentMinutes + ":" + actualSeconds;
+				}, 1000);
 
 			}
-			NetworkTables.setValue("startTheTimer","false");      //CHANGE TO A BOOLEAN LATER
+			NetworkTables.setValue("startTheTimer", "false"); //CHANGE TO A BOOLEAN LATER
 			break;
-			case "EncoderSliderValue":
-				if(value>350){
-					value=350;
-				}
-				else if(value<150){
-					value=150;
-				}
-				else{console.log("oh god no, something is wrong with the encoder");}
-				$("#EncoderSlider").val(value);
-				$('#encoderValueDisplaySpan').text('Encoder value: ' + value);
-			break
+		case "EncoderSliderValue":
+			if (value > 350) {
+				value = 350;
+			} else if (value < 150) {
+				value = 150;
+			} else {
+				console.log("oh god no, something is wrong with the encoder");
+			}
+			$("#EncoderSlider").val(value);
+			$('#encoderValueDisplaySpan').text('Encoder value: ' + value);
+			break;
 	}
 }
 
-// This is just for demonstration. Remove this once we have actual rotation data from the robot! ****
+// **** This is just for demonstration. Remove this once we have actual rotation data from the robot! ****
 var gyroRotation = 0;
 $('#gyro').click(function() {
 	gyroRotation += 5;
