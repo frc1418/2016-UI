@@ -103,8 +103,8 @@ aside {
     user-select: none;
 }
 .autoButton {
-    width: 10.5vw;
-    height: 20vh;
+    width: 150px;
+    height: 150px;
     margin-left: 5vw;
     background-color: lightgrey;
     border: solid 2px black;

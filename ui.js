@@ -18,14 +18,14 @@ $(document).ready(function() {
 		} else if (activeState === false || activeState == 'false') {
 			activeState = true;
 			//set all of the other values to false
-			$('.autoButton').not(document.getElementById($thisButton.attr('id'))).each(function() {
-				NetworkTables.setValue($(this).attr('id'), false);
+			$('.autoButton').not(document.getElementById($thisButton.attr("id"))).each(function() {
+				NetworkTables.setValue("/SmartDashboard/"+$(this).attr("id"),false);
+
 			});
 		} else {
-			console.log('activeStateButtonBug');
 		}
-		console.log($thisButton.attr('id'));
-		NetworkTables.setValue($thisButton.attr('id'), activeState); //onclick set the things id to true
+		NetworkTables.setValue("/SmartDashboard/"+$thisButton.attr('id'), activeState); //onclick set the things id to true
+
 	});
 	var EncoderSlider = $('#EncoderSlider');
 	var min = EncoderSlider.attr('min');
@@ -39,10 +39,11 @@ $(document).ready(function() {
 		newVal += tickDistance;
 	}
 	$('#encoder').hide().show(0); //element refresh
-	$('#EncoderSlider').change(function() {
-		var encoderVal = $('#EncoderSlider').val();
-		$('#encoderValueDisplaySpan').text('EncoderValue:' + encoderVal);
-		NetworkTables.setValue('EncoderSliderValue', parseInt(encoderVal));
+	$("#EncoderSlider").change(function(){
+		var encoderVal=$("#EncoderSlider").val();
+		$("#encoderValueDisplaySpan").text("EncoderValue:"+encoderVal);
+		NetworkTables.setValue("/SmartDashboard/EncoderSliderValue",parseInt(encoderVal));
+
 	});
 });
 // called when the websocket connects/disconnects
@@ -65,13 +66,16 @@ function onNetworkTablesConnection(connected) {
 }
 
 function onValueChanged(key, value, isNew) {
+	console.log("valueChange",key,value);
+	console.log(NetworkTables.keyToId(key));
+
 	if (isNew) {} else {
 		// similarly, use keySelector to convert the key to a valid jQuery
 		// selector. This should work for class names also, not just for ids
 	}
 	switch (key) {
 		//raw arm value and is the ball in
-		case 'ballIn': //not the actual networktablesValue
+		case '/SmartDashboard/ballIn': //not the actual networktablesValue
 			if (value) { //BOOLEANS ARE NOT WORKING WITH NETWORKTABLES AT THE MOMENT(or with testing at the very least)
 				$('#ballWidget').attr('visibility', 'visible');
 			} else {
@@ -79,23 +83,25 @@ function onValueChanged(key, value, isNew) {
 				$('#ballWidget').attr('visibility', 'hidden');
 			}
 			break;
-		case 'gyro':
+		case '/SmartDashboard/gyro':
 			$('#gyroArm').css({
 				'transform': 'rotate(' + value + 'deg)'
 			});
 			break;
-		case 'Arm | Forward Limit Switch': //checkspelling
-			if (value) { //recheck valuetype, this display a bool
-				$('#forwardEncoderSpan').css({
+		case '/SmartDashboard/Arm | Forward Limit Switch': //checkspelling
+			if (value == true || value == 'true') { //recheck valuetype, this display a bool
+				$('#forwardEncoderSpan').text("Forward Encoder:True").css({
 					'color': 'green'
 				});
+
 			} else {
 				$('#forwardEncoderSpan').css({
 					'color': 'red'
 				});
 			}
 			break;
-		case 'Arm | Reverse Limit Switch':
+
+	case '/SmartDashboard/Arm | Reverse Limit Switch':
 			if (value) { //recheck valuetype, this display a bool
 				$('#reverseEncoderSpan').css({
 					'color': 'green'
@@ -106,7 +112,7 @@ function onValueChanged(key, value, isNew) {
 				});
 			}
 			break;
-		case 'Arm | Encoder':
+		case '/SmartDashboard/Arm | Encoder':
 			if (value > 1140) {
 				value = 1140;
 			} else if (value < 0) {
@@ -117,9 +123,9 @@ function onValueChanged(key, value, isNew) {
 			var rotationPointx = parseInt($robotArm.attr('width')) + parseInt($robotArm.attr('x'));
 			$robotArm.attr('transform', 'rotate(' + rotationValue + ' ' + rotationPointx + ' ' + $robotArm.attr('y') + ')');
 			break;
-		case 'chevyButton':
-		case 'gateButton':
-		case 'ladderButton':
+		case '/SmartDashboard/chevyButton':
+		case '/SmartDashboard/gateButton':
+		case '/SmartDashboard/ladderButton':
 			//set the images border to something bright like orange if it equals true
 			//do acheck to see if all 4 are false, if so, then make them black border and slectable
 			var autoButtonSelection = $('.autoButton');
@@ -145,11 +151,12 @@ function onValueChanged(key, value, isNew) {
 			}
 
 			var setBorderColorTo = 'black';
-			$button = $('#' + key);
+			var name=key.substring(16,key.length);
+			$button = $('#' + name);
 			if (value) {
 				setBorderColorTo = '#ff66ff';
 				$button.attr('activeState', true);
-				$('.autoButton').not(document.getElementById(key)).each(function() {
+				$('.autoButton').not(document.getElementById(name)).each(function() {
 					/*in the event that one of them is true, check the other classes for true
 					if there is 2 trues then output a console and keep them both pink,
 					set all of the falses to unclickable and grayed out.
@@ -170,7 +177,8 @@ function onValueChanged(key, value, isNew) {
 				'border-color': setBorderColorTo
 			});
 			break;
-		case 'startTheTimer':
+
+	case "/SmartDashboard/startTheTimer":
 			if (value) {
 				document.getElementById('gameTimer').style.color = 'white';
 				timerVar = setInterval(function() {
@@ -184,12 +192,14 @@ function onValueChanged(key, value, isNew) {
 						document.getElementById('GameTimer').style.color = '#FF3030';
 					}
 
-					document.getElementById('gameTimer').innerHTML = 'GameTime:' + currentMinutes + ':' + actualSeconds;
+					document.getElementById("gameTimer").innerHTML =  currentMinutes + ":" + actualSeconds;
+
 				}, 1000);
 			}
-			NetworkTables.setValue('startTheTimer', 'false'); //CHANGE TO A BOOLEAN LATER
+			NetworkTables.setValue("/SmartDashboard/startTheTimer", "false"); //CHANGE TO A BOOLEAN LATER
 			break;
-		case 'EncoderSliderValue':
+		case "/SmartDashboard/EncoderSliderValue":
+			console.log("asdf");
 			if (value > 350) {
 				value = 350;
 			} else if (value < 150) {
@@ -198,8 +208,8 @@ function onValueChanged(key, value, isNew) {
 			$('#EncoderSlider').val(value);
 			$('#encoderValueDisplaySpan').text('Encoder value: ' + value);
 			break;
-		case 'EncoderSliderValue':
-
+		case "/SmartDashboard/EncoderSliderValue":
+			console.log("asdf");
 			if (value > 350) {
 				value = 350;
 			} else if (value < 150) {
@@ -215,5 +225,5 @@ function onValueChanged(key, value, isNew) {
 var gyroRotation = 0;
 $('#gyro').click(function() {
 	gyroRotation += 5;
-	onValueChanged('gyro', gyroRotation, false);
+	onValueChanged('/SmartDashboard/gyro', gyroRotation, false);
 });
