@@ -4,21 +4,6 @@ var currentSeconds = 150;
 var timerVar;
 var gameStarted = false;
 
-function startTheTimer() { //reminder, find the networktables value, add networktables support
-	var d = new Date();
-
-	var mEnd = 2;
-	var sEnd = 30;
-	var x = document.getElementById('GameTimer');
-	for (var i = 0; i < 150; i++) {
-		sEnd = sEnd - 1;
-		if (sEnd < 0) {
-			sEnd = sEnd + 60;
-			mEnd = mEnd - 1;
-		}
-		x.innerHTML = mEnd + ':' + sEnd;
-	}
-}
 
 $(document).ready(function() {
 	// sets a function that will be called when the websocket connects/disconnects
@@ -190,7 +175,7 @@ function onValueChanged(key, value, isNew) {
 			break;
 		case "startTheTimer":
 			if (value == true || value == "true") {
-				document.getElementById("GameTimer").style.color = "white";
+				document.getElementById("GameTimerSpan").style.color = "white";
 				timerVar = setInterval(function() {
 					currentSeconds--;
 					var currentMinutes = parseInt(currentSeconds / 60);
@@ -202,7 +187,7 @@ function onValueChanged(key, value, isNew) {
 						document.getElementById("GameTimer").style.color = "#FF3030";
 					}
 
-					document.getElementById("GameTimer").innerHTML = "GameTime:" + currentMinutes + ":" + actualSeconds;
+					document.getElementById("GameTimerSpan").innerHTML = "GameTime:" + currentMinutes + ":" + actualSeconds;
 				}, 1000);
 
 			}
@@ -214,12 +199,10 @@ function onValueChanged(key, value, isNew) {
 			} else if (value < 150) {
 				value = 150;
 			} else {
-				console.log("oh god no, something is wrong with the encoder");
 			}
 			$("#EncoderSlider").val(value);
 			$('#encoderValueDisplaySpan').text('Encoder value: ' + value);
 			break;
-<<<<<<< HEAD
 			case "EncoderSliderValue":
 
 				if(value>350){
@@ -231,8 +214,6 @@ function onValueChanged(key, value, isNew) {
 				$("#EncoderSlider").val(value);
 				$('#encoderValueDisplaySpan').text('Encoder value: ' + value);
 			break
-=======
->>>>>>> 1bb78556f11f7fbf06d7d24cdbc7adaa82745e38
 	}
 }
 
