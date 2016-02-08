@@ -31,7 +31,7 @@ $(document).ready(function() {
 	var min = EncoderSlider.attr('min');
 	var max = EncoderSlider.attr('max');
 	var dataList = $('#stepList');
-	var tickDistance = 10;
+	var tickDistance = 25;
 	var numberOfTicks = (parseInt(max) - parseInt(min)) / tickDistance;
 	var newVal = parseInt(min);
 	for (var a = 0; a < numberOfTicks; a++) {
@@ -72,7 +72,7 @@ function onValueChanged(key, value, isNew) {
 				$('#ballWidget').attr('visibility', 'hidden');
 			}
 			break;
-		case '/SmartDashboard/gyro':
+		case '/SmartDashboard/NavX | Yaw':
 			$('#gyroArm').css({
 				'transform': 'rotate(' + value + 'deg)'
 			});
@@ -106,9 +106,10 @@ function onValueChanged(key, value, isNew) {
 				value = 1140;
 			} else if (value < 0) {
 				value = 0;
-			}
+			}//0 is back,
 			var $robotArm = $('#robotArm');
-			var rotationValue = -45 + value * 225 / 1140; //-45 plus value*225/1140, value between 0 and 1140
+			var rotationValue =180 - value * 225 / 1200;
+			// 0 is direct back, 1200 is 45 degrees foreward
 			var rotationPointx = parseInt($robotArm.attr('width')) + parseInt($robotArm.attr('x'));
 			$robotArm.attr('transform', 'rotate(' + rotationValue + ' ' + rotationPointx + ' ' + $robotArm.attr('y') + ')');
 			break;
@@ -196,10 +197,10 @@ function onValueChanged(key, value, isNew) {
 			NetworkTables.setValue("/SmartDashboard/startTheTimer", "false"); //CHANGE TO A BOOLEAN LATER
 			break;
 		case "/SmartDashboard/EncoderSliderValue":
-			if (value > 350) {
-				value = 350;
-			} else if (value < 150) {
-				value = 150;
+			if (value > 1200) {
+				value = 1200;
+			} else if (value < 0) {
+				value = 0;
 			} else {}
 			$('#EncoderSlider').val(value);
 			$('#encoderValueDisplaySpan').text('Encoder value: ' + value);
@@ -218,7 +219,3 @@ function onValueChanged(key, value, isNew) {
 
 // **** This is just for demonstration. Remove this once we have actual rotation data from the robot! ****
 var gyroRotation = 0;
-$('#gyro').click(function() {
-	gyroRotation += 5;
-	onValueChanged('/SmartDashboard/gyro', gyroRotation, false);
-});
