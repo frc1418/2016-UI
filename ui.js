@@ -67,7 +67,6 @@ function onNetworkTablesConnection(connected) {
 
 function onValueChanged(key, value, isNew) {
 	console.log("valueChange",key,value);
-	console.log(NetworkTables.keyToId(key));
 
 	if (isNew) {} else {
 		// similarly, use keySelector to convert the key to a valid jQuery
@@ -127,55 +126,63 @@ function onValueChanged(key, value, isNew) {
 		case '/SmartDashboard/gateButton':
 		case '/SmartDashboard/ladderButton':
 			//set the images border to something bright like orange if it equals true
-			//do acheck to see if all 4 are false, if so, then make them black border and slectable
-			var autoButtonSelection = $('.autoButton');
-
-			var buttonValueList =
-				autoButtonSelection.map(function() {
-					return $(this).attr('activeState');
-				}).get();
-			var isButtonActive = false;
-			var buttonValueListLength = buttonValueList.length;
-			for (var a = 0; a < buttonValueListLength; a++) {
-				if (buttonValueList[a] === true) { //==true is intended, was always returning true without the ==true
-					isButtonActive = true;
-				}
-			}
-			if (isButtonActive) {
-
-			} else {
-				autoButtonSelection.css({
-					'pointer-events': 'auto',
-					'border-color': 'black'
-				});
-			}
-
-			var setBorderColorTo = 'black';
+			//do acheck to see if all 3 are false, if so, then make them white border and selectable
 			var name=key.substring(16,key.length);
-			$button = $('#' + name);
-			if (value) {
-				setBorderColorTo = '#ff66ff';
-				$button.attr('activeState', true);
-				$('.autoButton').not(document.getElementById(name)).each(function() {
-					/*in the event that one of them is true, check the other classes for true
-					if there is 2 trues then output a console and keep them both pink,
-					set all of the falses to unclickable and grayed out.
-					*/
+			var $button = $('#' + name);
+			var autoButtonSelection = $('.autoButton');						//this is a selection of all of the buttons
 
-					var theNewButton = $(this);
-					console.log(theNewButton.attr('id'));
-					console.log(setBorderColorTo);
-					theNewButton.css({
-						'pointer-events': 'none',
-						'border-color': '#306860'
-					});
-				});
-			} else {
-				$button.attr('activeState', false);
+			if(value==true){
+				//if the thing is true than set its css to purple, set its activestate to true, and make it selectable
+				$button.attr("activeState",true);
+				$button.attr('style',"pointer-events: auto; border-color: rgb(255, 26,140);");
+				$('.autoButton').not(document.getElementById(name)).each(function() {
+					$(this).css({'pointer-events': 'auto','border-color':"yellow"});
+					NetworkTables.setValue("/SmartDashboard/"+$(this).attr('id'),false);
+				});				//then set everything else that isn't true and make it red, and set their activeState to false,
 			}
-			$button.css({
-				'border-color': setBorderColorTo
-			});
+			else if(value==false){
+				$button.attr("activeState",false);
+				var buttonValueList =																	//getting the value of all 3 buttons
+					autoButtonSelection.map(function() {
+						return $(this).attr('activeState');
+					}).get();
+				var isButtonActive = false;
+				var buttonValueListLength = buttonValueList.length;
+				for (var a = 0; a < buttonValueListLength; a++) {
+					if (buttonValueList[a]==true ) { //==true is intended, was always returning true without the ==true
+						isButtonActive = true;
+					}
+				}
+				if (isButtonActive==true) {										//if one of the buttons is active get every not active button and set their css
+					autoButtonSelection.each(function(){
+						var thisIsTheButton=$(this);
+						var thisActiveState=thisIsTheButton.attr("activeState");
+						if(thisActiveState==true||thisActiveState=="true"){
+
+						}
+						else{
+							thisIsTheButton.css({
+								//'pointer-events': 'none',
+								//'border-color': 'red'
+							});
+						}
+					});
+					$button.attr('style',"pointer-events: none; border-color: rgb(255, 10,16);");
+
+				} else if(isButtonActive==false){					//if they are all false then set the current border to cyan
+					/*autoButtonSelection.css({
+						//'pointer-events': 'auto',
+						//'border-color': 'cyan'
+					});*/
+					$button.attr('style',"pointer-events: auto; border-color: rgb(255, 200,16);");
+
+				}
+				else{
+					console.log("terrible things have happened");
+				}
+				//if the thing is not true, check to see if something else is true, if something else is true, then make it red, else make it cyan
+			}
+			else{console.log("things gone wrong");}
 			break;
 
 	case "/SmartDashboard/startTheTimer":
@@ -199,7 +206,6 @@ function onValueChanged(key, value, isNew) {
 			NetworkTables.setValue("/SmartDashboard/startTheTimer", "false"); //CHANGE TO A BOOLEAN LATER
 			break;
 		case "/SmartDashboard/EncoderSliderValue":
-			console.log("asdf");
 			if (value > 350) {
 				value = 350;
 			} else if (value < 150) {
@@ -209,7 +215,6 @@ function onValueChanged(key, value, isNew) {
 			$('#encoderValueDisplaySpan').text('Encoder value: ' + value);
 			break;
 		case "/SmartDashboard/EncoderSliderValue":
-			console.log("asdf");
 			if (value > 350) {
 				value = 350;
 			} else if (value < 150) {

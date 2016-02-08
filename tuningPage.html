@@ -37,8 +37,17 @@
     <script>
         $(document).ready(function() {
             document.getElementById('setButton').onclick = function() {
+                var setValue=document.getElementById("value").value;
+                if(setValue=="true"){
+                  NetworkTables.setValue(document.getElementById('name').value,true);
+                }
+                else if(setValue=="false"){
+                  NetworkTables.setValue(document.getElementById('name').value,false);
+                }
+                else{
                 NetworkTables.setValue(document.getElementById('name').value,
                     document.getElementById("value").value);
+                }
             };
             document.getElementById("get").onclick = function() {
                     document.getElementById('value').value = NetworkTables.getValue(
