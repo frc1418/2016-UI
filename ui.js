@@ -47,18 +47,8 @@ $(document).ready(function() {
 	});
 });
 // called when the websocket connects/disconnects
-function onRobotConnection(connected) { // TODO: change some indicator
+function onRobotConnection(connected) {
 	//config.frontcam should be set to http://roborio-1418-frc.local:5800/
-	//
-	if (connected) {
-		$('#camOffline').hide();
-
-		$('#camera').prepend('<img class="webcamImage" id="webcamImage" src=" + "http://roborio-1418-frc.local:5800/" + "/?action=stream">');
-	} else {
-		$('#webcamImage').remove();
-
-		$('#camOfflineImage').show();
-	}
 }
 
 function onNetworkTablesConnection(connected) {
