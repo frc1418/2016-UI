@@ -109,6 +109,13 @@ aside {
     background-color: lightgrey;
     border: solid 2px black;
 }
+/*.autoButton [activeState="true"] {
+  border-color: #ff1a8c;
+}
+.autoButton [pointer-event="none"] {
+  border-color: red;
+
+}*/
 .arrow-up {
     width: 0;
     height: 0;
