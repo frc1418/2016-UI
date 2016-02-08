@@ -16,15 +16,16 @@ article,
 aside,
 #gameTimer,
 #GyroBox {
+    padding: 10px;
     position: fixed;
-    padding: 20px;
     border: solid 2px aqua;
+    overflow: scroll;
 }
 #GyroBox {
     display: block;
-    top: 20vh;
+    top: 0;
     left: 50vw;
-    height: 80vh;
+    height: 100vh;
     width: 25vw;
 }
 #gyro,
@@ -32,10 +33,10 @@ aside,
     margin-left: 2vw;
 }
 header {
-    width: 50vw;
+    width: 30vw;
     height: 20vh;
     top: 0;
-    left: 25vw;
+    left: 20vw;
     color: aqua;
 }
 .camera {
@@ -91,13 +92,14 @@ aside {
     height: 100vh;
 }
 #gameTimer {
+    padding: 5px 2px;
     font-family: 'DS-Digital', monospace;
     display: block;
     height: 20vh;
-    width: 25vw;
+    width: 20vw;
     top: 0;
     left: 0;
-    font-size: 18vh;
+    font-size: 23vh;
     line-height: .78;
     -webkit-user-select: none;
     user-select: none;
@@ -113,7 +115,7 @@ aside {
     width: 0;
     height: 0;
     border: 25px solid transparent;
-    border-bottom: 25px solid black;
+    border-bottom: 25px solid red;
     margin: 0 auto;
     display: block;
 }

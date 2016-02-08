@@ -21,6 +21,8 @@ traffic to the webpage. pynetworktables2js was initially prototyped by
 [Leon Tan](https://github.com/lleontan), our lead UI student, but it is now maintained by the RobotPy
 project so that other teams can benefit from our work.
 
+Please note that this version of the UI is designed for a 1366x530 resolution. Since it's not designed to be responsive, you may have to play around with the CSS a bit to make it fit your screen.
+
 Running the code
 ================
 
