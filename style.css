@@ -6,6 +6,9 @@
 * {
     box-sizing: border-box;
 }
+::-webkit-scrollbar {
+    display: none;
+}
 body {
     background: black;
     color: aqua;
@@ -33,10 +36,10 @@ aside,
     margin-left: 2vw;
 }
 header {
-    width: 30vw;
+    width: 28vw;
     height: 20vh;
     top: 0;
-    left: 20vw;
+    left: 22vw;
     color: aqua;
 }
 .camera {
@@ -66,7 +69,7 @@ nav li {
 nav a {
     position: relative;
     display: block;
-    padding: 10px 15px;
+    padding: 7px 10px;
     text-decoration: none;
     color: #eee;
 }
@@ -96,7 +99,7 @@ aside {
     font-family: 'DS-Digital', monospace;
     display: block;
     height: 20vh;
-    width: 20vw;
+    width: 22vw;
     top: 0;
     left: 0;
     font-size: 23vh;
@@ -109,15 +112,16 @@ aside {
     height: 150px;
     margin-left: 5vw;
     background-color: lightgrey;
-    border: solid 2px black;
+    border: solid 4px black;
 }
-/*.autoButton [activeState="true"] {
-  border-color: #ff1a8c;
+/*
+.autoButton [activeState="true"] {
+    border-color: #ff1a8c;
 }
 .autoButton [pointer-event="none"] {
-  border-color: red;
-
-}*/
+    border-color: red;
+}
+*/
 .arrow-up {
     width: 0;
     height: 0;
