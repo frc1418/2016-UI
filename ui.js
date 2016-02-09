@@ -10,7 +10,7 @@ var realDefenseNames = [
 	['wall', 'roughterrain']
 ];
 var attackerNames = ['empty', 'allied', 'us'];
-
+var displayInTuning=['/SmartDashboard/'];		//if it starts with these strings add to tuning page
 
 $(document).ready(function() {
 	var gyroRotation = 0;
@@ -190,6 +190,7 @@ function onNetworkTablesConnection(connected) {
 function onValueChanged(key, value, isNew) {
 	console.log('valueChange', key, value);
 	var propName = key.substring(16, key.length);
+	//$("Tuning"+NetworkTables.keyToId(key)).children("input").first().val(value keyto id is currently broken
 
 	switch (key) {
 		//raw arm value and is the ball in
@@ -259,7 +260,7 @@ function onValueChanged(key, value, isNew) {
 				$('.autoButton').not(document.getElementById(name)).each(function() {
 					$(this).css({
 						'pointer-events': 'auto',
-						'border-color': 'yellow'
+						'border-color': 'rgb(255, 200,16)'
 					});
 					NetworkTables.setValue('/SmartDashboard/' + $(this).attr('id'), false);
 				}); //then set everything else that isn't true and make it red, and set their activeState to false,
@@ -383,7 +384,15 @@ function onValueChanged(key, value, isNew) {
 				var autonomousModeArrayLength = value.length;
 				for (var n = 0; n < autonomousModeArrayLength; n++) {
 					//for each entry, make a option, get the value of currentlySelectedMode if it exists, if not then use the first
-					autonomousOptionSelect.append('<option id=' + value[n] + 'AutoMode' + '>' + value[n] + '</option>');
+					//also append /SmartDashboard/+name to displayInTuning list
+					var modeName=value[n];
+					if(modeName in displayInTuning){
+						//if it already exists
+					}
+					else{
+						displayInTuning.push('/SmartDashboard/'+modeName);
+					}
+					autonomousOptionSelect.append('<option id=' + modeName + 'AutoMode' + '>' + modeName + '</option>');
 				}
 				//if(NetworkTables.containsKey('currentlySelectedMode')){
 				autonomousOptionSelect.val(NetworkTables.getValue('/SmartDashboard/currentlySelectedMode'));
@@ -401,7 +410,7 @@ function onValueChanged(key, value, isNew) {
 			case '/SmartDashboard/attackerState3':
 			case '/SmartDashboard/attackerState4':
 				var attackerImage = $('#' + propName);
-				if (value == 'us') {
+				if (value == 'us') {											//if the value of the current thingy is being changed to US
 					console.log("attackerStateChanged");
 
 					//if value is us then get all of the other things and set anything equal to us to none
@@ -413,14 +422,19 @@ function onValueChanged(key, value, isNew) {
 					});
 					var attackerIndex=attackerImage.attr("position");
 					if(attackerIndex==0){
-						NetworkTables.setValue('/SmartDashboard/robotDefense',"lowbar");
+						NetworkTables.setValue('/SmartDashboard/robotDefense',"LowBar");
 					}
 					else{
 						var newPosition=parseInt(attackerIndex)-1;
 						var $defense=$("#defenseDefenseSelector"+newPosition);
 						//defenseclass and defensenumber
-						var defenseValue=realDefenseNames[$defense.attr("defenseclass")][$defense.attr("defensenumber")];
+						var defenseClass=parseInt($defense.attr("defenseclass"));
+						if(defenseClass==1||defenseClass==3){		//
+							NetworkTables.setValue('/SmartDashboard/robotDefense',"e0");
+						}else{
+						var defenseValue=realDefenseNames[defenseClass][$defense.attr("defensenumber")];
 						NetworkTables.setValue('/SmartDashboard/robotDefense',defenseValue);
+						}
 					}
 				}
 				attackerImage.attr('state', attackerNames.indexOf(value)).attr('src', 'img/' + value + '.png');
@@ -433,37 +447,50 @@ function onValueChanged(key, value, isNew) {
 	// the key names aren't always valid HTML identifiers, so we use
 	// the NetworkTables.keyToId() function to convert them appropriately
 	if (isNew) {
-		var div = $('<div></div>').appendTo($('.settings'));
-		$('<p></p>').text(key).appendTo(div);
-		if (value === true || value === false) {
-			var boolSlider = $('<div class="bool-slider ' + value + '"></div>');
-			var innerInset = $('<div class="inset"></div>');
-			innerInset.append('<div class="control"></div>')
-				.click(function() {
-					if (boolSlider.hasClass('true')) {
-						NetworkTables.setValue(key, false);
-						boolSlider.addClass('false').removeClass('true');
-					} else {
-						NetworkTables.setValue(key, true);
-						boolSlider.addClass('true').removeClass('false');
-					}
-				});
-			innerInset.appendTo(boolSlider);
-			boolSlider.appendTo(div);
-		} else if (!isNaN(value)) {
-			if (!isNaN(value)) {
-				$('<input type="number">')
-					.attr('id', NetworkTables.keyToId(key))
+		/*iterate through each value in displayInTuning, if the key starts
+		 with the current value of displayInTuning display it, if not then do nothing */
+		var displayInTuningLength=displayInTuning.length;
+		var addToTuning=false;
+		for(var a=0;a<displayInTuningLength;a++){
+			var currentString=displayInTuning[a];
+			if(key.substring(0,currentString.length)==currentString){
+				addToTuning=true;
+				break;
+			}
+		}
+		if(addToTuning){
+			var div = $('<div></div>').appendTo($('.settings'));
+			$('<p></p>').text(key).appendTo(div);
+			if (value === true || value === false) {
+				var boolSlider = $('<div class="bool-slider ' + value + ' id=Tuning'+NetworkTables.keyToId(key)+'"></div>');
+				var innerInset = $('<div class="inset"></div>');
+				innerInset.append('<div class="control"></div>')
+					.click(function() {
+						if (boolSlider.hasClass('true')) {
+
+							NetworkTables.setValue(key, false);
+							boolSlider.addClass('false').removeClass('true');
+						} else {
+							NetworkTables.setValue(key, true);
+							boolSlider.addClass('true').removeClass('false');
+						}
+					});
+				innerInset.appendTo(boolSlider);
+				boolSlider.appendTo(div);
+			} else if (!isNaN(value)) {
+				if (!isNaN(value)) {
+					$('<input type="number">')
+						.attr('id', "Tuning"+NetworkTables.keyToId(key))
+						.attr('value', value)
+						.appendTo(div);
+				}
+			} else {
+				$('<input type="text">')
+					.attr('id', "Tuning"+NetworkTables.keyToId(key))
 					.attr('value', value)
 					.appendTo(div);
 			}
-		} else {
-			$('<input type="text">')
-				.attr('id', NetworkTables.keyToId(key))
-				.attr('value', value)
-				.appendTo(div);
 		}
-
 	}
 }
 $('#set').click(function() {
@@ -501,8 +528,12 @@ $("#GyroBox").click(function(){
 	//NetworkTables.setValue("/SmartDashboard/ZeroTheGyro",true);
 	if(zeroTheGyro==0){
 		zeroTheGyro=$("#GyroBox").val();
+
 	}else{
 		zeroTheGyro=0;
 	}
+	$('#gyroArm').css({
+		'transform': 'rotate(' + NetworkTables.getValue('/SmartDashboard/NavX | Yaw') + 'deg)'
+	});
 }
 );
