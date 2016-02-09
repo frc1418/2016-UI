@@ -1,7 +1,7 @@
 var currentSeconds = 150;
 var timerVar;
 var gameStarted = false;
-var zeroTheGyro=0;			//if this is true, set the gyro offset to the current value,gyro offset
+var zeroTheGyro = 0; //if this is true, set the gyro offset to the current value,gyro offset
 var defenseNames = ['A', 'B', 'C', 'D'];
 var realDefenseNames = [
 	['porticulis', 'seesaw'],
@@ -17,7 +17,7 @@ $(document).ready(function() {
 
 	document.getElementById('setButton').onclick = function() {
 		var setValue = document.getElementById('value').value;
-		if (setValue == 'true') {
+		if (setValue == 'true') { // ¯\_(ツ)_/¯
 			NetworkTables.setValue(document.getElementById('name').value, true);
 		} else if (setValue == 'false') {
 			NetworkTables.setValue(document.getElementById('name').value, false);
@@ -109,7 +109,7 @@ $(document).ready(function() {
 		var defenseNumber = 0;
 		thisDiv.attr('defenseNumber', defenseNumber);
 		thisDiv.before().click(function() {
-			console.log("downarrow");
+			console.log('downarrow');
 			//onclick take the value of the current defense from this div, ex'defenseName=(3,0)', ++1
 			var currentDefenseClass = thisDiv.attr('defenseClass');
 
@@ -143,8 +143,8 @@ $(document).ready(function() {
 				NetworkTables.setValue('/SmartDashboard/' + thisDiv.attr('id'), realDefenseNames[thisDiv.attr('defenseClass')][currentDefenseNumber]);
 			})
 		);
-		thisDiv.after().click(function(i, b) {//right now both are being clicked
-			console.log("uparrow clicked");
+		thisDiv.after().click(function(i, b) { //right now both are being clicked
+			console.log('uparrow clicked');
 			//onclick take the value of the current defense from this div, ex'defenseName=(3,0)', ++1
 			var currentDefenseClass = parseInt(thisDiv.attr('defenseclass'));
 			//console.log(thisDiv.attr('id'),currentDefenseClass);
@@ -158,7 +158,7 @@ $(document).ready(function() {
 			thisDiv.children('.selectionToggleBox') //.find('.selectionToggleBox')
 				.attr('src', 'img/' + defenseNames[currentDefenseClass] + defenseNumber + '.png');
 			NetworkTables.setValue('/SmartDashboard/' + thisDiv.attr('id'), realDefenseNames[currentDefenseClass][defenseNumber]);
-			//console.log("stuff happened",currentDefenseClass);
+			//console.log('stuff happened',currentDefenseClass);
 			//console.log('/SmartDashboard/' + thisDiv.attr('id'), realDefenseNames[currentDefenseClass][defenseNumber]);
 
 		});
@@ -195,17 +195,18 @@ function onValueChanged(key, value, isNew) {
 		//raw arm value and is the ball in
 		case '/SmartDashboard/ballIn': //not the actual networktablesValue
 			if (value) { //BOOLEANS ARE NOT WORKING WITH NETWORKTABLES AT THE MOMENT(or with testing at the very least)
-				$('#ballWidget').attr('visibility', 'visible');
+				$('#ball').attr('visibility', 'visible');
 			} else {
 				console.log('visibilityFalse');
-				$('#ballWidget').attr('visibility', 'hidden');
+				$('#ball').attr('visibility', 'hidden');
 			}
 			break;
 		case '/SmartDashboard/NavX | Yaw':
-			var gyroVal=value+zeroTheGyro;
+			var gyroVal = value + zeroTheGyro;
 			$('#gyroArm').css({
 				'transform': 'rotate(' + gyroVal + 'deg)'
 			});
+            $('gyroLabel').innerHTML(gyroVal + 'º');
 			break;
 		case '/SmartDashboard/Arm | Forward Limit Switch': //checkspelling
 			if (value == true || value == 'true') { //recheck valuetype, this display a bool
@@ -255,11 +256,14 @@ function onValueChanged(key, value, isNew) {
 			if (value == true) {
 				//if the thing is true than set its css to purple, set its activestate to true, and make it selectable
 				$button.attr('activeState', true);
-				$button.attr('style', 'pointer-events: auto; border-color: rgb(255, 26,140);');
+				$button.css({
+                    'pointer-events': 'auto',
+                    'border-color': 'aqua'
+                });
 				$('.autoButton').not(document.getElementById(name)).each(function() {
 					$(this).css({
 						'pointer-events': 'auto',
-						'border-color': 'yellow'
+						'border-color': 'orange'
 					});
 					NetworkTables.setValue('/SmartDashboard/' + $(this).attr('id'), false);
 				}); //then set everything else that isn't true and make it red, and set their activeState to false,
@@ -333,7 +337,7 @@ function onValueChanged(key, value, isNew) {
 				value = 0;
 			} else {}
 			$('#EncoderSlider').val(value);
-			$('#encoderValueDisplaySpan').text('Encoder value: ' + value);
+			$('#encoderValueDisplaySpan').text('EncoderValue: ' + value);
 			break;
 		case '/SmartDashboard/EncoderSliderValue':
 			if (value > 350) {
@@ -342,89 +346,88 @@ function onValueChanged(key, value, isNew) {
 				value = 150;
 			}
 			$('#EncoderSlider').val(value);
-			$('#encoderValueDisplaySpan').text('Encoder value: ' + value);
+			$('#encoderValueDisplaySpan').text('EncoderValue: ' + value);
 			break;
-			case '/SmartDashboard/defenseDefenseSelector0':
-			case '/SmartDashboard/defenseDefenseSelector1':
-			case '/SmartDashboard/defenseDefenseSelector2':
-			case '/SmartDashboard/defenseDefenseSelector3':
+		case '/SmartDashboard/defenseDefenseSelector0':
+		case '/SmartDashboard/defenseDefenseSelector1':
+		case '/SmartDashboard/defenseDefenseSelector2':
+		case '/SmartDashboard/defenseDefenseSelector3':
 
-				var theChangedDiv = $('#' + propName);
-				var realDefenseNamesLength = realDefenseNames.length;
-				var defenseNum = -1;
-				var defenseClass = -1;
-				for (var i = 0; i < realDefenseNamesLength; i++) {
-					//search through the defense classes, check each one for the mode, return the defenseclass=(a) and the defenseNum=(b)
+			var theChangedDiv = $('#' + propName);
+			var realDefenseNamesLength = realDefenseNames.length;
+			var defenseNum = -1;
+			var defenseClass = -1;
+			for (var i = 0; i < realDefenseNamesLength; i++) {
+				//search through the defense classes, check each one for the mode, return the defenseclass=(a) and the defenseNum=(b)
 
-					for (var j = 0; j < 2; j++) {
-						if (realDefenseNames[i][j] == value) {
+				for (var j = 0; j < 2; j++) {
+					if (realDefenseNames[i][j] == value) {
 
-							defenseClass = i;
-							defenseNum = j;
-							break;
-						}
+						defenseClass = i;
+						defenseNum = j;
+						break;
 					}
 				}
-				if (defenseClass == -1) {
-					break;
-				}
-				theChangedDiv.attr('defenseClass', defenseClass)
-					.attr('defenseNumber', defenseNum);
-				theChangedDiv.children('.selectionToggleBox')
-					.attr('src', 'img/' + defenseNames[defenseClass] + defenseNum + '.png');
-
-				break; //in case we want to add another listener to the swtich afterwards
-			case '/SmartDashboard/Autonomous Mode/options':
-
-				//if there is a change in the names of the autonomous modes check the select,clear it and rewrite
-				var autonomousOptionSelect = $('#autonomousOptionSelect');
-				autonomousOptionSelect.empty();
-				//autonomousOptionSelect.append('<option id='defaultAutonomousNoMove'>Do Nothing</option>'); //temporarily commented out
-				var autonomousModeArrayLength = value.length;
-				for (var n = 0; n < autonomousModeArrayLength; n++) {
-					//for each entry, make a option, get the value of currentlySelectedMode if it exists, if not then use the first
-					autonomousOptionSelect.append('<option id=' + value[n] + 'AutoMode' + '>' + value[n] + '</option>');
-				}
-				//if(NetworkTables.containsKey('currentlySelectedMode')){
-				autonomousOptionSelect.val(NetworkTables.getValue('/SmartDashboard/currentlySelectedMode'));
-				//}       //temporary commenting out
-				//else{
-				//autonomousOptionSelect.val($('#autonomousOptionSelect option:first').val());
-				//}
+			}
+			if (defenseClass == -1) {
 				break;
-			case '/SmartDashboard/currentlySelectedMode':
-				$('#autonomousOptionSelect').val(value);
-				break;
-			case '/SmartDashboard/attackerState0':
-			case '/SmartDashboard/attackerState1':
-			case '/SmartDashboard/attackerState2':
-			case '/SmartDashboard/attackerState3':
-			case '/SmartDashboard/attackerState4':
-				var attackerImage = $('#' + propName);
-				if (value == 'us') {
-					console.log("attackerStateChanged");
+			}
+			theChangedDiv.attr('defenseClass', defenseClass)
+				.attr('defenseNumber', defenseNum);
+			theChangedDiv.children('.selectionToggleBox')
+				.attr('src', 'img/' + defenseNames[defenseClass] + defenseNum + '.png');
 
-					//if value is us then get all of the other things and set anything equal to us to none
-					$('.attackerState').not(document.getElementById(propName)).each(function() {
-						var thisAttacker = $(this);
-						if (attackerNames[thisAttacker.attr('state')] == 'us') {
-							NetworkTables.setValue('/SmartDashboard/' + thisAttacker.attr('id'), 'empty');
-						}
-					});
-					var attackerIndex=attackerImage.attr("position");
-					if(attackerIndex==0){
-						NetworkTables.setValue('/SmartDashboard/robotDefense',"lowbar");
+			break; //in case we want to add another listener to the swtich afterwards
+		case '/SmartDashboard/Autonomous Mode/options':
+
+			//if there is a change in the names of the autonomous modes check the select,clear it and rewrite
+			var autonomousOptionSelect = $('#autonomousOptionSelect');
+			autonomousOptionSelect.empty();
+			//autonomousOptionSelect.append('<option id='defaultAutonomousNoMove'>Do Nothing</option>'); //temporarily commented out
+			var autonomousModeArrayLength = value.length;
+			for (var n = 0; n < autonomousModeArrayLength; n++) {
+				//for each entry, make a option, get the value of currentlySelectedMode if it exists, if not then use the first
+				autonomousOptionSelect.append('<option id=' + value[n] + 'AutoMode' + '>' + value[n] + '</option>');
+			}
+			//if(NetworkTables.containsKey('currentlySelectedMode')){
+			autonomousOptionSelect.val(NetworkTables.getValue('/SmartDashboard/currentlySelectedMode'));
+			//}       //temporary commenting out
+			//else{
+			//autonomousOptionSelect.val($('#autonomousOptionSelect option:first').val());
+			//}
+			break;
+		case '/SmartDashboard/currentlySelectedMode':
+			$('#autonomousOptionSelect').val(value);
+			break;
+		case '/SmartDashboard/attackerState0':
+		case '/SmartDashboard/attackerState1':
+		case '/SmartDashboard/attackerState2':
+		case '/SmartDashboard/attackerState3':
+		case '/SmartDashboard/attackerState4':
+			var attackerImage = $('#' + propName);
+			if (value == 'us') {
+				console.log('attackerStateChanged');
+
+				//if value is us then get all of the other things and set anything equal to us to none
+				$('.attackerState').not(document.getElementById(propName)).each(function() {
+					var thisAttacker = $(this);
+					if (attackerNames[thisAttacker.attr('state')] == 'us') {
+						NetworkTables.setValue('/SmartDashboard/' + thisAttacker.attr('id'), 'empty');
 					}
-					else{
-						var newPosition=parseInt(attackerIndex)-1;
-						var $defense=$("#defenseDefenseSelector"+newPosition);
-						//defenseclass and defensenumber
-						var defenseValue=realDefenseNames[$defense.attr("defenseclass")][$defense.attr("defensenumber")];
-						NetworkTables.setValue('/SmartDashboard/robotDefense',defenseValue);
-					}
+				});
+				var attackerIndex = attackerImage.attr('position');
+				if (attackerIndex == 0) {
+					NetworkTables.setValue('/SmartDashboard/robotDefense', 'lowbar');
+				} else {
+					var newPosition = parseInt(attackerIndex) - 1;
+					var $defense = $('#defenseDefenseSelector' + newPosition);
+					//defenseclass and defensenumber
+					var defenseValue = realDefenseNames[$defense.attr('defenseclass')][$defense.attr('defensenumber')];
+					NetworkTables.setValue('/SmartDashboard/robotDefense', defenseValue);
 				}
-				attackerImage.attr('state', attackerNames.indexOf(value)).attr('src', 'img/' + value + '.png');
-				break;
+			}
+			attackerImage.attr('state', attackerNames.indexOf(value)).attr('src', 'img/' + value + '.png');
+			break;
 	}
 	//name, data, has the variable just been created t/f
 
@@ -463,7 +466,6 @@ function onValueChanged(key, value, isNew) {
 				.attr('value', value)
 				.appendTo(div);
 		}
-
 	}
 }
 $('#set').click(function() {
@@ -477,32 +479,36 @@ $('#set').click(function() {
 $('#teleopButton').click(function() {
 	$('#tuning').hide();
 	$('#autonomousSelection').hide();
-    $(this).addClass('active');
-    $('#tuningButton').removeClass('active');
-    $('#autonomousButton').removeClass('active');
+	$(this).addClass('active');
+	$('#tuningButton').removeClass('active');
+	$('#autonomousButton').removeClass('active');
 });
 $('#tuningButton').click(function() {
 	$('#tuning').show();
 	$('#autonomousSelection').hide();
-    $('#teleopButton').removeClass('active');
-    $(this).addClass('active');
-    $('#autonomousButton').removeClass('active');
+	$('#teleopButton').removeClass('active');
+	$(this).addClass('active');
+	$('#autonomousButton').removeClass('active');
 });
 $('#autonomousButton').click(function() {
 	$('#tuning').hide();
 	$('#autonomousSelection').show();
-    $('#teleopButton').removeClass('active');
-    $('#tuningButton').removeClass('active');
-    $(this).addClass('active');
+	$('#teleopButton').removeClass('active');
+	$('#tuningButton').removeClass('active');
+	$(this).addClass('active');
 });
+
 var gyroRotation = 0;
-$("#GyroBox").click(function(){
+$('#GyroBox').click(function() {
 	//onclick, visually set the offset of the gyro to the current value, if offset != 0 then set to 0
-	//NetworkTables.setValue("/SmartDashboard/ZeroTheGyro",true);
-	if(zeroTheGyro==0){
-		zeroTheGyro=$("#GyroBox").val();
-	}else{
-		zeroTheGyro=0;
+	//NetworkTables.setValue('/SmartDashboard/ZeroTheGyro',true);
+	if (zeroTheGyro === 0) {
+		zeroTheGyro = $('#GyroBox').val();
+	} else {
+		zeroTheGyro = 0;
 	}
-}
-);
+});
+
+$('#robotDiagram').click(function() {
+    $('.winch').toggle();
+});
