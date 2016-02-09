@@ -6,6 +6,9 @@
 * {
     box-sizing: border-box;
 }
+::-webkit-scrollbar {
+    display: none;
+}
 body {
     background: black;
     color: aqua;
@@ -16,15 +19,19 @@ article,
 aside,
 #gameTimer,
 #GyroBox {
+    padding: 10px;
     position: fixed;
-    padding: 20px;
     border: solid 2px aqua;
+    overflow: scroll;
+}
+article {
+    z-index: 100;
 }
 #GyroBox {
     display: block;
-    top: 20vh;
+    top: 0;
     left: 50vw;
-    height: 80vh;
+    height: 100vh;
     width: 25vw;
 }
 #gyro,
@@ -32,10 +39,10 @@ aside,
     margin-left: 2vw;
 }
 header {
-    width: 50vw;
+    width: 28vw;
     height: 20vh;
     top: 0;
-    left: 25vw;
+    left: 22vw;
     color: aqua;
 }
 .camera {
@@ -62,27 +69,23 @@ nav li {
     display: block;
     float: left;
 }
-nav a {
+nav button {
     position: relative;
     display: block;
-    padding: 10px 15px;
+    padding: 7px 10px;
     text-decoration: none;
+    border: 0;
+    background: #666;
     color: #eee;
 }
-nav a:hover,
-nav a:focus {
+nav button:hover,
+nav button:focus {
     text-decoration: none;
     background-color: #888;
+    outline: 0;
 }
 nav .active {
-    background: #666;
-}
-article {
-    left: 0;
-    bottom: 0;
-    height: 80vh;
-    width: 75vw;
-    overflow: scroll;
+    background: #888;
 }
 aside {
     right: 0;
@@ -91,13 +94,14 @@ aside {
     height: 100vh;
 }
 #gameTimer {
+    padding: 5px 2px;
     font-family: 'DS-Digital', monospace;
     display: block;
     height: 20vh;
-    width: 25vw;
+    width: 22vw;
     top: 0;
     left: 0;
-    font-size: 18vh;
+    font-size: 23vh;
     line-height: .78;
     -webkit-user-select: none;
     user-select: none;
@@ -107,58 +111,18 @@ aside {
     height: 150px;
     margin-left: 5vw;
     background-color: lightgrey;
-    border: solid 2px black;
+    border: solid 4px black;
 }
-.arrow-up {
-    width: 0;
-    height: 0;
-    border: 25px solid transparent;
-    border-bottom: 25px solid black;
-    margin: 0 auto;
-    display: block;
+
+/*
+.autoButton [activeState="true"] {
+    border-color: #ff1a8c;
 }
-.arrow-down {
-    width: 0;
-    height: 0;
-    border: 25px solid transparent;
-    border-top: 25px solid red;
-    margin: 0 auto;
-    display: block;
+.autoButton [pointer-event="none"] {
+    border-color: red;
 }
-.selectionDiv {
-    display: block;
-    position: relative;
-}
-.selectionToggleBox {
-    height: 100px;
-    width: 100px;
-    margin-left: auto;
-    margin-right: auto;
-    display: block;
-    background-color: lightgrey;
-}
-.attackerState {
-    height: 100px;
-    width: 100px;
-}
-.FieldSelector {
-    display: inline-block;
-    width: 12vw;
-    height: 72vh;
-}
-.ObstacleSelector {
-    display: inline-block;
-    width: 11.5vw;
-    height: 35vh;
-}
-.DefenseSelector {
-    padding-top: 3vh;
-}
-.RobotSelector {
-    display: inline-block;
-    width: 11.5vw;
-    height: 35vh;
-}
+*/
+
 #EncoderSlider {
     width: 22vw !important;
 }
@@ -172,6 +136,13 @@ aside {
 }
 .encoderLimitSwitchSpan {
     color: red;
+}
+article#tuning {
+    background: black;
+    top: 20vh;
+    left: 0;
+    width: 50vw;
+    height: 80vh;
 }
 .bool-slider {
     color: #FFF;
@@ -229,4 +200,58 @@ aside {
 }
 .bool-slider.disabled .control {
     cursor: default;
+}
+article#autonomousSelection {
+    width: 50vw;
+    height: 100vh;
+    background: black;
+    top: 0;
+    right: 0;
+}
+.DefenseSelector::before,
+.DefenseSelector::after {
+    content: '';
+    width: 0;
+    height: 0;
+    border: 25px solid transparent;
+    margin: 0 auto;
+    display: block;
+}
+.DefenseSelector::before {
+    border-bottom: 25px solid red;
+}
+.DefenseSelector::after {
+    border-top: 25px solid red;
+}
+.selectionDiv {
+    display: block;
+    position: relative;
+}
+.selectionToggleBox {
+    height: 100px;
+    width: 100px;
+    margin-left: auto;
+    margin-right: auto;
+    display: block;
+    background-color: lightgrey;
+}
+.attackerState {
+    height: 100px;
+    width: 100px;
+}
+.FieldSelector {
+    display: inline-block;
+    width: 12vw;
+    height: 72vh;
+}
+.ObstacleSelector {
+    display: inline-block;
+    width: 100px;
+    height: 100px;
+}
+.DefenseSelector {}
+.RobotSelector {
+    display: inline-block;
+    width: 11.5vw;
+    height: 35vh;
 }

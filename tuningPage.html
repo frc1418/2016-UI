@@ -1,3 +1,15 @@
+<!--
+********************************************************************************
+This page is obsolete! All content and scripts have been moved to the main page.
+Make any changes there. You can delete this page if you want.
+********************************************************************************
+
+
+
+
+
+
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -37,8 +49,17 @@
     <script>
         $(document).ready(function() {
             document.getElementById('setButton').onclick = function() {
+                var setValue=document.getElementById("value").value;
+                if(setValue=="true"){
+                  NetworkTables.setValue(document.getElementById('name').value,true);
+                }
+                else if(setValue=="false"){
+                  NetworkTables.setValue(document.getElementById('name').value,false);
+                }
+                else{
                 NetworkTables.setValue(document.getElementById('name').value,
                     document.getElementById("value").value);
+                }
             };
             document.getElementById("get").onclick = function() {
                     document.getElementById('value').value = NetworkTables.getValue(
@@ -117,8 +138,8 @@
                     NetworkTables.setValue(thisChild.attr('id'), thisChild.val());
                 });
             });
-
     </script>
 </body>
 
 </html>
+-->

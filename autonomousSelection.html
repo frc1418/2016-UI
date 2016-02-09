@@ -1,3 +1,13 @@
+<!--
+********************************************************************************
+This page is obsolete! All content and scripts have been moved to the main page.
+Make any changes there. You can delete this page if you want.
+********************************************************************************
+
+
+
+
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -287,10 +297,10 @@
                     var attackerImage = $("#" + name);
                     if (value == "us") {
                         //if value is us then get all of the other things and set anything equal to us to none
-                        $(".attackerState").not(document.getElementById(key)).each(function() {
+                        $(".attackerState").not(document.getElementById(name)).each(function() {
                             var thisAttacker = $(this);
                             if (attackerNames[thisAttacker.attr("state")] == "us") {
-                                NetworkTables.setValue(thisAttacker.attr("id"), "empty");
+                                NetworkTables.setValue("/SmartDashboard/"+thisAttacker.attr("id"), "empty");
                             }
                         });
                     }
@@ -303,3 +313,4 @@
 </body>
 
 </html>
+-->
