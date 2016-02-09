@@ -1,7 +1,7 @@
 var currentSeconds = 150;
 var timerVar;
 var gameStarted = false;
-
+var zeroTheGyro=0;			//if this is true, set the gyro offset to the current value,gyro offset
 var defenseNames = ['A', 'B', 'C', 'D'];
 var realDefenseNames = [
 	['porticulis', 'seesaw'],
@@ -57,7 +57,7 @@ $(document).ready(function() {
 	var min = EncoderSlider.attr('min');
 	var max = EncoderSlider.attr('max');
 	var dataList = $('#stepList');
-	var tickDistance = 25;
+	var tickDistance = 50;
 	var numberOfTicks = (parseInt(max) - parseInt(min)) / tickDistance;
 	var newVal = parseInt(min);
 	for (var a = 0; a < numberOfTicks; a++) {
@@ -108,7 +108,8 @@ $(document).ready(function() {
 		thisDiv.attr('id', 'defenseDefenseSelector' + a);
 		var defenseNumber = 0;
 		thisDiv.attr('defenseNumber', defenseNumber);
-		$(thisDiv).before().click(function() {
+		thisDiv.before().click(function() {
+			console.log("downarrow");
 			//onclick take the value of the current defense from this div, ex'defenseName=(3,0)', ++1
 			var currentDefenseClass = thisDiv.attr('defenseClass');
 
@@ -117,7 +118,7 @@ $(document).ready(function() {
 			} else {
 				currentDefenseClass++;
 			}
-			thisDiv.attr('defenseClass', currentDefenseClass);
+			thisDiv.attr('defenseclass', currentDefenseClass);
 			thisDiv.children('.selectionToggleBox') //.find('.selectionToggleBox')
 				.attr('src', 'img/' + defenseNames[currentDefenseClass] + '' + defenseNumber + '.png');
 
@@ -128,32 +129,38 @@ $(document).ready(function() {
 			//.attr('id','selectionToggleBox'+a)
 			.attr('src', 'img/defaultImg.png')
 			.click(function() {
-				var currentDefenseNumber = thisDiv.attr('defenseNumber');
+				var currentDefenseNumber = thisDiv.attr('defensenumber');
 
 				if (currentDefenseNumber >= 1) {
 					currentDefenseNumber = 0;
 				} else {
 					currentDefenseNumber++;
 				}
-				thisDiv.attr('defenseNumber', currentDefenseNumber);
+				thisDiv.attr('defensenumber', currentDefenseNumber);
 				thisDiv.children('.selectionToggleBox'); //.find('.selectionToggleBox')
 				//.attr('src','img/'+defenseNames[thisDiv.attr('defenseClass')]+''+currentDefenseNumber+'.png');
 
 				NetworkTables.setValue('/SmartDashboard/' + thisDiv.attr('id'), realDefenseNames[thisDiv.attr('defenseClass')][currentDefenseNumber]);
 			})
 		);
-		$(thisDiv).after().click(function(i, b) {
+		thisDiv.after().click(function(i, b) {//right now both are being clicked
+			console.log("uparrow clicked");
 			//onclick take the value of the current defense from this div, ex'defenseName=(3,0)', ++1
-			var currentDefenseClass = thisDiv.attr('defenseClass');
+			var currentDefenseClass = parseInt(thisDiv.attr('defenseclass'));
+			//console.log(thisDiv.attr('id'),currentDefenseClass);
+
 			if (currentDefenseClass <= 0) {
 				currentDefenseClass = 3;
 			} else {
 				currentDefenseClass--;
 			}
-			thisDiv.attr('defenseClass', currentDefenseClass);
+			thisDiv.attr('defenseclass', currentDefenseClass);
 			thisDiv.children('.selectionToggleBox') //.find('.selectionToggleBox')
 				.attr('src', 'img/' + defenseNames[currentDefenseClass] + defenseNumber + '.png');
 			NetworkTables.setValue('/SmartDashboard/' + thisDiv.attr('id'), realDefenseNames[currentDefenseClass][defenseNumber]);
+			//console.log("stuff happened",currentDefenseClass);
+			//console.log('/SmartDashboard/' + thisDiv.attr('id'), realDefenseNames[currentDefenseClass][defenseNumber]);
+
 		});
 		if (defenseNumber == 0) {
 			defenseNumber = 1;
@@ -195,8 +202,9 @@ function onValueChanged(key, value, isNew) {
 			}
 			break;
 		case '/SmartDashboard/NavX | Yaw':
+			var gyroVal=value+zeroTheGyro;
 			$('#gyroArm').css({
-				'transform': 'rotate(' + value + 'deg)'
+				'transform': 'rotate(' + gyroVal + 'deg)'
 			});
 			break;
 		case '/SmartDashboard/Arm | Forward Limit Switch': //checkspelling
@@ -206,7 +214,7 @@ function onValueChanged(key, value, isNew) {
 				});
 
 			} else {
-				$('#forwardEncoderSpan').css({
+				$('#forwardEncoderSpan').text('Forward Encoder:False').css({
 					'color': 'red'
 				});
 			}
@@ -489,7 +497,12 @@ $('#autonomousButton').click(function() {
 });
 var gyroRotation = 0;
 $("#GyroBox").click(function(){
-	//onclick set a smartdashboard variable that recenters the gyro.
-	NetworkTables.setValue("/SmartDashboard/ZeroTheGyro",true);
+	//onclick, visually set the offset of the gyro to the current value, if offset != 0 then set to 0
+	//NetworkTables.setValue("/SmartDashboard/ZeroTheGyro",true);
+	if(zeroTheGyro==0){
+		zeroTheGyro=$("#GyroBox").val();
+	}else{
+		zeroTheGyro=0;
+	}
 }
 );
