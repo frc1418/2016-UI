@@ -1,7 +1,7 @@
 var currentSeconds = 150;
 var timerVar;
 var gameStarted = false;
-
+var zeroTheGyro=0;			//if this is true, set the gyro offset to the current value,gyro offset
 var defenseNames = ['A', 'B', 'C', 'D'];
 var realDefenseNames = [
 	['porticulis', 'seesaw'],
@@ -57,7 +57,7 @@ $(document).ready(function() {
 	var min = EncoderSlider.attr('min');
 	var max = EncoderSlider.attr('max');
 	var dataList = $('#stepList');
-	var tickDistance = 25;
+	var tickDistance = 50;
 	var numberOfTicks = (parseInt(max) - parseInt(min)) / tickDistance;
 	var newVal = parseInt(min);
 	for (var a = 0; a < numberOfTicks; a++) {
@@ -108,7 +108,8 @@ $(document).ready(function() {
 		thisDiv.attr('id', 'defenseDefenseSelector' + a);
 		var defenseNumber = 0;
 		thisDiv.attr('defenseNumber', defenseNumber);
-		$(thisDiv + "::before").click(function() {
+		thisDiv.before().click(function() {
+			console.log("downarrow");
 			//onclick take the value of the current defense from this div, ex'defenseName=(3,0)', ++1
 			var currentDefenseClass = thisDiv.attr('defenseClass');
 
@@ -117,7 +118,7 @@ $(document).ready(function() {
 			} else {
 				currentDefenseClass++;
 			}
-			thisDiv.attr('defenseClass', currentDefenseClass);
+			thisDiv.attr('defenseclass', currentDefenseClass);
 			thisDiv.children('.selectionToggleBox') //.find('.selectionToggleBox')
 				.attr('src', 'img/' + defenseNames[currentDefenseClass] + '' + defenseNumber + '.png');
 
@@ -128,32 +129,38 @@ $(document).ready(function() {
 			//.attr('id','selectionToggleBox'+a)
 			.attr('src', 'img/defaultImg.png')
 			.click(function() {
-				var currentDefenseNumber = thisDiv.attr('defenseNumber');
+				var currentDefenseNumber = thisDiv.attr('defensenumber');
 
 				if (currentDefenseNumber >= 1) {
 					currentDefenseNumber = 0;
 				} else {
 					currentDefenseNumber++;
 				}
-				thisDiv.attr('defenseNumber', currentDefenseNumber);
+				thisDiv.attr('defensenumber', currentDefenseNumber);
 				thisDiv.children('.selectionToggleBox'); //.find('.selectionToggleBox')
 				//.attr('src','img/'+defenseNames[thisDiv.attr('defenseClass')]+''+currentDefenseNumber+'.png');
 
 				NetworkTables.setValue('/SmartDashboard/' + thisDiv.attr('id'), realDefenseNames[thisDiv.attr('defenseClass')][currentDefenseNumber]);
 			})
 		);
-		$(thisDiv + "::after").click(function(i, b) {
+		thisDiv.after().click(function(i, b) {//right now both are being clicked
+			console.log("uparrow clicked");
 			//onclick take the value of the current defense from this div, ex'defenseName=(3,0)', ++1
-			var currentDefenseClass = thisDiv.attr('defenseClass');
+			var currentDefenseClass = parseInt(thisDiv.attr('defenseclass'));
+			//console.log(thisDiv.attr('id'),currentDefenseClass);
+
 			if (currentDefenseClass <= 0) {
 				currentDefenseClass = 3;
 			} else {
 				currentDefenseClass--;
 			}
-			thisDiv.attr('defenseClass', currentDefenseClass);
+			thisDiv.attr('defenseclass', currentDefenseClass);
 			thisDiv.children('.selectionToggleBox') //.find('.selectionToggleBox')
 				.attr('src', 'img/' + defenseNames[currentDefenseClass] + defenseNumber + '.png');
 			NetworkTables.setValue('/SmartDashboard/' + thisDiv.attr('id'), realDefenseNames[currentDefenseClass][defenseNumber]);
+			//console.log("stuff happened",currentDefenseClass);
+			//console.log('/SmartDashboard/' + thisDiv.attr('id'), realDefenseNames[currentDefenseClass][defenseNumber]);
+
 		});
 		if (defenseNumber == 0) {
 			defenseNumber = 1;
@@ -182,11 +189,8 @@ function onNetworkTablesConnection(connected) {
 
 function onValueChanged(key, value, isNew) {
 	console.log('valueChange', key, value);
+	var propName = key.substring(16, key.length);
 
-	if (isNew) {} else {
-		// similarly, use keySelector to convert the key to a valid jQuery
-		// selector. This should work for class names also, not just for ids
-	}
 	switch (key) {
 		//raw arm value and is the ball in
 		case '/SmartDashboard/ballIn': //not the actual networktablesValue
@@ -198,8 +202,9 @@ function onValueChanged(key, value, isNew) {
 			}
 			break;
 		case '/SmartDashboard/NavX | Yaw':
+			var gyroVal=value+zeroTheGyro;
 			$('#gyroArm').css({
-				'transform': 'rotate(' + value + 'deg)'
+				'transform': 'rotate(' + gyroVal + 'deg)'
 			});
 			break;
 		case '/SmartDashboard/Arm | Forward Limit Switch': //checkspelling
@@ -209,7 +214,7 @@ function onValueChanged(key, value, isNew) {
 				});
 
 			} else {
-				$('#forwardEncoderSpan').css({
+				$('#forwardEncoderSpan').text('Forward Encoder:False').css({
 					'color': 'red'
 				});
 			}
@@ -301,7 +306,6 @@ function onValueChanged(key, value, isNew) {
 				console.log('things gone wrong');
 			}
 			break;
-
 		case '/SmartDashboard/startTheTimer':
 			if (value) {
 				document.getElementById('gameTimer').style.color = 'white';
@@ -340,64 +344,6 @@ function onValueChanged(key, value, isNew) {
 			$('#EncoderSlider').val(value);
 			$('#encoderValueDisplaySpan').text('Encoder value: ' + value);
 			break;
-	}
-	console.log(key, value, isNew);
-	//name, data, has the variable just been created t/f
-
-	// key thing here: we're using the various NetworkTable keys as
-	// the id of the elements that we're appending, for simplicity. However,
-	// the key names aren't always valid HTML identifiers, so we use
-	// the NetworkTables.keyToId() function to convert them appropriately
-	if (isNew) {
-		var div = $('<div></div>').appendTo($('.settings'));
-		$('<p></p>').text(key).appendTo(div);
-		if (value === true || value === false) {
-			var boolSlider = $('<div class="bool-slider" + value + ""></div>');
-			var innerInset = $('<div class="inset"></div>');
-			innerInset.append('<div class="control"></div>')
-				.click(function() {
-					if (boolSlider.hasClass('true')) {
-						NetworkTables.setValue(key, false);
-						boolSlider.addClass('false').removeClass('true');
-					} else {
-						NetworkTables.setValue(key, true);
-						boolSlider.addClass('true').removeClass('false');
-					}
-				});
-			innerInset.appendTo(boolSlider);
-			boolSlider.appendTo(div);
-		} else if (!isNaN(value)) {
-			if (!isNaN(value)) {
-				$('<input type="number">')
-					.attr('id', NetworkTables.keyToId(key))
-					.attr('value', value)
-					.appendTo(div);
-			}
-		} else {
-			$('<input type="text">')
-				.attr('id', NetworkTables.keyToId(key))
-				.attr('value', value)
-				.appendTo(div);
-		}
-
-		/*else {
-		                // similarly, use keySelector to convert the key to a valid jQuery
-		                // selector. This should work for class names also, not just for ids
-		                //$('#' + NetworkTables.keySelector(key)).text(value);
-		            }*/
-		// key thing here: we're using the various NetworkTable keys as
-		// the id of the elements that we're appending, for simplicity. However,
-		// the key names aren't always valid HTML identifiers, so we use
-		// the NetworkTables.keyToId() function to convert them appropriately
-		var propName = key.substring(16, key.length);
-		if (isNew) {
-
-		} else {
-			// similarly, use keySelector to convert the key to a valid jQuery
-			// selector. This should work for class names also, not just for ids
-
-		}
-		switch (key) {
 			case '/SmartDashboard/defenseDefenseSelector0':
 			case '/SmartDashboard/defenseDefenseSelector1':
 			case '/SmartDashboard/defenseDefenseSelector2':
@@ -411,7 +357,7 @@ function onValueChanged(key, value, isNew) {
 					//search through the defense classes, check each one for the mode, return the defenseclass=(a) and the defenseNum=(b)
 
 					for (var j = 0; j < 2; j++) {
-						if (realDefenseNames[i][b] == value) {
+						if (realDefenseNames[i][j] == value) {
 
 							defenseClass = i;
 							defenseNum = j;
@@ -440,7 +386,7 @@ function onValueChanged(key, value, isNew) {
 					autonomousOptionSelect.append('<option id=' + value[n] + 'AutoMode' + '>' + value[n] + '</option>');
 				}
 				//if(NetworkTables.containsKey('currentlySelectedMode')){
-				autonomousOptionSelect.val(networkTables.getValue('/SmartDashboard/currentlySelectedMode'));
+				autonomousOptionSelect.val(NetworkTables.getValue('/SmartDashboard/currentlySelectedMode'));
 				//}       //temporary commenting out
 				//else{
 				//autonomousOptionSelect.val($('#autonomousOptionSelect option:first').val());
@@ -456,6 +402,8 @@ function onValueChanged(key, value, isNew) {
 			case '/SmartDashboard/attackerState4':
 				var attackerImage = $('#' + propName);
 				if (value == 'us') {
+					console.log("attackerStateChanged");
+
 					//if value is us then get all of the other things and set anything equal to us to none
 					$('.attackerState').not(document.getElementById(propName)).each(function() {
 						var thisAttacker = $(this);
@@ -463,10 +411,59 @@ function onValueChanged(key, value, isNew) {
 							NetworkTables.setValue('/SmartDashboard/' + thisAttacker.attr('id'), 'empty');
 						}
 					});
+					var attackerIndex=attackerImage.attr("position");
+					if(attackerIndex==0){
+						NetworkTables.setValue('/SmartDashboard/robotDefense',"lowbar");
+					}
+					else{
+						var newPosition=parseInt(attackerIndex)-1;
+						var $defense=$("#defenseDefenseSelector"+newPosition);
+						//defenseclass and defensenumber
+						var defenseValue=realDefenseNames[$defense.attr("defenseclass")][$defense.attr("defensenumber")];
+						NetworkTables.setValue('/SmartDashboard/robotDefense',defenseValue);
+					}
 				}
 				attackerImage.attr('state', attackerNames.indexOf(value)).attr('src', 'img/' + value + '.png');
 				break;
+	}
+	//name, data, has the variable just been created t/f
+
+	// key thing here: we're using the various NetworkTable keys as
+	// the id of the elements that we're appending, for simplicity. However,
+	// the key names aren't always valid HTML identifiers, so we use
+	// the NetworkTables.keyToId() function to convert them appropriately
+	if (isNew) {
+		var div = $('<div></div>').appendTo($('.settings'));
+		$('<p></p>').text(key).appendTo(div);
+		if (value === true || value === false) {
+			var boolSlider = $('<div class="bool-slider ' + value + '"></div>');
+			var innerInset = $('<div class="inset"></div>');
+			innerInset.append('<div class="control"></div>')
+				.click(function() {
+					if (boolSlider.hasClass('true')) {
+						NetworkTables.setValue(key, false);
+						boolSlider.addClass('false').removeClass('true');
+					} else {
+						NetworkTables.setValue(key, true);
+						boolSlider.addClass('true').removeClass('false');
+					}
+				});
+			innerInset.appendTo(boolSlider);
+			boolSlider.appendTo(div);
+		} else if (!isNaN(value)) {
+			if (!isNaN(value)) {
+				$('<input type="number">')
+					.attr('id', NetworkTables.keyToId(key))
+					.attr('value', value)
+					.appendTo(div);
+			}
+		} else {
+			$('<input type="text">')
+				.attr('id', NetworkTables.keyToId(key))
+				.attr('value', value)
+				.appendTo(div);
 		}
+
 	}
 }
 $('#set').click(function() {
@@ -498,3 +495,14 @@ $('#autonomousButton').click(function() {
     $('#tuningButton').removeClass('active');
     $(this).addClass('active');
 });
+var gyroRotation = 0;
+$("#GyroBox").click(function(){
+	//onclick, visually set the offset of the gyro to the current value, if offset != 0 then set to 0
+	//NetworkTables.setValue("/SmartDashboard/ZeroTheGyro",true);
+	if(zeroTheGyro==0){
+		zeroTheGyro=$("#GyroBox").val();
+	}else{
+		zeroTheGyro=0;
+	}
+}
+);
