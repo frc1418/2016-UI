@@ -22,9 +22,9 @@
         <span id="robotstate">Unknown state</span>
         <nav>
             <ul>
-                <li class="active"><a href="UI_MainPage.html">Teleop</a></li>
-                <li><a href="tuningPage.html">Tuning</a></li>
-                <li><a href="autonomousSelection.html">Autonomous</a></li>
+                <li class="active"><button id="teleopButton">Teleop</button></li>
+                <li><button id="tuningButton">Tuning</button></li>
+                <li><button id="autonomousButton">Autonomous</button></li>
             </ul>
         </nav>
     </header>
@@ -45,6 +45,65 @@
             </svg>
         </div>
     </div>
+    <article id="tuning">
+        <form>
+            <input type="text" placeholder="Name" name="name" id="name">
+            <input type="text" placeholder="Value" name="value" id="value">
+        </form>
+        <button id="setButton">Set</button>
+        <button id="get">Get</button>
+        <h1>Dashboard</h1>
+        <div class="settings" id="settingsContainerDiv"></div>
+        <button id="set">Set</button>
+    </article>
+    <article id="autonomousSelection">
+        <div class="FieldSelector">
+            <div class="ObstacleSelector">
+            </div>
+            <div class="RobotSelector">
+                <img class="attackerState">
+            </div>
+        </div>
+        <div class="FieldSelector">
+            <div class="ObstacleSelector">
+                <div class="DefenseSelector"></div>
+            </div>
+            <div class="RobotSelector">
+                <img class="attackerState">
+            </div>
+        </div>
+        <div class="FieldSelector">
+            <div class="ObstacleSelector">
+                <div class="DefenseSelector"></div>
+            </div>
+            <div class="RobotSelector">
+                <img class="attackerState">
+            </div>
+        </div>
+        <div class="FieldSelector">
+            <div class="ObstacleSelector">
+                <div class="DefenseSelector"></div>
+            </div>
+            <div class="RobotSelector">
+                <img class="attackerState">
+            </div>
+        </div>
+        <div class="FieldSelector">
+            <div class="ObstacleSelector">
+                <div class="DefenseSelector"></div>
+            </div>
+            <div class="RobotSelector">
+                <img class="attackerState">
+            </div>
+        </div>
+
+        <form>
+            <select id="autonomousOptionSelect">
+                <option>Lorem</option>
+                <option>Ipsum</option>
+            </select>
+        </form>
+    </article>
     <aside>
         <div id="encoder">
             <input id="EncoderSlider" type="range" min="0" max="1200" value="770" step="25" list="stepList">
@@ -66,7 +125,6 @@
     <script src="js/d3.js"></script>
     <script src="/networktables/networktables.js"></script>
     <script src="ui.js"></script>
-
 </body>
 
 </html>

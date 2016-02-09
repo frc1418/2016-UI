@@ -24,6 +24,9 @@ aside,
     border: solid 2px aqua;
     overflow: scroll;
 }
+article {
+    z-index: 100;
+}
 #GyroBox {
     display: block;
     top: 0;
@@ -81,13 +84,6 @@ nav a:focus {
 nav .active {
     background: #666;
 }
-article {
-    left: 0;
-    bottom: 0;
-    height: 80vh;
-    width: 75vw;
-    overflow: scroll;
-}
 aside {
     right: 0;
     top: 0;
@@ -114,6 +110,7 @@ aside {
     background-color: lightgrey;
     border: solid 4px black;
 }
+
 /*
 .autoButton [activeState="true"] {
     border-color: #ff1a8c;
@@ -122,56 +119,7 @@ aside {
     border-color: red;
 }
 */
-.arrow-up {
-    width: 0;
-    height: 0;
-    border: 25px solid transparent;
-    border-bottom: 25px solid red;
-    margin: 0 auto;
-    display: block;
-}
-.arrow-down {
-    width: 0;
-    height: 0;
-    border: 25px solid transparent;
-    border-top: 25px solid red;
-    margin: 0 auto;
-    display: block;
-}
-.selectionDiv {
-    display: block;
-    position: relative;
-}
-.selectionToggleBox {
-    height: 100px;
-    width: 100px;
-    margin-left: auto;
-    margin-right: auto;
-    display: block;
-    background-color: lightgrey;
-}
-.attackerState {
-    height: 100px;
-    width: 100px;
-}
-.FieldSelector {
-    display: inline-block;
-    width: 12vw;
-    height: 72vh;
-}
-.ObstacleSelector {
-    display: inline-block;
-    width: 11.5vw;
-    height: 35vh;
-}
-.DefenseSelector {
-    padding-top: 3vh;
-}
-.RobotSelector {
-    display: inline-block;
-    width: 11.5vw;
-    height: 35vh;
-}
+
 #EncoderSlider {
     width: 22vw !important;
 }
@@ -185,6 +133,13 @@ aside {
 }
 .encoderLimitSwitchSpan {
     color: red;
+}
+article#tuning {
+    background: black;
+    top: 20vh;
+    left: 0;
+    width: 50vw;
+    height: 80vh;
 }
 .bool-slider {
     color: #FFF;
@@ -242,4 +197,58 @@ aside {
 }
 .bool-slider.disabled .control {
     cursor: default;
+}
+article#autonomousSelection {
+    width: 50vw;
+    height: 100vh;
+    background: black;
+    top: 0;
+    right: 0;
+}
+.DefenseSelector::before,
+.DefenseSelector::after {
+    content: '';
+    width: 0;
+    height: 0;
+    border: 25px solid transparent;
+    margin: 0 auto;
+    display: block;
+}
+.DefenseSelector::before {
+    border-bottom: 25px solid red;
+}
+.DefenseSelector::after {
+    border-top: 25px solid red;
+}
+.selectionDiv {
+    display: block;
+    position: relative;
+}
+.selectionToggleBox {
+    height: 100px;
+    width: 100px;
+    margin-left: auto;
+    margin-right: auto;
+    display: block;
+    background-color: lightgrey;
+}
+.attackerState {
+    height: 100px;
+    width: 100px;
+}
+.FieldSelector {
+    display: inline-block;
+    width: 12vw;
+    height: 72vh;
+}
+.ObstacleSelector {
+    display: inline-block;
+    width: 100px;
+    height: 100px;
+}
+.DefenseSelector {}
+.RobotSelector {
+    display: inline-block;
+    width: 11.5vw;
+    height: 35vh;
 }
