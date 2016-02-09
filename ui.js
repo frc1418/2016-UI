@@ -102,60 +102,59 @@ $(document).ready(function() {
 	//set the value from networkTables or if no networkTables, get the default value
 	var everyDefenseSelector = $('.DefenseSelector'); //get every defenseDefenseSelector(the div that contains the stuff)
 	everyDefenseSelector.each(function(a) {
-			//for every DefenseSelector add the triangles, set the id, 'a' is the index in the list of divs
-			var thisDiv = $(this);
-			thisDiv.attr('defenseClass', a);
-			thisDiv.attr('id', 'defenseDefenseSelector' + a);
-			var defenseNumber = 0;
-			thisDiv.attr('defenseNumber', defenseNumber);
-			$(thisDiv + "::before").click(function() {
-				//onclick take the value of the current defense from this div, ex'defenseName=(3,0)', ++1
-				var currentDefenseClass = thisDiv.attr('defenseClass');
+		//for every DefenseSelector add the triangles, set the id, 'a' is the index in the list of divs
+		var thisDiv = $(this);
+		thisDiv.attr('defenseClass', a);
+		thisDiv.attr('id', 'defenseDefenseSelector' + a);
+		var defenseNumber = 0;
+		thisDiv.attr('defenseNumber', defenseNumber);
+		$(thisDiv + "::before").click(function() {
+			//onclick take the value of the current defense from this div, ex'defenseName=(3,0)', ++1
+			var currentDefenseClass = thisDiv.attr('defenseClass');
 
-				if (currentDefenseClass >= 3) {
-					currentDefenseClass = 0;
+			if (currentDefenseClass >= 3) {
+				currentDefenseClass = 0;
+			} else {
+				currentDefenseClass++;
+			}
+			thisDiv.attr('defenseClass', currentDefenseClass);
+			thisDiv.children('.selectionToggleBox') //.find('.selectionToggleBox')
+				.attr('src', 'img/' + defenseNames[currentDefenseClass] + '' + defenseNumber + '.png');
+
+			NetworkTables.setValue('/SmartDashboard/' + thisDiv.attr('id'), realDefenseNames[currentDefenseClass][defenseNumber]);
+		});
+		thisDiv.append($('<img>')
+			.addClass('selectionToggleBox')
+			//.attr('id','selectionToggleBox'+a)
+			.attr('src', 'img/defaultImg.png')
+			.click(function() {
+				var currentDefenseNumber = thisDiv.attr('defenseNumber');
+
+				if (currentDefenseNumber >= 1) {
+					currentDefenseNumber = 0;
 				} else {
-					currentDefenseClass++;
+					currentDefenseNumber++;
 				}
-				thisDiv.attr('defenseClass', currentDefenseClass);
-				thisDiv.children('.selectionToggleBox') //.find('.selectionToggleBox')
-					.attr('src', 'img/' + defenseNames[currentDefenseClass] + '' + defenseNumber + '.png');
+				thisDiv.attr('defenseNumber', currentDefenseNumber);
+				thisDiv.children('.selectionToggleBox'); //.find('.selectionToggleBox')
+				//.attr('src','img/'+defenseNames[thisDiv.attr('defenseClass')]+''+currentDefenseNumber+'.png');
 
-				NetworkTables.setValue('/SmartDashboard/' + thisDiv.attr('id'), realDefenseNames[currentDefenseClass][defenseNumber]);
-			});
-			thisDiv.append($('<img>')
-				.addClass('selectionToggleBox')
-				//.attr('id','selectionToggleBox'+a)
-				.attr('src', 'img/defaultImg.png')
-				.click(function() {
-					var currentDefenseNumber = thisDiv.attr('defenseNumber');
-
-					if (currentDefenseNumber >= 1) {
-						currentDefenseNumber = 0;
-					} else {
-						currentDefenseNumber++;
-					}
-					thisDiv.attr('defenseNumber', currentDefenseNumber);
-					thisDiv.children('.selectionToggleBox'); //.find('.selectionToggleBox')
-					//.attr('src','img/'+defenseNames[thisDiv.attr('defenseClass')]+''+currentDefenseNumber+'.png');
-
-					NetworkTables.setValue('/SmartDashboard/' + thisDiv.attr('id'), realDefenseNames[thisDiv.attr('defenseClass')][currentDefenseNumber]);
-				})
-			);
-			$(thisDiv + "::after").click(function(i, b) {
-				//onclick take the value of the current defense from this div, ex'defenseName=(3,0)', ++1
-				var currentDefenseClass = thisDiv.attr('defenseClass');
-				if (currentDefenseClass <= 0) {
-					currentDefenseClass = 3;
-				} else {
-					currentDefenseClass--;
-				}
-				thisDiv.attr('defenseClass', currentDefenseClass);
-				thisDiv.children('.selectionToggleBox') //.find('.selectionToggleBox')
-					.attr('src', 'img/' + defenseNames[currentDefenseClass] + defenseNumber + '.png');
-				NetworkTables.setValue('/SmartDashboard/' + thisDiv.attr('id'), realDefenseNames[currentDefenseClass][defenseNumber]);
+				NetworkTables.setValue('/SmartDashboard/' + thisDiv.attr('id'), realDefenseNames[thisDiv.attr('defenseClass')][currentDefenseNumber]);
 			})
 		);
+		$(thisDiv + "::after").click(function(i, b) {
+			//onclick take the value of the current defense from this div, ex'defenseName=(3,0)', ++1
+			var currentDefenseClass = thisDiv.attr('defenseClass');
+			if (currentDefenseClass <= 0) {
+				currentDefenseClass = 3;
+			} else {
+				currentDefenseClass--;
+			}
+			thisDiv.attr('defenseClass', currentDefenseClass);
+			thisDiv.children('.selectionToggleBox') //.find('.selectionToggleBox')
+				.attr('src', 'img/' + defenseNames[currentDefenseClass] + defenseNumber + '.png');
+			NetworkTables.setValue('/SmartDashboard/' + thisDiv.attr('id'), realDefenseNames[currentDefenseClass][defenseNumber]);
+		});
 		if (defenseNumber == 0) {
 			defenseNumber = 1;
 		} else {
@@ -479,15 +478,23 @@ $('#set').click(function() {
 });
 
 $('#teleopButton').click(function() {
-    console.log("asdhfj");
 	$('#tuning').hide();
 	$('#autonomousSelection').hide();
+    $(this).addClass('active');
+    $('#tuningButton').removeClass('active');
+    $('#autonomousButton').removeClass('active');
 });
 $('#tuningButton').click(function() {
 	$('#tuning').show();
 	$('#autonomousSelection').hide();
+    $('#teleopButton').removeClass('active');
+    $(this).addClass('active');
+    $('#autonomousButton').removeClass('active');
 });
 $('#autonomousButton').click(function() {
 	$('#tuning').hide();
 	$('#autonomousSelection').show();
+    $('#teleopButton').removeClass('active');
+    $('#tuningButton').removeClass('active');
+    $(this).addClass('active');
 });
