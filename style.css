@@ -241,6 +241,7 @@ article#autonomousSelection {
 }
 .FieldSelector {
     display: inline-block;
+
     width: 12vw;
     height: 72vh;
 }
