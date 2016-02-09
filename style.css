@@ -69,20 +69,23 @@ nav li {
     display: block;
     float: left;
 }
-nav a {
+nav button {
     position: relative;
     display: block;
     padding: 7px 10px;
     text-decoration: none;
+    border: 0;
+    background: #666;
     color: #eee;
 }
-nav a:hover,
-nav a:focus {
+nav button:hover,
+nav button:focus {
     text-decoration: none;
     background-color: #888;
+    outline: 0;
 }
 nav .active {
-    background: #666;
+    background: #888;
 }
 aside {
     right: 0;
