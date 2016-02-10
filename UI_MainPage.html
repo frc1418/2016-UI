@@ -5,15 +5,6 @@
     <meta charset="utf-8">
     <title>1418 DriverStation</title>
     <link rel="stylesheet" href="style.css">
-    <style>
-        #gyro {
-            width: 20vw;
-            height: 20vw;
-        }
-        #gyroArm {
-            transform-origin: bottom;
-        }
-    </style>
 </head>
 
 <body>
@@ -22,9 +13,15 @@
         <span id="robotstate">Unknown state</span>
         <nav>
             <ul>
-                <li><button id="teleopButton">Teleop</button></li>
-                <li><button id="tuningButton">Tuning</button></li>
-                <li><button id="autonomousButton">Autonomous</button></li>
+                <li>
+                    <button id="teleopButton" class="active">Teleop</button>
+                </li>
+                <li>
+                    <button id="tuningButton">Tuning</button>
+                </li>
+                <li>
+                    <button id="autonomousButton">Autonomous</button>
+                </li>
             </ul>
         </nav>
     </header>
@@ -32,19 +29,35 @@
         <img src="http://roborio-1418-frc.local:5800/?action=stream">
     </div>
     <div id="gameTimer">00:00</div>
-    <div id="GyroBox">
+    <article id="main">
         <svg id="gyro">
-            <circle id="gyroCircle" cx="120" cy="120" r="100" stroke="aqua" stroke-width="3" />
-            <rect id="gyroArm" x="115" y="40" width="10" height="80" stroke="aqua" stroke-width="3" />
+            <circle id="gyroCircle" cx="85" cy="85" r="50" stroke="aqua" stroke-width="3" />
+            <rect id="gyroArm" x="80" y="5" width="10" height="80" stroke="aqua" stroke-width="3" />
+            <text id="gyroLabel" x="70" y="25" fill="aqua" font-size="25">90º</text>
         </svg>
-        <div class="roboWidget">
-            <svg id="widgetCanvas">
-                <rect id="robotBody" x="75" y="75" width="110" height="60" style="fill:#9c9c9c;stroke-width:3;stroke:rgb(0,0,0)" />
-                <rect id="robotArm" x="35" y="75" width="80" height="10" style="fill:#c37dc3;stroke-width:3;stroke:black" />
-                <circle id="ballWidget" cx="50" cy="110" r="20" stroke="black" stroke-width="3" style="fill:#f0195f;stroke-width:3;stroke:black" visibility="hidden" />
-            </svg>
-        </div>
-    </div>
+        <svg id="robotDiagram" width="332" height="450">
+            <rect class="winch back" x="200" y="340" width="70" height="8" />
+            <rect class="winch back" x="200" y="295" width="70" height="8" />
+            <rect class="winch back" x="200" y="250" width="70" height="8" />
+            <rect class="winch back" x="200" y="205" width="70" height="8" />
+            <rect class="winch back" x="200" y="160" width="70" height="8" />
+            <rect class="winch forward" x="200" y="340" width="70" height="8" />
+            <rect class="winch forward" x="200" y="295" width="70" height="8" />
+            <rect class="winch forward" x="200" y="250" width="70" height="8" />
+            <rect class="winch forward" x="200" y="205" width="70" height="8" />
+            <rect class="winch forward" x="200" y="160" width="70" height="8" />
+            <rect x="75" y="360" width="230" height="40" />
+            <rect x="85" y="370" width="210" height="40" />
+            <rect id="robotArm" x="35" y="375" width="80" height="10" />
+            <line x1="100" y1="415" x2="180" y2="420" />
+            <line x1="180" y1="420" x2="260" y2="415" />
+            <circle cx="100" cy="410" r="25" />
+            <circle cx="180" cy="410" r="25" />
+            <circle cx="260" cy="410" r="25" />
+            <rect x="60" y="380" width="250" height="30" />
+            <circle id="ball" cx="50" cy="410" r="20" visibility="hidden" />
+        </svg>
+    </article>
     <article id="tuning">
         <form>
             <input type="text" placeholder="Name" name="name" id="name">
@@ -109,7 +122,7 @@
             <input id="EncoderSlider" type="range" min="0" max="1200" value="770" step="25" list="stepList">
             <datalist id="stepList"></datalist>
             <br>
-            <span class="encodertext" id="encoderValueDisplaySpan">Encoder value: 200</span>
+            <span class="encodertext" id="encoderValueDisplaySpan">EncoderValue: 200</span>
             <br>
             <span class="encodertext encoderLimitSwitchSpan" id="forwardEncoderSpan">Forward Encoder:False</span>
             <br>
