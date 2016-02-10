@@ -259,14 +259,18 @@ function onValueChanged(key, value, isNew) {
 				$button.attr('activeState', true);
 				$button.css({
                     'pointer-events': 'auto',
-                    'border-color': 'aqua'
+                    'border-color': 'aqua',
                 });
+				$button.attr("src",'/img/'+$button.attr("baseSrc")+'.gif');
+				console.log($button.attr("src"));
 				$('.autoButton').not(document.getElementById(name)).each(function() {
-					$(this).css({
+					var thisButton=$(this)
+					thisButton.attr("src",'/img/'+thisButton.attr("baseSrc")+'.png');
+					thisButton.css({
 						'pointer-events': 'auto',
-						'border-color': 'rgb(255, 200,16)'
+						'border-color': 'rgb(255, 200,16)',
 					});
-					NetworkTables.setValue('/SmartDashboard/' + $(this).attr('id'), false);
+					NetworkTables.setValue('/SmartDashboard/' + thisButton.attr('id'), false);
 				}); //then set everything else that isn't true and make it red, and set their activeState to false,
 			} else if (value == false) {
 				$button.attr('activeState', false);
@@ -301,6 +305,7 @@ function onValueChanged(key, value, isNew) {
 						//'pointer-events': 'auto',
 						//'border-color': 'cyan'
 					});*/
+					$button.attr("src",'/img/'+$button.attr("baseSrc")+'.png');
 					$button.attr('style', 'pointer-events: auto; border-color: rgb(255, 200,16);');
 
 				} else {
