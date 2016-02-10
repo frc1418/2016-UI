@@ -17,26 +17,56 @@ body {
 header,
 article,
 aside,
-#gameTimer,
-#GyroBox {
+#gameTimer {
     padding: 10px;
     position: fixed;
-    border: solid 2px aqua;
+    border: solid 1px aqua;
     overflow: scroll;
 }
-article {
+article#tuning,
+article#autonomousSelection {
     z-index: 100;
 }
-#GyroBox {
-    display: block;
+article#main {
     top: 0;
     left: 50vw;
     height: 100vh;
-    width: 25vw;
+    width: 30vw;
 }
-#gyro,
-#robowidget {
-    margin-left: 2vw;
+svg * {
+    stroke: aqua;
+    stroke-width: 2;
+    transform-origin: center;
+}
+#gyro {
+    width: 175px;
+    height: 175px;
+    border: solid 2px aqua;
+    border-radius: 50%;
+}
+#gyroArm {
+    transform-origin: bottom;
+    transform: rotate(90deg);
+}
+#robotDiagram {
+    position: absolute;
+    bottom: 1px;
+    left: .12vw;
+}
+.winch {
+    transition: .5s;
+}
+.winch.forward {
+    transform: rotate(-45deg);
+}
+.winch.back {
+    transform: rotate(45deg);
+}
+.winch.forward.open {
+    transform: rotate(-5deg);
+}
+.winch.back.open {
+    transform: rotate(5deg);
 }
 header {
     width: 28vw;
@@ -90,7 +120,7 @@ nav .active {
 aside {
     right: 0;
     top: 0;
-    width: 25vw;
+    width: 20vw;
     height: 100vh;
 }
 #gameTimer {
@@ -124,7 +154,7 @@ aside {
 */
 
 #EncoderSlider {
-    width: 22vw !important;
+    width: 18vw;
 }
 .encodertext {
     margin-left: 5vw;
@@ -143,6 +173,7 @@ article#tuning {
     left: 0;
     width: 50vw;
     height: 80vh;
+    display: none;
 }
 .bool-slider {
     color: #FFF;
@@ -154,7 +185,7 @@ article#tuning {
     border-radius: 25px;
 }
 .bool-slider.true .inset {
-    background-color: #51a351;
+    background-color: #007880;
 }
 .bool-slider.true .inset .control {
     float: left;
@@ -166,7 +197,7 @@ article#tuning {
     top: 20%;
 }
 .bool-slider.false .inset {
-    background-color: #da4f49;
+    background-color: #6e2e09;
     background-image: none;
 }
 .bool-slider.false .inset .control {
@@ -193,7 +224,7 @@ article#tuning {
     cursor: pointer;
 }
 .bool-slider.disabled {
-    color: #CCC;
+    color: #ccc;
 }
 .bool-slider.disabled .inset {
     background-color: #f5f5f5;
@@ -207,6 +238,7 @@ article#autonomousSelection {
     background: black;
     top: 0;
     right: 0;
+    display: none;
 }
 .DefenseSelector::before,
 .DefenseSelector::after {
@@ -217,21 +249,15 @@ article#autonomousSelection {
     margin: 0 auto;
     display: block;
 }
-.DefenseSelector::before {
+.DefenseSelector:before {
     border-bottom: 25px solid red;
 }
-.DefenseSelector::after {
+.DefenseSelector:after {
     border-top: 25px solid red;
-}
-.selectionDiv {
-    display: block;
-    position: relative;
 }
 .selectionToggleBox {
     height: 100px;
     width: 100px;
-    margin-left: auto;
-    margin-right: auto;
     display: block;
     background-color: lightgrey;
 }
@@ -241,18 +267,16 @@ article#autonomousSelection {
 }
 .FieldSelector {
     display: inline-block;
-
-    width: 12vw;
-    height: 72vh;
 }
 .ObstacleSelector {
-    display: inline-block;
+    display: block;
     width: 100px;
     height: 100px;
+    margin-bottom: 100px;
 }
 .DefenseSelector {}
 .RobotSelector {
-    display: inline-block;
-    width: 11.5vw;
-    height: 35vh;
+    display: block;
+    width: 100px;
+    height: 100px;
 }
