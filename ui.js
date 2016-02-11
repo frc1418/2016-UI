@@ -11,7 +11,9 @@ var realDefenseNames = [
 ];
 var attackerNames = ['empty', 'allied', 'us'];
 var displayInTuning=['/SmartDashboard/'];		//if it starts with these strings add to tuning page
-
+function hashCode(s){
+  return s.split("").reduce(function(a,b){a=((a<<5)-a)+b.charCodeAt(0);return a&a},0);
+}
 $(document).ready(function() {
 	var gyroRotation = 0;
 
@@ -259,14 +261,18 @@ function onValueChanged(key, value, isNew) {
 				$button.attr('activeState', true);
 				$button.css({
                     'pointer-events': 'auto',
-                    'border-color': 'aqua'
+                    'border-color': 'aqua',
                 });
+				$button.attr("src",'/img/'+$button.attr("baseSrc")+'.gif');
+				console.log($button.attr("src"));
 				$('.autoButton').not(document.getElementById(name)).each(function() {
-					$(this).css({
+					var thisButton=$(this)
+					thisButton.attr("src",'/img/'+thisButton.attr("baseSrc")+'.png');
+					thisButton.css({
 						'pointer-events': 'auto',
-						'border-color': 'rgb(255, 200,16)'
+						'border-color': 'rgb(255, 200,16)',
 					});
-					NetworkTables.setValue('/SmartDashboard/' + $(this).attr('id'), false);
+					NetworkTables.setValue('/SmartDashboard/' + thisButton.attr('id'), false);
 				}); //then set everything else that isn't true and make it red, and set their activeState to false,
 			} else if (value == false) {
 				$button.attr('activeState', false);
@@ -301,6 +307,7 @@ function onValueChanged(key, value, isNew) {
 						//'pointer-events': 'auto',
 						//'border-color': 'cyan'
 					});*/
+					$button.attr("src",'/img/'+$button.attr("baseSrc")+'.png');
 					$button.attr('style', 'pointer-events: auto; border-color: rgb(255, 200,16);');
 
 				} else {
@@ -430,12 +437,6 @@ function onValueChanged(key, value, isNew) {
 			attackerImage.attr('state', attackerNames.indexOf(value)).attr('src', 'img/' + value + '.png');
 			break;
 	}
-	//name, data, has the variable just been created t/f
-
-	// key thing here: we're using the various NetworkTable keys as
-	// the id of the elements that we're appending, for simplicity. However,
-	// the key names aren't always valid HTML identifiers, so we use
-	// the NetworkTables.keyToId() function to convert them appropriately
 	if (isNew) {
 		/*iterate through each value in displayInTuning, if the key starts
 		 with the current value of displayInTuning display it, if not then do nothing */
@@ -452,7 +453,7 @@ function onValueChanged(key, value, isNew) {
 			var div = $('<div></div>').appendTo($('.settings'));
 			$('<p></p>').text(key).appendTo(div);
 			if (value === true || value === false) {
-				var boolSlider = $('<div class="bool-slider ' + value + ' id=Tuning'+NetworkTables.keyToId(key)+'"></div>');
+				var boolSlider = $('<div class="bool-slider ' + value + '" id="tuning'+hashCode(key)+'"></div>');
 				var innerInset = $('<div class="inset"></div>');
 				innerInset.append('<div class="control"></div>')
 					.click(function() {
@@ -470,16 +471,35 @@ function onValueChanged(key, value, isNew) {
 			} else if (!isNaN(value)) {
 				if (!isNaN(value)) {
 					$('<input type="number">')
-						.attr('id', "Tuning"+NetworkTables.keyToId(key))
+						.attr('id', "tuning"+hashCode(key))
 						.attr('value', value)
 						.appendTo(div);
 				}
 			} else {
 				$('<input type="text">')
-					.attr('id', "Tuning"+NetworkTables.keyToId(key))
+					.attr('id', 'tuning'+hashCode(key))
 					.attr('value', value)
 					.appendTo(div);
 			}
+		}
+	}
+	else{
+		var $tuningDiv=$('#tuning'+hashCode(key));
+		if (value === true || value === false) {
+			//$tuningDiv.trigger("click");
+			if ($tuningDiv.hasClass('true')) {
+				$tuningDiv.addClass('false').removeClass('true');
+			}
+			else{
+				$tuningDiv.addClass('true').removeClass('false');
+			}
+			console.log('valueChangebool',value);
+
+		}
+		else{
+
+			$tuningDiv.val(value);
+			console.log('valueChange',$tuningDiv.val());
 		}
 	}
 }
@@ -514,10 +534,12 @@ $('#autonomousButton').click(function() {
 });
 
 var gyroRotation = 0;
-$('#GyroBox').click(function() {
+$('#gyro').click(function(e) {
+	e.stopPropagation();
+
 	//onclick, visually set the offset of the gyro to the current value, if offset != 0 then set to 0
 	if(zeroTheGyro==0){
-		zeroTheGyro=$("#GyroBox").val();
+		zeroTheGyro=$("#gyro").val();
 
 	}else{
 		zeroTheGyro=0;
@@ -529,6 +551,8 @@ $('#GyroBox').click(function() {
 }
 );
 
-$('#robotDiagram').click(function() {
+$('#robotDiagram').on("click",function(e) {
+	e.stopPropagation();
+
     $('.winch').toggle();
 });
