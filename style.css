@@ -160,9 +160,11 @@ aside {
     margin-left: 5vw;
 }
 #lowBarImg {
-    display: inline-block;
-    width: 11.5vw;
-    height: 25vh;
+  transform: translateY(50px);
+  height: 100px;
+  width: 100px;
+  display: block;
+  background-color: lightgrey;
 }
 .encoderLimitSwitchSpan {
     color: red;
