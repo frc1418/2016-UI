@@ -43,6 +43,7 @@ svg * {
     height: 175px;
     border: solid 2px aqua;
     border-radius: 50%;
+    z-index: 50;
 }
 #gyroArm {
     transform-origin: bottom;
@@ -269,6 +270,7 @@ article#autonomousSelection {
 }
 .FieldSelector {
     display: inline-block;
+    margin-left: -5px;
 }
 .ObstacleSelector {
     display: block;
