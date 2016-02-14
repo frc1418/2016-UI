@@ -110,8 +110,8 @@ $(document).ready(function() {
 		thisDiv.attr('id', 'defenseDefenseSelector' + a);
 		var defenseNumber = 0;
 		thisDiv.attr('defenseNumber', defenseNumber);
-		thisDiv.before().click(function() {
-			console.log('downarrow');
+		thisDiv.append($('<div class="arrow-up"></div>')
+            .click(function() {
 			//onclick take the value of the current defense from this div, ex'defenseName=(3,0)', ++1
 			var currentDefenseClass = thisDiv.attr('defenseClass');
 
@@ -125,7 +125,7 @@ $(document).ready(function() {
 				.attr('src', 'img/' + defenseNames[currentDefenseClass] + '' + defenseNumber + '.png');
 
 			NetworkTables.setValue('/SmartDashboard/' + thisDiv.attr('id'), realDefenseNames[currentDefenseClass][defenseNumber]);
-		});
+		}));
 		thisDiv.append($('<img>')
 			.addClass('selectionToggleBox')
 			//.attr('id','selectionToggleBox'+a)
@@ -145,8 +145,8 @@ $(document).ready(function() {
 				NetworkTables.setValue('/SmartDashboard/' + thisDiv.attr('id'), realDefenseNames[thisDiv.attr('defenseClass')][currentDefenseNumber]);
 			})
 		);
-		thisDiv.after().click(function(i, b) { //right now both are being clicked
-			console.log('uparrow clicked');
+		thisDiv.append($('<div class="arrow-down"></div>')
+            .click(function(i, b) { //right now both are being clicked
 			//onclick take the value of the current defense from this div, ex'defenseName=(3,0)', ++1
 			var currentDefenseClass = parseInt(thisDiv.attr('defenseclass'));
 			//console.log(thisDiv.attr('id'),currentDefenseClass);
@@ -163,7 +163,7 @@ $(document).ready(function() {
 			//console.log('stuff happened',currentDefenseClass);
 			//console.log('/SmartDashboard/' + thisDiv.attr('id'), realDefenseNames[currentDefenseClass][defenseNumber]);
 
-		});
+		}));
 		if (defenseNumber == 0) {
 			defenseNumber = 1;
 		} else {
