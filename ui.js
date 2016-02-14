@@ -12,7 +12,15 @@ var realDefenseNames = [
 var attackerNames = ['empty', 'allied', 'us'];
 var displayInTuning=['/SmartDashboard/'];		//if it starts with these strings add to tuning page
 function hashCode(s){
-  return s.split("").reduce(function(a,b){a=((a<<5)-a)+b.charCodeAt(0);return a&a},0);
+	//previous value, current value
+	var ret="";
+	var sLength=s.length;
+	for(var a=0;a<sLength;a++){
+		ret=ret+s.charCodeAt(a);
+	}
+
+	console.log("hashPreformed",s,ret);
+	return ret;
 }
 $(document).ready(function() {
 	var gyroRotation = 0;
@@ -48,7 +56,7 @@ $(document).ready(function() {
 			activeState = true;
 			//set all of the other values to false
 			$('.autoButton').not(document.getElementById($thisButton.attr('id'))).each(function() {
-				NetworkTables.setValue('/SmartDashboard/' + $(this).attr('id'), false);
+				NetworkTables.setValue('/SmartDashboard/' + $thisButton.attr('id'), false);
 
 			});
 		} else {}
@@ -69,12 +77,12 @@ $(document).ready(function() {
 	$('#encoder').hide().show(0); //element refresh
 	$('#EncoderSlider').change(function() {
 		var encoderVal = $('#EncoderSlider').val();
-		$('#encoderValueDisplaySpan').text('EncoderValue:' + encoderVal);
-		NetworkTables.setValue('/SmartDashboard/EncoderSliderValue', parseInt(encoderVal));
+		$('#encoderValueDisplaySpan').text('Arm Encoder Value:' + encoderVal);
+		NetworkTables.setValue('/SmartDashboard/Arm | Middle', parseInt(encoderVal));
 
 	});
 	$('#autonomousOptionSelect').change(function() {
-		NetworkTables.setValue('/SmartDashboard/currentlySelectedMode', $(this).val());
+		NetworkTables.setValue('/SmartDashboard/Autonomous Mode/selected', $(this).val());
 	});
 
 	//for every of the 5 attacking positions give the image the attacking toggleswitchcyclethroughimagesthing
@@ -196,6 +204,16 @@ function onValueChanged(key, value, isNew) {
 
 	switch (key) {
 		//raw arm value and is the ball in
+		case '/SmartDashboard/ladderUp':
+			//is the ladderLift extended?
+			if(value==true){
+				$('.winch').show();
+			}
+			else{
+				$('.winch').hide();
+
+			}
+		break
 		case '/SmartDashboard/ballIn': //not the actual networktablesValue
 			if (value) { //BOOLEANS ARE NOT WORKING WITH NETWORKTABLES AT THE MOMENT(or with testing at the very least)
 				$('#ball').attr('visibility', 'visible');
@@ -336,23 +354,14 @@ function onValueChanged(key, value, isNew) {
 
 				}, 1000);
 			}
-			NetworkTables.setValue('/SmartDashboard/startTheTimer', 'false'); //CHANGE TO A BOOLEAN LATER
+			NetworkTables.setValue('/SmartDashboard/startTheTimer', false);
 			break;
-		case '/SmartDashboard/EncoderSliderValue':
+		case '/SmartDashboard/Arm | Middle':
 			if (value > 1200) {
 				value = 1200;
 			} else if (value < 0) {
 				value = 0;
 			} else {}
-			$('#EncoderSlider').val(value);
-			$('#encoderValueDisplaySpan').text('EncoderValue: ' + value);
-			break;
-		case '/SmartDashboard/EncoderSliderValue':
-			if (value > 350) {
-				value = 350;
-			} else if (value < 150) {
-				value = 150;
-			}
 			$('#EncoderSlider').val(value);
 			$('#encoderValueDisplaySpan').text('EncoderValue: ' + value);
 			break;
@@ -404,6 +413,15 @@ function onValueChanged(key, value, isNew) {
 			//autonomousOptionSelect.val($('#autonomousOptionSelect option:first').val());
 			//}
 			break;
+		case '/SmartDashboard/Autonomous Mode/default':
+				//set the default options thingy to value if it exists.
+			try{
+				$("#autonomousOptionSelect").val(value);
+			}
+			catch(ex){
+				console.log("autonomousDefaultingError, something went wrong");
+			}
+			break;
 		case '/SmartDashboard/currentlySelectedMode':
 			$('#autonomousOptionSelect').val(value);
 			break;
@@ -415,7 +433,8 @@ function onValueChanged(key, value, isNew) {
 			var attackerImage = $('#' + propName);
 			if (value == 'us') {
 				console.log('attackerStateChanged');
-
+				var attackerIndex = attackerImage.attr('position');
+				NetworkTables.setValue("/SmartDashboard/robotPosition",attackerIndex);
 				//if value is us then get all of the other things and set anything equal to us to none
 				$('.attackerState').not(document.getElementById(propName)).each(function() {
 					var thisAttacker = $(this);
@@ -423,7 +442,6 @@ function onValueChanged(key, value, isNew) {
 						NetworkTables.setValue('/SmartDashboard/' + thisAttacker.attr('id'), 'empty');
 					}
 				});
-				var attackerIndex = attackerImage.attr('position');
 				if (attackerIndex == 0) {
 					NetworkTables.setValue('/SmartDashboard/robotDefense', 'lowbar');
 				} else {
@@ -432,6 +450,7 @@ function onValueChanged(key, value, isNew) {
 					//defenseclass and defensenumber
 					var defenseValue = realDefenseNames[$defense.attr('defenseclass')][$defense.attr('defensenumber')];
 					NetworkTables.setValue('/SmartDashboard/robotDefense', defenseValue);
+
 				}
 			}
 			attackerImage.attr('state', attackerNames.indexOf(value)).attr('src', 'img/' + value + '.png');
@@ -507,7 +526,7 @@ $('#set').click(function() {
 	var childInputs = $('#settingsContainerDiv input');
 	childInputs.each(function(a) {
 		var thisChild = $(this);
-		NetworkTables.setValue(thisChild.attr('id'), thisChild.val());
+		NetworkTables.setValue("Tuning"+hashCode(thisChild.attr('id'), thisChild.val()));		//need to change id back into a string
 	});
 });
 
@@ -550,9 +569,3 @@ $('#gyro').click(function(e) {
 	});
 }
 );
-
-$('#robotDiagram').on("click",function(e) {
-	e.stopPropagation();
-
-    $('.winch').toggle();
-});

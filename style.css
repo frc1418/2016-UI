@@ -124,14 +124,14 @@ aside {
     height: 100vh;
 }
 #gameTimer {
-    padding: 5px 2px;
+    padding: 2vh 1vw;
     font-family: 'DS-Digital', monospace;
     display: block;
     height: 20vh;
     width: 22vw;
     top: 0;
     left: 0;
-    font-size: 23vh;
+    font-size: 9vmax;
     line-height: .78;
     -webkit-user-select: none;
     user-select: none;
@@ -160,9 +160,11 @@ aside {
     margin-left: 5vw;
 }
 #lowBarImg {
-    display: inline-block;
-    width: 11.5vw;
-    height: 25vh;
+  transform: translateY(50px);
+  height: 100px;
+  width: 100px;
+  display: block;
+  background-color: lightgrey;
 }
 .encoderLimitSwitchSpan {
     color: red;
