@@ -240,8 +240,8 @@ article#autonomousSelection {
     right: 0;
     display: none;
 }
-.DefenseSelector::before,
-.DefenseSelector::after {
+.arrow-up,
+.arrow-down {
     content: '';
     width: 0;
     height: 0;
@@ -249,10 +249,10 @@ article#autonomousSelection {
     margin: 0 auto;
     display: block;
 }
-.DefenseSelector:before {
+.arrow-up {
     border-bottom: 25px solid red;
 }
-.DefenseSelector:after {
+.arrow-down {
     border-top: 25px solid red;
 }
 .selectionToggleBox {
