@@ -212,7 +212,7 @@ function onValueChanged(key, value, isNew) {
 				$('.winch').hide();
 
 			}
-			break
+			break;
 		case '/SmartDashboard/ballIn': //not the actual networktablesValue
 			if (value) { //BOOLEANS ARE NOT WORKING WITH NETWORKTABLES AT THE MOMENT(or with testing at the very least)
 				$('#ball').attr('visibility', 'visible');
@@ -308,14 +308,6 @@ function onValueChanged(key, value, isNew) {
 					autoButtonSelection.each(function() {
 						var thisIsTheButton = $(this);
 						var thisActiveState = thisIsTheButton.attr('activeState');
-						if (thisActiveState == true || thisActiveState == 'true') {
-
-						} else {
-							thisIsTheButton.css({
-								//'pointer-events': 'none',
-								//'border-color': 'red'
-							});
-						}
 					});
 					$button.attr('style', 'pointer-events: none; border-color: rgb(255, 10,16);');
 
@@ -325,7 +317,7 @@ function onValueChanged(key, value, isNew) {
 						//'border-color': 'cyan'
 					});*/
 					$button.attr('src', '/img/' + $button.attr('baseSrc') + '.png');
-					$button.attr('style', 'pointer-events: auto; border-color: rgb(255, 200,16);');
+					$button.attr('style', 'pointer-events: auto; border-color: #ffc811;');
 
 				} else {
 					console.log('terrible things have happened');
@@ -341,21 +333,18 @@ function onValueChanged(key, value, isNew) {
 				timerVar = setInterval(function() {
 					currentSeconds--;
 					var currentMinutes = parseInt(currentSeconds / 60);
-					var actualSeconds = (currentSeconds % 60)
+					var actualSeconds = (currentSeconds % 60);
 
 					actualSeconds = actualSeconds < 10 ? "0" + actualSeconds : actualSeconds;
 
 					if (currentSeconds < 0) {
 						window.clearTimeout(timerVar);
 						return;
-					}
-					else if (currentSeconds < 20){
-						document.getElementById('gameTimer').style.color = (currentSeconds % 2 == 0)? '#FF3030' : 'white'
-					}
-				 	else if (currentSeconds < 30) {
+					} else if (currentSeconds <= 15) {
+						document.getElementById('gameTimer').style.color = (currentSeconds % 2 == 0) ? '#FF3030' : 'white';
+					} else if (currentSeconds <= 30) {
 						document.getElementById('gameTimer').style.color = '#FF3030';
 					}
-					
 
 					document.getElementById('gameTimer').innerHTML = currentMinutes + ':' + actualSeconds;
 
@@ -448,7 +437,7 @@ function onValueChanged(key, value, isNew) {
 						NetworkTables.setValue('/SmartDashboard/' + thisAttacker.attr('id'), 'empty');
 					}
 				});
-				if (attackerIndex == 0) {
+				if (attackerIndex === 0) {
 					NetworkTables.setValue('/SmartDashboard/robotDefense', 'lowbar');
 				} else {
 					var newPosition = parseInt(attackerIndex) - 1;
@@ -467,8 +456,8 @@ function onValueChanged(key, value, isNew) {
 		 with the current value of displayInTuning display it, if not then do nothing */
 		var displayInTuningLength = displayInTuning.length;
 		var addToTuning = false;
-		for (var a = 0; a < displayInTuningLength; a++) {
-			var currentString = displayInTuning[a];
+		for (var i = 0; i < displayInTuningLength; i++) {
+			var currentString = displayInTuning[i];
 			if (key.substring(0, currentString.length) == currentString) {
 				addToTuning = true;
 				break;
@@ -569,4 +558,9 @@ $('#gyro').click(function(e) {
 	$('#gyroArm').css({
 		'transform': 'rotate(' + gyroVal + ')'
 	});
+});
+$('.winch').mousedown(function() {
+    NetworkTables.setValue('/SmartDashboard/ladderButtonPressed', true);
+}).mouseup(function() {
+    NetworkTables.setValue('/SmartDashboard/ladderButtonPressed', false);
 });
