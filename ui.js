@@ -1,4 +1,4 @@
-var currentSeconds = 150;
+var currentSeconds = 135;
 var timerVar;
 var gameStarted = false;
 var zeroTheGyro = 0; //if this is true, set the gyro offset to the current value,gyro offset
@@ -337,20 +337,25 @@ function onValueChanged(key, value, isNew) {
 			break;
 		case '/SmartDashboard/startTheTimer':
 			if (value) {
-				document.getElementById('gameTimer').style.color = 'white';
+				document.getElementById('gameTimer').style.color = 'aqua';
 				timerVar = setInterval(function() {
 					currentSeconds--;
 					var currentMinutes = parseInt(currentSeconds / 60);
 					var actualSeconds = (currentSeconds % 60)
 
 					actualSeconds = actualSeconds < 10 ? "0" + actualSeconds : actualSeconds;
-					
+
 					if (currentSeconds < 0) {
 						window.clearTimeout(timerVar);
 						return;
-					} else if (currentSeconds < 30) {
-						document.getElementById('GameTimer').style.color = '#FF3030';
 					}
+					else if (currentSeconds < 20){
+						document.getElementById('gameTimer').style.color = (currentSeconds % 2 == 0)? '#FF3030' : 'white'
+					}
+				 	else if (currentSeconds < 30) {
+						document.getElementById('gameTimer').style.color = '#FF3030';
+					}
+					
 
 					document.getElementById('gameTimer').innerHTML = currentMinutes + ':' + actualSeconds;
 
