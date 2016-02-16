@@ -349,6 +349,9 @@ function onValueChanged(key, value, isNew) {
 					document.getElementById('gameTimer').innerHTML = currentMinutes + ':' + actualSeconds;
 
 				}, 1000);
+			}else{
+				document.getElementById('gameTimer').innerHTML = 2:15;
+				currentSeconds = 135
 			}
 			NetworkTables.setValue('/SmartDashboard/startTheTimer', false);
 			break;
