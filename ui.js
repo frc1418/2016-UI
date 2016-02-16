@@ -182,7 +182,7 @@ $(document).ready(function() {
 // called when the websocket connects/disconnects
 function onRobotConnection(connected) {
 	//config.frontcam should be set to http://roborio-1418-frc.local:5800/
-	console.log('Robot connected: ' + connected);
+	console.log('Robot status: ' + connected);
 	$('#robotstate').text(connected ? 'Connected!' : 'Disconnected');
 }
 
