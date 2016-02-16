@@ -341,7 +341,10 @@ function onValueChanged(key, value, isNew) {
 				timerVar = setInterval(function() {
 					currentSeconds--;
 					var currentMinutes = parseInt(currentSeconds / 60);
-					var actualSeconds = currentSeconds - 60 * currentMinutes;
+					var actualSeconds = (currentSeconds % 60)
+
+					actualSeconds = actualSeconds < 10 ? "0" + actualSeconds : actualSeconds;
+					
 					if (currentSeconds < 0) {
 						window.clearTimeout(timerVar);
 						return;
