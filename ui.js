@@ -182,7 +182,7 @@ $(document).ready(function() {
 // called when the websocket connects/disconnects
 function onRobotConnection(connected) {
 	//config.frontcam should be set to http://roborio-1418-frc.local:5800/
-	console.log('Robot connected: ' + connected);
+	console.log('Robot status: ' + connected);
 	$('#robotstate').text(connected ? 'Connected!' : 'Disconnected');
 }
 
@@ -349,6 +349,9 @@ function onValueChanged(key, value, isNew) {
 					document.getElementById('gameTimer').innerHTML = currentMinutes + ':' + actualSeconds;
 
 				}, 1000);
+			}else{
+				document.getElementById('gameTimer').innerHTML = 2:15;
+				currentSeconds = 135
 			}
 			NetworkTables.setValue('/SmartDashboard/startTheTimer', false);
 			break;
