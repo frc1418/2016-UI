@@ -43,10 +43,10 @@ svg * {
     height: 175px;
     border: solid 2px aqua;
     border-radius: 50%;
+    z-index: 50;
 }
 #gyroArm {
-    transform-origin: bottom;
-    transform: rotate(90deg);
+    transform-origin: left;
 }
 #robotDiagram {
     position: absolute;
@@ -155,9 +155,6 @@ aside {
 
 #EncoderSlider {
     width: 18vw;
-}
-.encodertext {
-    margin-left: 5vw;
 }
 #lowBarImg {
   transform: translateY(50px);
@@ -269,6 +266,7 @@ article#autonomousSelection {
 }
 .FieldSelector {
     display: inline-block;
+    margin-left: -5px;
 }
 .ObstacleSelector {
     display: block;
