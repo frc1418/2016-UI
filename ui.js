@@ -23,6 +23,8 @@ function hashCode(s) {
 	return ret;
 }
 $(document).ready(function() {
+	$('.winch').hide();
+
 	var gyroRotation = 0;
 
 	document.getElementById('setButton').onclick = function() {
@@ -349,6 +351,7 @@ function onValueChanged(key, value, isNew) {
 					document.getElementById('gameTimer').innerHTML = currentMinutes + ':' + actualSeconds;
 
 				}, 1000);
+
 			} else {
 				document.getElementById('gameTimer').innerHTML = '2:15';
 				currentSeconds = 135
@@ -470,7 +473,8 @@ function onValueChanged(key, value, isNew) {
 			var div = $('<div></div>').appendTo($('.settings'));
 			$('<p></p>').text(key).appendTo(div);
 			if (value === true || value === false) {
-				var boolSlider = $('<div class="bool-slider ' + value + '" id="tuning' + hashCode(key) + '"></div>');
+				var boolSlider = $('<div class="bool-slider ' + value +
+				 '" id="tuning' + hashCode(key) + '" tableValue="'+key+'"></div>');
 				var innerInset = $('<div class="inset"></div>');
 				innerInset.append('<div class="control"></div>')
 					.click(function() {
@@ -488,7 +492,15 @@ function onValueChanged(key, value, isNew) {
 			} else if (!isNaN(value)) {
 				if (!isNaN(value)) {
 					$('<input type="number">')
+						.keypress(function(e){
+							var key = e.which;
+							if(key == 13)  // the enter key code
+							{
+								//NetworkTables.setValue();					//get the key, and set the current value
+							}
+						})
 						.attr('id', 'tuning' + hashCode(key))
+						.attr("tableValue",key)
 						.attr('value', value)
 						.appendTo(div);
 				}
@@ -496,19 +508,22 @@ function onValueChanged(key, value, isNew) {
 				$('<input type="text">')
 					.attr('id', 'tuning' + hashCode(key))
 					.attr('value', value)
+					.attr("tableValue",key)
 					.appendTo(div);
 			}
 		}
 	} else {
 		var $tuningDiv = $('#tuning' + hashCode(key));
+
 		if (value === true || value === false) {
 			//$tuningDiv.trigger('click');
+			console.log("booleantriggered!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
 			if ($tuningDiv.hasClass('true')) {
 				$tuningDiv.addClass('false').removeClass('true');
 			} else {
 				$tuningDiv.addClass('true').removeClass('false');
 			}
-			console.log('valueChangebool', value);
+			console.log('valueChangebool',key, value);
 
 		} else {
 
@@ -521,7 +536,7 @@ $('#set').click(function() {
 	var childInputs = $('#settingsContainerDiv input');
 	childInputs.each(function(a) {
 		var thisChild = $(this);
-		NetworkTables.setValue('Tuning' + hashCode(thisChild.attr('id'), thisChild.val())); //need to change id back into a string
+		NetworkTables.setValue(thisChild.attr('tableValue'), thisChild.val()); //need to change id back into a string
 	});
 });
 
