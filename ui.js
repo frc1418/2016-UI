@@ -474,10 +474,10 @@ function onValueChanged(key, value, isNew) {
 						if (boolSlider.hasClass('true')) {
 
 							NetworkTables.setValue(key, false);
-							boolSlider.addClass('false').removeClass('true');
+							//boolSlider.addClass('false').removeClass('true');
 						} else {
 							NetworkTables.setValue(key, true);
-							boolSlider.addClass('true').removeClass('false');
+							//boolSlider.addClass('true').removeClass('false');
 						}
 					});
 				innerInset.appendTo(boolSlider);
