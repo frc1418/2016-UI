@@ -224,7 +224,7 @@ function onValueChanged(key, value, isNew) {
 			}
 			break;
 		case '/SmartDashboard/NavX | Yaw':
-			var gyroVal = value + zeroTheGyro;
+			var gyroVal = value + zeroTheGyro+180;
 			$('#gyroArm').css({
 				'transform': 'rotate(' + gyroVal + 'deg)'
 			});
@@ -568,8 +568,8 @@ $('#gyro').click(function(e) {
 
 	//onclick, visually set the offset of the gyro to the current value, if offset != 0 then set to 0
 	zeroTheGyro = 0;
-	var gyroVal = zeroTheGyro + parseInt(NetworkTables.getValue('/SmartDashboard/NavX | Yaw'));
-	$('#gyroArm').css('transform', 'rotate(' + gyroVal + ')');
+	var gyroVal = zeroTheGyro + parseInt(NetworkTables.getValue('/SmartDashboard/NavX | Yaw'))+180;
+	$('#gyroArm').css('transform', 'rotate(' + gyroVal + ' 80 80)');
 	$('#gyroLabel').innerHTML = gyroVal + "º";
 });
 $('.winch').mousedown(function() {
