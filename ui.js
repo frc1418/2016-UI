@@ -1,7 +1,7 @@
 var currentSeconds = 135;
 var timerVar;
 var gameStarted = false;
-var zeroTheGyro = 0; //if this is true, set the gyro offset to the current value,gyro offset
+var zeroTheGyro = 0;
 var defenseNames = ['A', 'B', 'C', 'D'];
 var realDefenseNames = [
 	['porticulis', 'seesaw'],
@@ -15,11 +15,11 @@ function hashCode(s) {
 	//previous value, current value
 	var ret = '';
 	var sLength = s.length;
-	for (var a = 0; a < sLength; a++) {
-		ret = ret + s.charCodeAt(a);
+	for (var i = 0; i < sLength; i++) {
+		ret = ret + s.charCodeAt(i);
 	}
 
-	console.log('hashPreformed', s, ret);
+	console.log('hashPerformed', s, ret);
 	return ret;
 }
 $(document).ready(function() {
@@ -59,7 +59,6 @@ $(document).ready(function() {
 			//set all of the other values to false
 			$('.autoButton').not(document.getElementById($thisButton.attr('id'))).each(function() {
 				NetworkTables.setValue('/SmartDashboard/' + $thisButton.attr('id'), false);
-
 			});
 		} else {}
 		NetworkTables.setValue('/SmartDashboard/' + $thisButton.attr('id'), activeState); //onclick set the things id to true
@@ -208,11 +207,10 @@ function onValueChanged(key, value, isNew) {
 		//raw arm value and is the ball in
 		case '/SmartDashboard/ladderUp':
 			//is the ladderLift extended?
-			if (value == true) {
+			if (value === true) {
 				$('.winch').show();
 			} else {
 				$('.winch').hide();
-
 			}
 			break;
 		case '/SmartDashboard/ballIn': //not the actual networktablesValue
@@ -231,7 +229,7 @@ function onValueChanged(key, value, isNew) {
 			$('#gyroLabel').innerHTML = gyroVal + 'º';
 			break;
 		case '/SmartDashboard/Arm | Forward Limit Switch': //checkspelling
-			if (value == true || value == 'true') { //recheck valuetype, this display a bool
+			if (value === true || value == 'true') { //recheck valuetype, this display a bool
 				$('#forwardEncoderSpan').text('Forward Encoder:True').css({
 					'color': 'green'
 				});
@@ -275,7 +273,7 @@ function onValueChanged(key, value, isNew) {
 			var $button = $('#' + name);
 			var autoButtonSelection = $('.autoButton'); //this is a selection of all of the buttons
 
-			if (value == true) {
+			if (value === true) {
 				//if the thing is true than set its css to purple, set its activestate to true, and make it selectable
 				$button.attr('activeState', true);
 				$button.css({
@@ -293,7 +291,7 @@ function onValueChanged(key, value, isNew) {
 					});
 					NetworkTables.setValue('/SmartDashboard/' + thisButton.attr('id'), false);
 				}); //then set everything else that isn't true and make it red, and set their activeState to false,
-			} else if (value == false) {
+			} else if (value === false) {
 				$button.attr('activeState', false);
 				var buttonValueList = //getting the value of all 3 buttons
 					autoButtonSelection.map(function() {
@@ -302,31 +300,22 @@ function onValueChanged(key, value, isNew) {
 				var isButtonActive = false;
 				var buttonValueListLength = buttonValueList.length;
 				for (var a = 0; a < buttonValueListLength; a++) {
-					if (buttonValueList[a] == true) { //==true is intended, was always returning true without the ==true
+					if (buttonValueList[a] === true) {
 						isButtonActive = true;
 					}
 				}
-				if (isButtonActive == true) { //if one of the buttons is active get every not active button and set their css
+				if (isButtonActive === true) { //if one of the buttons is active get every not active button and set their css
 					autoButtonSelection.each(function() {
 						var thisIsTheButton = $(this);
 						var thisActiveState = thisIsTheButton.attr('activeState');
 					});
 					$button.attr('style', 'pointer-events: none; border-color: rgb(255, 10,16);');
 
-				} else if (isButtonActive == false) { //if they are all false then set the current border to cyan
-					/*autoButtonSelection.css({
-						//'pointer-events': 'auto',
-						//'border-color': 'cyan'
-					});*/
+				} else if (isButtonActive === false) { //if they are all false then set the current border to cyan
 					$button.attr('src', '/img/' + $button.attr('baseSrc') + '.png');
 					$button.attr('style', 'pointer-events: auto; border-color: #ffc811;');
-
-				} else {
-					console.log('terrible things have happened');
 				}
 				//if the thing is not true, check to see if something else is true, if something else is true, then make it red, else make it cyan
-			} else {
-				console.log('things gone wrong');
 			}
 			break;
 		case '/SmartDashboard/startTheTimer':
@@ -343,7 +332,7 @@ function onValueChanged(key, value, isNew) {
 						window.clearTimeout(timerVar);
 						return;
 					} else if (currentSeconds <= 15) {
-						document.getElementById('gameTimer').style.color = (currentSeconds % 2 == 0) ? '#FF3030' : 'white';
+						document.getElementById('gameTimer').style.color = (currentSeconds % 2 === 0) ? '#FF3030' : 'white';
 					} else if (currentSeconds <= 30) {
 						document.getElementById('gameTimer').style.color = '#FF3030';
 					}
@@ -354,7 +343,7 @@ function onValueChanged(key, value, isNew) {
 
 			} else {
 				document.getElementById('gameTimer').innerHTML = '2:15';
-				currentSeconds = 135
+				currentSeconds = 135;
 			}
 			NetworkTables.setValue('/SmartDashboard/startTheTimer', false);
 			break;
@@ -572,8 +561,10 @@ $('#gyro').click(function(e) {
 	$('#gyroArm').css('transform', 'rotate(' + gyroVal + ' 80 80)');
 	$('#gyroLabel').innerHTML = gyroVal + "º";
 });
-$('.winch').mousedown(function() {
-	NetworkTables.setValue('/SmartDashboard/ladderButtonPressed', true);
-}).mouseup(function() {
-	NetworkTables.setValue('/SmartDashboard/ladderButtonPressed', false);
-});
+$('.winch')
+    .mousedown(function() {
+    	NetworkTables.setValue('/SmartDashboard/ladderButtonPressed', true);
+    })
+    .mouseup(function() {
+    	NetworkTables.setValue('/SmartDashboard/ladderButtonPressed', false);
+    });
