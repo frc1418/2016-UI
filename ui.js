@@ -349,8 +349,8 @@ function onValueChanged(key, value, isNew) {
 					document.getElementById('gameTimer').innerHTML = currentMinutes + ':' + actualSeconds;
 
 				}, 1000);
-			}else{
-				document.getElementById('gameTimer').innerHTML = 2:15;
+			} else {
+				document.getElementById('gameTimer').innerHTML = '2:15';
 				currentSeconds = 135
 			}
 			NetworkTables.setValue('/SmartDashboard/startTheTimer', false);
@@ -552,13 +552,13 @@ $('#gyro').click(function(e) {
 	e.stopPropagation();
 
 	//onclick, visually set the offset of the gyro to the current value, if offset != 0 then set to 0
-    zeroTheGyro = 0;
+	zeroTheGyro = 0;
 	var gyroVal = zeroTheGyro + parseInt(NetworkTables.getValue('/SmartDashboard/NavX | Yaw'));
 	$('#gyroArm').css('transform', 'rotate(' + gyroVal + ')');
-    $('#gyroLabel').innerHTML = gyroVal + "º";
+	$('#gyroLabel').innerHTML = gyroVal + "º";
 });
 $('.winch').mousedown(function() {
-    NetworkTables.setValue('/SmartDashboard/ladderButtonPressed', true);
+	NetworkTables.setValue('/SmartDashboard/ladderButtonPressed', true);
 }).mouseup(function() {
-    NetworkTables.setValue('/SmartDashboard/ladderButtonPressed', false);
+	NetworkTables.setValue('/SmartDashboard/ladderButtonPressed', false);
 });
