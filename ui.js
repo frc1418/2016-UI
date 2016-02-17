@@ -223,33 +223,23 @@ function onValueChanged(key, value, isNew) {
 			break;
 		case '/SmartDashboard/NavX | Yaw':
 			var gyroVal = value + zeroTheGyro;
-			$('#gyroArm').css({
-				'transform': 'rotate(' + gyroVal + 'deg)'
-			});
+			$('#gyroArm').css('transform', 'rotate(' + gyroVal + 'deg)');
 			$('#gyroLabel').innerHTML = gyroVal + 'º';
 			break;
 		case '/SmartDashboard/Arm | Forward Limit Switch': //checkspelling
 			if (value === true || value == 'true') { //recheck valuetype, this display a bool
-				$('#forwardEncoderSpan').text('Forward Encoder:True').css({
-					'color': 'green'
-				});
+				$('#forwardEncoderSpan').text('Forward Encoder:True').css('color', 'green');
 
 			} else {
-				$('#forwardEncoderSpan').text('Forward Encoder:False').css({
-					'color': 'red'
-				});
+				$('#forwardEncoderSpan').text('Forward Encoder:False').css('color', 'red');
 			}
 			break;
 
 		case '/SmartDashboard/Arm | Reverse Limit Switch':
 			if (value) { //recheck valuetype, this display a bool
-				$('#reverseEncoderSpan').css({
-					'color': 'green'
-				});
+				$('#reverseEncoderSpan').css('color', 'green');
 			} else {
-				$('#reverseEncoderSpan').css({
-					'color': 'red'
-				});
+				$('#reverseEncoderSpan').css('color', 'red');
 			}
 			break;
 		case '/SmartDashboard/Arm | Encoder':
@@ -370,7 +360,6 @@ function onValueChanged(key, value, isNew) {
 
 				for (var j = 0; j < 2; j++) {
 					if (realDefenseNames[i][j] == value) {
-
 						defenseClass = i;
 						defenseNum = j;
 						break;
@@ -391,18 +380,12 @@ function onValueChanged(key, value, isNew) {
 			//if there is a change in the names of the autonomous modes check the select,clear it and rewrite
 			var autonomousOptionSelect = $('#autonomousOptionSelect');
 			autonomousOptionSelect.empty();
-			//autonomousOptionSelect.append('<option id='defaultAutonomousNoMove'>Do Nothing</option>'); //temporarily commented out
 			var autonomousModeArrayLength = value.length;
 			for (var n = 0; n < autonomousModeArrayLength; n++) {
 				//for each entry, make a option, get the value of currentlySelectedMode if it exists, if not then use the first
 				autonomousOptionSelect.append('<option id=' + value[n] + 'AutoMode' + '>' + value[n] + '</option>');
 			}
-			//if(NetworkTables.containsKey('currentlySelectedMode')){
 			autonomousOptionSelect.val(NetworkTables.getValue('/SmartDashboard/currentlySelectedMode'));
-			//}       //temporary commenting out
-			//else{
-			//autonomousOptionSelect.val($('#autonomousOptionSelect option:first').val());
-			//}
 			break;
 		case '/SmartDashboard/Autonomous Mode/default':
 			//set the default options thingy to value if it exists.
