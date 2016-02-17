@@ -46,8 +46,7 @@ svg * {
     z-index: 50;
 }
 #gyroArm {
-    transform-origin: bottom;
-    transform: rotate(90deg);
+    transform-origin: left;
 }
 #robotDiagram {
     position: absolute;
@@ -156,9 +155,6 @@ aside {
 
 #EncoderSlider {
     width: 18vw;
-}
-.encodertext {
-    margin-left: 5vw;
 }
 #lowBarImg {
   transform: translateY(50px);
