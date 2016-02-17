@@ -226,7 +226,7 @@ function onValueChanged(key, value, isNew) {
 			$('#gyroArm').css({
 				'transform': 'rotate(' + gyroVal + 'deg)'
 			});
-			$('gyroLabel').innerHTML(gyroVal + 'º');
+			$('#gyroLabel').innerHTML = gyroVal + 'º';
 			break;
 		case '/SmartDashboard/Arm | Forward Limit Switch': //checkspelling
 			if (value == true || value == 'true') { //recheck valuetype, this display a bool
@@ -552,15 +552,10 @@ $('#gyro').click(function(e) {
 	e.stopPropagation();
 
 	//onclick, visually set the offset of the gyro to the current value, if offset != 0 then set to 0
-	if (zeroTheGyro == 0) {
-		zeroTheGyro = $('#gyro').val();
-	} else {
-		zeroTheGyro = 0;
-	}
+    zeroTheGyro = 0;
 	var gyroVal = zeroTheGyro + parseInt(NetworkTables.getValue('/SmartDashboard/NavX | Yaw'));
-	$('#gyroArm').css({
-		'transform': 'rotate(' + gyroVal + ')'
-	});
+	$('#gyroArm').css('transform', 'rotate(' + gyroVal + ')');
+    $('#gyroLabel').innerHTML = gyroVal + "º";
 });
 $('.winch').mousedown(function() {
     NetworkTables.setValue('/SmartDashboard/ladderButtonPressed', true);

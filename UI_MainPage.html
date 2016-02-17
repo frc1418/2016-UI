@@ -32,7 +32,7 @@
     <article id="main">
         <svg id="gyro" z-index="10">
             <circle id="gyroCircle" cx="85" cy="85" r="50" stroke="aqua" stroke-width="3" />
-            <rect id="gyroArm" x="40" y="40" width="80" height="10" stroke="aqua" stroke-width="3" />
+            <rect id="gyroArm" x="85" y="80" width="80" height="10" stroke="aqua" stroke-width="3" />
             <text id="gyroLabel" x="100" y="30" fill="aqua" font-size="25">0º</text>
         </svg>
         <svg id="robotDiagram" width="332" height="450">
@@ -123,11 +123,11 @@
             <input id="EncoderSlider" type="range" min="0" max="1200" value="770" step="25" list="stepList">
             <datalist id="stepList"></datalist>
             <br>
-            <span class="encodertext" id="encoderValueDisplaySpan">Arm Encoder Value: 200</span>
+            <span id="encoderValueDisplaySpan">Arm Encoder Value: 200</span>
             <br>
-            <span class="encodertext encoderLimitSwitchSpan" id="forwardEncoderSpan">Forward Encoder:False</span>
+            <span class="encoderLimitSwitchSpan" id="forwardEncoderSpan">Forward Encoder:False</span>
             <br>
-            <span class="encodertext encoderLimitSwitchSpan" id="reverseEncoderSpan">Reverse Encoder:False</span>
+            <span class="encoderLimitSwitchSpan" id="reverseEncoderSpan">Reverse Encoder:False</span>
         </div>
         <div id="autoButtons">
             <img id="gateButton" class="autoButton" src="/img/gate.png" baseSrc="gate"activeState=false>
