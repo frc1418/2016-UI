@@ -7,8 +7,7 @@ Introduction
 HTML5 & Javascript driver station interface. The
 UI features:
 
-* Touchscreen web browser interface provides richer control interface
-  for secondary robot operator
+* Touchscreen web browser interface provides richer control interface for secondary robot operator
 * Provides full access to robot functionality
   * Can raise or lower the forklifts to any given position
   * Enable and disable automatic functions of the robot
@@ -16,10 +15,7 @@ UI features:
 * Select one of multiple autonomous modes
 * Live streaming camera views to assist operators when view is blocked
 
-The HTML/JavaScript interface is made possible by using [pynetworktables2js](https://github.com/robotpy/pynetworktables2js) to forward NetworkTables
-traffic to the webpage. pynetworktables2js was initially prototyped by
-[Leon Tan](https://github.com/lleontan), our lead UI student, but it is now maintained by the RobotPy
-project so that other teams can benefit from our work.
+The HTML/JavaScript interface is made possible by using [pynetworktables2js](https://github.com/robotpy/pynetworktables2js) to forward NetworkTables traffic to the webpage. pynetworktables2js was initially prototyped by [Leon Tan](https://github.com/lleontan), our lead UI student, but it is now maintained by the [RobotPy](http://github.com/robotpy) project so that other teams can benefit from our work.
 
 Please note that this version of the UI is designed for a 1119x485 resolution. Since it's not designed to be responsive, you may have to play around with the CSS a bit to make it fit your screen.
 
@@ -54,10 +50,9 @@ View the output
 
 Open a web browser (preferably Chrome), and go to:
 
-    http://localhost:8888/
+    http://localhost:8888/UI.html
 
-You can replace the HTML file at the end of the URL with whatever you're
-trying to test.
+If you change the name of the UI file or add another page, simply replace `UI.html` in the URL with the name of your file.
 
 
 Authors
@@ -67,7 +62,8 @@ Current Students
 
 * [Leon Tan](https://github.com/lleontan), UI Lead
 * [Erik Boesen](https://github.com/ErikBoesen)
+* [Tim Winters](https://github.com/Twinters007)
 * [Aki Maher](https://github.com/17mahera)
 * Tyler Gogal
 
-Special Thanks to [Dustin Spicuzza](https://github.com/virtuald), mentor.
+Special Thanks to [Dustin Spicuzza](https://github.com/virtuald), mentor and head of the [RobotPy](http://github.com/robotpy) project.
