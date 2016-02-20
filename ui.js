@@ -1,5 +1,6 @@
 var currentSeconds = 135;
 var timerVar;
+var alliedCounter=0;
 var gameStarted = false;
 var zeroTheGyro = 0;
 var defenseNames = ['A', 'B', 'C', 'D'];
@@ -398,7 +399,19 @@ function onValueChanged(key, value, isNew) {
 		case '/SmartDashboard/attackerState3':
 		case '/SmartDashboard/attackerState4':
 			var attackerImage = $('#' + propName);
-			if (value == 'us') {
+			if(value=="allied"){
+				alliedCounter=0;
+				$('.attackerState').not(document.getElementById(propName)).each(function() {
+					var thisAttacker = $(this);
+					if (attackerNames[thisAttacker.attr('state')] == 'allied') {
+						alliedCounter++;
+						if(alliedCounter>1){
+						NetworkTables.setValue('/SmartDashboard/' + thisAttacker.attr('id'), 'empty');
+						}
+					}
+				});
+			}
+			else if (value == 'us') {
 				console.log('attackerStateChanged');
 				var attackerIndex = attackerImage.attr('position');
 				NetworkTables.setValue('/SmartDashboard/robotPosition', attackerIndex);

@@ -17,7 +17,8 @@ body {
 header,
 article,
 aside,
-#gameTimer {
+#gameTimer,
+#bulb {
     padding: 10px;
     position: fixed;
     border: solid 1px aqua;
@@ -69,11 +70,24 @@ svg * {
     transform: rotate(5deg);
 }
 header {
-    width: 28vw;
+    width: 20vw;
     height: 20vh;
     top: 0;
     left: 22vw;
     color: aqua;
+}
+#bulb {
+    width: 8vw;
+    height: 20vh;
+    left: 42vw;
+    top: 0;
+}
+#bulb svg * {
+    fill: aqua;
+    stroke: none;
+}
+#bulb svg.active * {
+    fill: yellow;
 }
 .camera {
     position: fixed;
