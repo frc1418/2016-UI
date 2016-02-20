@@ -449,8 +449,9 @@ function onValueChanged(key, value, isNew) {
 		}
 		if (addToTuning) {
 			var div = $('<div></div>').appendTo($('.settings'));
-			$('<p></p>').text(key).appendTo(div);
+			$('<p></p>').text(propName).appendTo(div);
 			if (value === true || value === false) {
+				div.attr("type","boolean");
 				var boolSlider = $('<div class="bool-slider ' + value +
 					'" id="tuning' + hashCode(key) + '" tableValue="' + key + '"></div>');
 				var innerInset = $('<div class="inset"></div>');
@@ -466,6 +467,8 @@ function onValueChanged(key, value, isNew) {
 				boolSlider.appendTo(div);
 			} else if (!isNaN(value)) {
 				if (!isNaN(value)) {
+					div.attr("type","int");
+
 					$('<input type="number">')
 						.keypress(function(e) {
 							var key = e.which;
@@ -480,12 +483,20 @@ function onValueChanged(key, value, isNew) {
 						.appendTo(div);
 				}
 			} else {
+				div.attr("type","string");
+
 				$('<input type="text">')
 					.attr('id', 'tuning' + hashCode(key))
 					.attr('value', value)
 					.attr("tableValue", key)
 					.appendTo(div);
 			}
+			var alphabeticallyOrderedDivs = $("#settingsContainerDiv > div").sort(function (a, b) {
+				console.log($(a).children("[tableValue]").attr("tableValue"));
+
+        return $(a).children("[tableValue]:first").attr("tableValue") > $(b).children("[tableValue]:first").attr("tableValue");
+    	});
+			$("#settingsContainerDiv").empty().html(alphabeticallyOrderedDivs);
 		}
 	} else {
 		var $tuningDiv = $('#tuning' + hashCode(key));
