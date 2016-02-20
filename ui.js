@@ -1,13 +1,20 @@
 var currentSeconds = 135;
 var timerVar;
 var gameStarted = false;
-var zeroTheGyro = 0; //if this is true, set the gyro offset to the current value,gyro offset
+var zeroTheGyro = 0;
 var defenseNames = ['A', 'B', 'C', 'D'];
 var realDefenseNames = [
-	['porticulis', 'seesaw'],
+	['portcullis', 'chevalDeFrise'],
 	['moat', 'ramparts'],
-	['gate', 'drawbridge'],
-	['wall', 'roughterrain']
+	['sallyport', 'drawbridge'],
+	['roughTerrain', 'rockwall']
+];
+
+var defenseAutoNames = [
+	['A0', 'A1'],
+	['E0', 'E0'],
+	['C1', 'C1'],
+	['E0', 'E0']
 ];
 var attackerNames = ['empty', 'allied', 'us'];
 var displayInTuning = ['/SmartDashboard/']; //if it starts with these strings add to tuning page
@@ -15,11 +22,11 @@ function hashCode(s) {
 	//previous value, current value
 	var ret = '';
 	var sLength = s.length;
-	for (var a = 0; a < sLength; a++) {
-		ret = ret + s.charCodeAt(a);
+	for (var i = 0; i < sLength; i++) {
+		ret = ret + s.charCodeAt(i);
 	}
 
-	console.log('hashPreformed', s, ret);
+	console.log('hashPerformed', s, ret);
 	return ret;
 }
 $(document).ready(function() {
@@ -59,7 +66,6 @@ $(document).ready(function() {
 			//set all of the other values to false
 			$('.autoButton').not(document.getElementById($thisButton.attr('id'))).each(function() {
 				NetworkTables.setValue('/SmartDashboard/' + $thisButton.attr('id'), false);
-
 			});
 		} else {}
 		NetworkTables.setValue('/SmartDashboard/' + $thisButton.attr('id'), activeState); //onclick set the things id to true
@@ -112,12 +118,12 @@ $(document).ready(function() {
 
 	//for every selection Div, make the stuff, add a listener to each arrow, the toggleBox,
 	//set the value from networkTables or if no networkTables, get the default value
-	var everyDefenseSelector = $('.DefenseSelector'); //get every defenseDefenseSelector(the div that contains the stuff)
+	var everyDefenseSelector = $('.DefenseSelector'); //get every defenseSelector(the div that contains the stuff)
 	everyDefenseSelector.each(function(a) {
 		//for every DefenseSelector add the triangles, set the id, 'a' is the index in the list of divs
 		var thisDiv = $(this);
 		thisDiv.attr('defenseClass', a);
-		thisDiv.attr('id', 'defenseDefenseSelector' + a);
+		thisDiv.attr('id', 'defenseSelector' + a);
 		var defenseNumber = 0;
 		thisDiv.attr('defenseNumber', defenseNumber);
 		thisDiv.append($('<div class="arrow-up"></div>')
@@ -131,14 +137,12 @@ $(document).ready(function() {
 					currentDefenseClass++;
 				}
 				thisDiv.attr('defenseclass', currentDefenseClass);
-				thisDiv.children('.selectionToggleBox') //.find('.selectionToggleBox')
-					.attr('src', 'img/' + defenseNames[currentDefenseClass] + '' + defenseNumber + '.png');
-
+				thisDiv.children('.selectionToggleBox')
+					.attr('src', 'img/' + defenseNames[currentDefenseClass] + defenseNumber + '.png');
 				NetworkTables.setValue('/SmartDashboard/' + thisDiv.attr('id'), realDefenseNames[currentDefenseClass][defenseNumber]);
 			}));
 		thisDiv.append($('<img>')
 			.addClass('selectionToggleBox')
-			//.attr('id','selectionToggleBox'+a)
 			.attr('src', 'img/defaultImg.png')
 			.click(function() {
 				var currentDefenseNumber = thisDiv.attr('defensenumber');
@@ -149,8 +153,7 @@ $(document).ready(function() {
 					currentDefenseNumber++;
 				}
 				thisDiv.attr('defensenumber', currentDefenseNumber);
-				thisDiv.children('.selectionToggleBox'); //.find('.selectionToggleBox')
-				//.attr('src','img/'+defenseNames[thisDiv.attr('defenseClass')]+''+currentDefenseNumber+'.png');
+				thisDiv.children('.selectionToggleBox');
 
 				NetworkTables.setValue('/SmartDashboard/' + thisDiv.attr('id'), realDefenseNames[thisDiv.attr('defenseClass')][currentDefenseNumber]);
 			})
@@ -159,7 +162,6 @@ $(document).ready(function() {
 			.click(function(i, b) { //right now both are being clicked
 				//onclick take the value of the current defense from this div, ex'defenseName=(3,0)', ++1
 				var currentDefenseClass = parseInt(thisDiv.attr('defenseclass'));
-				//console.log(thisDiv.attr('id'),currentDefenseClass);
 
 				if (currentDefenseClass <= 0) {
 					currentDefenseClass = 3;
@@ -170,9 +172,6 @@ $(document).ready(function() {
 				thisDiv.children('.selectionToggleBox') //.find('.selectionToggleBox')
 					.attr('src', 'img/' + defenseNames[currentDefenseClass] + defenseNumber + '.png');
 				NetworkTables.setValue('/SmartDashboard/' + thisDiv.attr('id'), realDefenseNames[currentDefenseClass][defenseNumber]);
-				//console.log('stuff happened',currentDefenseClass);
-				//console.log('/SmartDashboard/' + thisDiv.attr('id'), realDefenseNames[currentDefenseClass][defenseNumber]);
-
 			}));
 		if (defenseNumber == 0) {
 			defenseNumber = 1;
@@ -202,21 +201,19 @@ function onNetworkTablesConnection(connected) {
 function onValueChanged(key, value, isNew) {
 	console.log('valueChange', key, value);
 	var propName = key.substring(16, key.length);
-	//$('Tuning'+NetworkTables.keyToId(key)).children('input').first().val(value keyto id is currently broken
 
 	switch (key) {
 		//raw arm value and is the ball in
 		case '/SmartDashboard/ladderUp':
 			//is the ladderLift extended?
-			if (value == true) {
+			if (value === true) {
 				$('.winch').show();
 			} else {
 				$('.winch').hide();
-
 			}
 			break;
 		case '/SmartDashboard/ballIn': //not the actual networktablesValue
-			if (value) { //BOOLEANS ARE NOT WORKING WITH NETWORKTABLES AT THE MOMENT(or with testing at the very least)
+			if (value === true) {
 				$('#ball').attr('visibility', 'visible');
 			} else {
 				console.log('visibilityFalse');
@@ -225,33 +222,21 @@ function onValueChanged(key, value, isNew) {
 			break;
 		case '/SmartDashboard/NavX | Yaw':
 			var gyroVal = value + zeroTheGyro;
-			$('#gyroArm').css({
-				'transform': 'rotate(' + gyroVal + 'deg)'
-			});
+			$('#gyroArm').css('transform', 'rotate(' + gyroVal + 'deg)');
 			$('#gyroLabel').innerHTML = gyroVal + 'º';
 			break;
 		case '/SmartDashboard/Arm | Forward Limit Switch': //checkspelling
-			if (value == true || value == 'true') { //recheck valuetype, this display a bool
-				$('#forwardEncoderSpan').text('Forward Encoder:True').css({
-					'color': 'green'
-				});
-
+			if (value === true || value == 'true') { //recheck valuetype, this display a bool
+				$('#forwardEncoderSpan').text('Forward Encoder:True').css('color', 'green');
 			} else {
-				$('#forwardEncoderSpan').text('Forward Encoder:False').css({
-					'color': 'red'
-				});
+				$('#forwardEncoderSpan').text('Forward Encoder:False').css('color', 'red');
 			}
 			break;
-
 		case '/SmartDashboard/Arm | Reverse Limit Switch':
 			if (value) { //recheck valuetype, this display a bool
-				$('#reverseEncoderSpan').css({
-					'color': 'green'
-				});
+				$('#reverseEncoderSpan').css('color', 'green');
 			} else {
-				$('#reverseEncoderSpan').css({
-					'color': 'red'
-				});
+				$('#reverseEncoderSpan').css('color', 'red');
 			}
 			break;
 		case '/SmartDashboard/Arm | Encoder':
@@ -275,7 +260,7 @@ function onValueChanged(key, value, isNew) {
 			var $button = $('#' + name);
 			var autoButtonSelection = $('.autoButton'); //this is a selection of all of the buttons
 
-			if (value == true) {
+			if (value === true) {
 				//if the thing is true than set its css to purple, set its activestate to true, and make it selectable
 				$button.attr('activeState', true);
 				$button.css({
@@ -285,7 +270,7 @@ function onValueChanged(key, value, isNew) {
 				$button.attr('src', '/img/' + $button.attr('baseSrc') + '.gif');
 				console.log($button.attr('src'));
 				$('.autoButton').not(document.getElementById(name)).each(function() {
-					var thisButton = $(this)
+					var thisButton = $(this);
 					thisButton.attr('src', '/img/' + thisButton.attr('baseSrc') + '.png');
 					thisButton.css({
 						'pointer-events': 'auto',
@@ -293,7 +278,7 @@ function onValueChanged(key, value, isNew) {
 					});
 					NetworkTables.setValue('/SmartDashboard/' + thisButton.attr('id'), false);
 				}); //then set everything else that isn't true and make it red, and set their activeState to false,
-			} else if (value == false) {
+			} else if (value === false) {
 				$button.attr('activeState', false);
 				var buttonValueList = //getting the value of all 3 buttons
 					autoButtonSelection.map(function() {
@@ -302,31 +287,25 @@ function onValueChanged(key, value, isNew) {
 				var isButtonActive = false;
 				var buttonValueListLength = buttonValueList.length;
 				for (var a = 0; a < buttonValueListLength; a++) {
-					if (buttonValueList[a] == true) { //==true is intended, was always returning true without the ==true
+					if (buttonValueList[a] === true) {
 						isButtonActive = true;
 					}
 				}
-				if (isButtonActive == true) { //if one of the buttons is active get every not active button and set their css
+				if (isButtonActive === true) { //if one of the buttons is active get every not active button and set their css
 					autoButtonSelection.each(function() {
 						var thisIsTheButton = $(this);
 						var thisActiveState = thisIsTheButton.attr('activeState');
 					});
-					$button.attr('style', 'pointer-events: none; border-color: rgb(255, 10,16);');
+					$button.css({
+						'pointer-events': 'none',
+						'border-color': '#ff0a10'
+					});
 
-				} else if (isButtonActive == false) { //if they are all false then set the current border to cyan
-					/*autoButtonSelection.css({
-						//'pointer-events': 'auto',
-						//'border-color': 'cyan'
-					});*/
+				} else if (isButtonActive === false) { //if they are all false then set the current border to cyan
 					$button.attr('src', '/img/' + $button.attr('baseSrc') + '.png');
 					$button.attr('style', 'pointer-events: auto; border-color: #ffc811;');
-
-				} else {
-					console.log('terrible things have happened');
 				}
 				//if the thing is not true, check to see if something else is true, if something else is true, then make it red, else make it cyan
-			} else {
-				console.log('things gone wrong');
 			}
 			break;
 		case '/SmartDashboard/startTheTimer':
@@ -343,18 +322,15 @@ function onValueChanged(key, value, isNew) {
 						window.clearTimeout(timerVar);
 						return;
 					} else if (currentSeconds <= 15) {
-						document.getElementById('gameTimer').style.color = (currentSeconds % 2 == 0) ? '#FF3030' : 'white';
+						document.getElementById('gameTimer').style.color = (currentSeconds % 2 === 0) ? '#FF3030' : 'white';
 					} else if (currentSeconds <= 30) {
 						document.getElementById('gameTimer').style.color = '#FF3030';
 					}
-
 					document.getElementById('gameTimer').innerHTML = currentMinutes + ':' + actualSeconds;
-
 				}, 1000);
-
 			} else {
 				document.getElementById('gameTimer').innerHTML = '2:15';
-				currentSeconds = 135
+				currentSeconds = 135;
 			}
 			NetworkTables.setValue('/SmartDashboard/startTheTimer', false);
 			break;
@@ -367,21 +343,18 @@ function onValueChanged(key, value, isNew) {
 			$('#EncoderSlider').val(value);
 			$('#encoderValueDisplaySpan').text('EncoderValue: ' + value);
 			break;
-		case '/SmartDashboard/defenseDefenseSelector0':
-		case '/SmartDashboard/defenseDefenseSelector1':
-		case '/SmartDashboard/defenseDefenseSelector2':
-		case '/SmartDashboard/defenseDefenseSelector3':
-
+		case '/SmartDashboard/defenseSelector0':
+		case '/SmartDashboard/defenseSelector1':
+		case '/SmartDashboard/defenseSelector2':
+		case '/SmartDashboard/defenseSelector3':
 			var theChangedDiv = $('#' + propName);
 			var realDefenseNamesLength = realDefenseNames.length;
 			var defenseNum = -1;
 			var defenseClass = -1;
 			for (var i = 0; i < realDefenseNamesLength; i++) {
 				//search through the defense classes, check each one for the mode, return the defenseclass=(a) and the defenseNum=(b)
-
 				for (var j = 0; j < 2; j++) {
 					if (realDefenseNames[i][j] == value) {
-
 						defenseClass = i;
 						defenseNum = j;
 						break;
@@ -395,25 +368,18 @@ function onValueChanged(key, value, isNew) {
 				.attr('defenseNumber', defenseNum);
 			theChangedDiv.children('.selectionToggleBox')
 				.attr('src', 'img/' + defenseNames[defenseClass] + defenseNum + '.png');
-
 			break; //in case we want to add another listener to the swtich afterwards
 		case '/SmartDashboard/Autonomous Mode/options':
 
 			//if there is a change in the names of the autonomous modes check the select,clear it and rewrite
 			var autonomousOptionSelect = $('#autonomousOptionSelect');
 			autonomousOptionSelect.empty();
-			//autonomousOptionSelect.append('<option id='defaultAutonomousNoMove'>Do Nothing</option>'); //temporarily commented out
 			var autonomousModeArrayLength = value.length;
 			for (var n = 0; n < autonomousModeArrayLength; n++) {
 				//for each entry, make a option, get the value of currentlySelectedMode if it exists, if not then use the first
 				autonomousOptionSelect.append('<option id=' + value[n] + 'AutoMode' + '>' + value[n] + '</option>');
 			}
-			//if(NetworkTables.containsKey('currentlySelectedMode')){
 			autonomousOptionSelect.val(NetworkTables.getValue('/SmartDashboard/currentlySelectedMode'));
-			//}       //temporary commenting out
-			//else{
-			//autonomousOptionSelect.val($('#autonomousOptionSelect option:first').val());
-			//}
 			break;
 		case '/SmartDashboard/Autonomous Mode/default':
 			//set the default options thingy to value if it exists.
@@ -447,11 +413,10 @@ function onValueChanged(key, value, isNew) {
 					NetworkTables.setValue('/SmartDashboard/robotDefense', 'lowbar');
 				} else {
 					var newPosition = parseInt(attackerIndex) - 1;
-					var $defense = $('#defenseDefenseSelector' + newPosition);
+					var $defense = $('#defenseSelector' + newPosition);
 					//defenseclass and defensenumber
-					var defenseValue = realDefenseNames[$defense.attr('defenseclass')][$defense.attr('defensenumber')];
+					var defenseValue = defenseAutoNames[$defense.attr('defenseclass')][$defense.attr('defensenumber')];
 					NetworkTables.setValue('/SmartDashboard/robotDefense', defenseValue);
-
 				}
 			}
 			attackerImage.attr('state', attackerNames.indexOf(value)).attr('src', 'img/' + value + '.png');
@@ -474,17 +439,14 @@ function onValueChanged(key, value, isNew) {
 			$('<p></p>').text(key).appendTo(div);
 			if (value === true || value === false) {
 				var boolSlider = $('<div class="bool-slider ' + value +
-				 '" id="tuning' + hashCode(key) + '" tableValue="'+key+'"></div>');
+					'" id="tuning' + hashCode(key) + '" tableValue="' + key + '"></div>');
 				var innerInset = $('<div class="inset"></div>');
 				innerInset.append('<div class="control"></div>')
 					.click(function() {
 						if (boolSlider.hasClass('true')) {
-
 							NetworkTables.setValue(key, false);
-							//boolSlider.addClass('false').removeClass('true');
 						} else {
 							NetworkTables.setValue(key, true);
-							//boolSlider.addClass('true').removeClass('false');
 						}
 					});
 				innerInset.appendTo(boolSlider);
@@ -492,15 +454,15 @@ function onValueChanged(key, value, isNew) {
 			} else if (!isNaN(value)) {
 				if (!isNaN(value)) {
 					$('<input type="number">')
-						.keypress(function(e){
+						.keypress(function(e) {
 							var key = e.which;
-							if(key == 13)  // the enter key code
+							if (key == 13) // the enter key code
 							{
 								//NetworkTables.setValue();					//get the key, and set the current value
 							}
 						})
 						.attr('id', 'tuning' + hashCode(key))
-						.attr("tableValue",key)
+						.attr("tableValue", key)
 						.attr('value', value)
 						.appendTo(div);
 				}
@@ -508,7 +470,7 @@ function onValueChanged(key, value, isNew) {
 				$('<input type="text">')
 					.attr('id', 'tuning' + hashCode(key))
 					.attr('value', value)
-					.attr("tableValue",key)
+					.attr("tableValue", key)
 					.appendTo(div);
 			}
 		}
@@ -516,17 +478,13 @@ function onValueChanged(key, value, isNew) {
 		var $tuningDiv = $('#tuning' + hashCode(key));
 
 		if (value === true || value === false) {
-			//$tuningDiv.trigger('click');
-			console.log("booleantriggered!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
 			if ($tuningDiv.hasClass('true')) {
 				$tuningDiv.addClass('false').removeClass('true');
 			} else {
 				$tuningDiv.addClass('true').removeClass('false');
 			}
-			console.log('valueChangebool',key, value);
-
+			console.log('valueChangebool', key, value);
 		} else {
-
 			$tuningDiv.val(value);
 			console.log('valueChange', $tuningDiv.val());
 		}
@@ -536,7 +494,15 @@ $('#set').click(function() {
 	var childInputs = $('#settingsContainerDiv input');
 	childInputs.each(function(a) {
 		var thisChild = $(this);
-		NetworkTables.setValue(thisChild.attr('tableValue'), thisChild.val()); //need to change id back into a string
+		var s;
+		if($.isNumeric(thisChild.val())){
+			console.log("numberfound");
+			 s=parseInt(thisChild.val());
+		}
+		else{
+			s=thisChild.val();
+		}
+		NetworkTables.setValue(thisChild.attr('tableValue'), s); //need to change id back into a string
 	});
 });
 
@@ -572,8 +538,10 @@ $('#gyro').click(function(e) {
 	$('#gyroArm').css('transform', 'rotate(' + gyroVal + ')');
 	$('#gyroLabel').innerHTML = gyroVal + "º";
 });
-$('.winch').mousedown(function() {
-	NetworkTables.setValue('/SmartDashboard/ladderButtonPressed', true);
-}).mouseup(function() {
-	NetworkTables.setValue('/SmartDashboard/ladderButtonPressed', false);
-});
+$('.winch')
+	.mousedown(function() {
+		NetworkTables.setValue('/SmartDashboard/ladderButtonPressed', true);
+	})
+	.mouseup(function() {
+		NetworkTables.setValue('/SmartDashboard/ladderButtonPressed', false);
+	});

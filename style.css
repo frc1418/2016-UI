@@ -23,11 +23,11 @@ aside,
     border: solid 1px aqua;
     overflow: scroll;
 }
-article#tuning,
-article#autonomousSelection {
+#tuning,
+#autonomousSelection {
     z-index: 100;
 }
-article#main {
+#main {
     top: 0;
     left: 50vw;
     height: 100vh;
@@ -46,7 +46,7 @@ svg * {
     z-index: 50;
 }
 #gyroArm {
-    transform-origin: left;
+    transform-origin: bottom;
 }
 #robotDiagram {
     position: absolute;
@@ -143,16 +143,6 @@ aside {
     background-color: lightgrey;
     border: solid 4px black;
 }
-
-/*
-.autoButton [activeState="true"] {
-    border-color: #ff1a8c;
-}
-.autoButton [pointer-event="none"] {
-    border-color: red;
-}
-*/
-
 #EncoderSlider {
     width: 18vw;
 }
@@ -166,7 +156,7 @@ aside {
 .encoderLimitSwitchSpan {
     color: red;
 }
-article#tuning {
+#tuning {
     background: black;
     top: 20vh;
     left: 0;
@@ -231,7 +221,7 @@ article#tuning {
 .bool-slider.disabled .control {
     cursor: default;
 }
-article#autonomousSelection {
+#autonomousSelection {
     width: 50vw;
     height: 100vh;
     background: black;
