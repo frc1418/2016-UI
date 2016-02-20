@@ -515,7 +515,15 @@ $('#set').click(function() {
 	var childInputs = $('#settingsContainerDiv input');
 	childInputs.each(function(a) {
 		var thisChild = $(this);
-		NetworkTables.setValue(thisChild.attr('tableValue'), thisChild.val()); //need to change id back into a string
+		var s;
+		if($.isNumeric(thisChild.val())){
+			console.log("numberfound");
+			 s=parseInt(thisChild.val());
+		}
+		else{
+			s=thisChild.val();
+		}
+		NetworkTables.setValue(thisChild.attr('tableValue'), s); //need to change id back into a string
 	});
 });
 
