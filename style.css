@@ -46,7 +46,7 @@ svg * {
     z-index: 50;
 }
 #gyroArm {
-    transform-origin: left;
+    transform-origin: bottom;
 }
 #robotDiagram {
     position: absolute;
