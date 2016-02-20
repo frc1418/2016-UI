@@ -253,10 +253,12 @@ aside {
     display: block;
 }
 .arrow-up {
-    border-bottom: 25px solid red;
+    margin-bottom: 10px;
+    border-bottom: 25px solid aqua;
 }
 .arrow-down {
-    border-top: 25px solid red;
+    margin-top: 10px;
+    border-top: 25px solid aqua;
 }
 .selectionToggleBox {
     height: 100px;
