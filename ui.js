@@ -4,10 +4,17 @@ var gameStarted = false;
 var zeroTheGyro = 0;
 var defenseNames = ['A', 'B', 'C', 'D'];
 var realDefenseNames = [
-	['porticulis', 'seesaw'],
+	['portcullis', 'chevalDeFrise'],
 	['moat', 'ramparts'],
-	['gate', 'drawbridge'],
-	['wall', 'roughterrain']
+	['sallyport', 'drawbridge'],
+	['roughTerrain', 'rockwall']
+];
+
+var defenseAutoNames = [
+	['A0', 'A1'],
+	['E0', 'E0'],
+	['C1', 'C1'],
+	['E0', 'E0']
 ];
 var attackerNames = ['empty', 'allied', 'us'];
 var displayInTuning = ['/SmartDashboard/']; //if it starts with these strings add to tuning page
@@ -421,7 +428,7 @@ function onValueChanged(key, value, isNew) {
 					var newPosition = parseInt(attackerIndex) - 1;
 					var $defense = $('#defenseDefenseSelector' + newPosition);
 					//defenseclass and defensenumber
-					var defenseValue = realDefenseNames[$defense.attr('defenseclass')][$defense.attr('defensenumber')];
+					var defenseValue = defenseAutoNames[$defense.attr('defenseclass')][$defense.attr('defensenumber')];
 					NetworkTables.setValue('/SmartDashboard/robotDefense', defenseValue);
 
 				}
