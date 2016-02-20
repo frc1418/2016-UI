@@ -1,5 +1,6 @@
 var currentSeconds = 135;
 var timerVar;
+var alliedCounter=0;
 var gameStarted = false;
 var zeroTheGyro = 0;
 var defenseNames = ['A', 'B', 'C', 'D'];
@@ -26,7 +27,6 @@ function hashCode(s) {
 		ret = ret + s.charCodeAt(i);
 	}
 
-	console.log('hashPerformed', s, ret);
 	return ret;
 }
 $(document).ready(function() {
@@ -199,7 +199,6 @@ function onNetworkTablesConnection(connected) {
 }
 
 function onValueChanged(key, value, isNew) {
-	console.log('valueChange', key, value);
 	var propName = key.substring(16, key.length);
 
 	switch (key) {
@@ -216,14 +215,18 @@ function onValueChanged(key, value, isNew) {
 			if (value === true) {
 				$('#ball').attr('visibility', 'visible');
 			} else {
-				console.log('visibilityFalse');
 				$('#ball').attr('visibility', 'hidden');
 			}
 			break;
 		case '/SmartDashboard/NavX | Yaw':
 			var gyroVal = value + zeroTheGyro;
+			var gyroDisplayVal=String(Math.floor(gyroVal));
+			var addSpaces=4-gyroDisplayVal.length;
+			for(var a=0;a<addSpaces;a++){
+				gyroDisplayVal="\xA0"+gyroDisplayVal;
+			}
 			$('#gyroArm').css('transform', 'rotate(' + gyroVal + 'deg)');
-			$('#gyroLabel').innerHTML = gyroVal + 'º';
+			$('#gyroLabel').text( gyroDisplayVal + 'º');
 			break;
 		case '/SmartDashboard/Arm | Forward Limit Switch': //checkspelling
 			if (value === true || value == 'true') { //recheck valuetype, this display a bool
@@ -268,7 +271,6 @@ function onValueChanged(key, value, isNew) {
 					'border-color': 'aqua',
 				});
 				$button.attr('src', '/img/' + $button.attr('baseSrc') + '.gif');
-				console.log($button.attr('src'));
 				$('.autoButton').not(document.getElementById(name)).each(function() {
 					var thisButton = $(this);
 					thisButton.attr('src', '/img/' + thisButton.attr('baseSrc') + '.png');
@@ -386,7 +388,6 @@ function onValueChanged(key, value, isNew) {
 			try {
 				$('#autonomousOptionSelect').val(value);
 			} catch (ex) {
-				console.log('autonomousDefaultingError, something went wrong');
 			}
 			break;
 		case '/SmartDashboard/currentlySelectedMode':
@@ -398,8 +399,19 @@ function onValueChanged(key, value, isNew) {
 		case '/SmartDashboard/attackerState3':
 		case '/SmartDashboard/attackerState4':
 			var attackerImage = $('#' + propName);
-			if (value == 'us') {
-				console.log('attackerStateChanged');
+			if(value=="allied"){
+				alliedCounter=0;
+				$('.attackerState').not(document.getElementById(propName)).each(function() {
+					var thisAttacker = $(this);
+					if (attackerNames[thisAttacker.attr('state')] == 'allied') {
+						alliedCounter++;
+						if(alliedCounter>1){
+						NetworkTables.setValue('/SmartDashboard/' + thisAttacker.attr('id'), 'empty');
+						}
+					}
+				});
+			}
+			else if (value == 'us') {
 				var attackerIndex = attackerImage.attr('position');
 				NetworkTables.setValue('/SmartDashboard/robotPosition', attackerIndex);
 				//if value is us then get all of the other things and set anything equal to us to none
@@ -436,8 +448,9 @@ function onValueChanged(key, value, isNew) {
 		}
 		if (addToTuning) {
 			var div = $('<div></div>').appendTo($('.settings'));
-			$('<p></p>').text(key).appendTo(div);
+			$('<p></p>').text(propName).appendTo(div);
 			if (value === true || value === false) {
+				div.attr("type","boolean");
 				var boolSlider = $('<div class="bool-slider ' + value +
 					'" id="tuning' + hashCode(key) + '" tableValue="' + key + '"></div>');
 				var innerInset = $('<div class="inset"></div>');
@@ -453,6 +466,8 @@ function onValueChanged(key, value, isNew) {
 				boolSlider.appendTo(div);
 			} else if (!isNaN(value)) {
 				if (!isNaN(value)) {
+					div.attr("type","int");
+
 					$('<input type="number">')
 						.keypress(function(e) {
 							var key = e.which;
@@ -467,12 +482,19 @@ function onValueChanged(key, value, isNew) {
 						.appendTo(div);
 				}
 			} else {
+				div.attr("type","string");
+
 				$('<input type="text">')
 					.attr('id', 'tuning' + hashCode(key))
 					.attr('value', value)
 					.attr("tableValue", key)
 					.appendTo(div);
 			}
+			var alphabeticallyOrderedDivs = $("#settingsContainerDiv > div").sort(function (a, b) {
+
+        return $(a).children("[tableValue]:first").attr("tableValue") > $(b).children("[tableValue]:first").attr("tableValue");
+    	});
+			$("#settingsContainerDiv").empty().html(alphabeticallyOrderedDivs);
 		}
 	} else {
 		var $tuningDiv = $('#tuning' + hashCode(key));
@@ -483,10 +505,8 @@ function onValueChanged(key, value, isNew) {
 			} else {
 				$tuningDiv.addClass('true').removeClass('false');
 			}
-			console.log('valueChangebool', key, value);
 		} else {
 			$tuningDiv.val(value);
-			console.log('valueChange', $tuningDiv.val());
 		}
 	}
 }
@@ -496,7 +516,6 @@ $('#set').click(function() {
 		var thisChild = $(this);
 		var s;
 		if($.isNumeric(thisChild.val())){
-			console.log("numberfound");
 			 s=parseInt(thisChild.val());
 		}
 		else{
@@ -530,13 +549,14 @@ $('#autonomousButton').click(function() {
 
 var gyroRotation = 0;
 $('#gyro').click(function(e) {
+
 	e.stopPropagation();
 
 	//onclick, visually set the offset of the gyro to the current value, if offset != 0 then set to 0
 	zeroTheGyro = 0;
 	var gyroVal = zeroTheGyro + parseInt(NetworkTables.getValue('/SmartDashboard/NavX | Yaw'));
 	$('#gyroArm').css('transform', 'rotate(' + gyroVal + ')');
-	$('#gyroLabel').innerHTML = gyroVal + "º";
+	$('#gyroLabel').text( gyroVal + "º");
 });
 $('.winch')
 	.mousedown(function() {
