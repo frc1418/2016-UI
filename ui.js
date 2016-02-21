@@ -465,7 +465,7 @@ function onValueChanged(key, value, isNew) {
 			break;
 			case "/SmartDashboard/LightBulb":
 			console.log("bulbs",value);
-				if(value==false){
+				if(value==true){
 					$("#bulbSVG").addClass("active");
 				}
 				else{
@@ -546,7 +546,7 @@ function onValueChanged(key, value, isNew) {
 							var key = e.which;
 							if (key == 13) // the enter key code
 							{
-								//NetworkTables.setValue();					//get the key, and set the current value
+								NetworkTables.setValue($(this).attr("tableValue"),parseFloat($(this).val()));					//get the key, and set the current value
 							}
 						})
 						.attr('id', 'tuning' + hashCode(key))
@@ -558,6 +558,13 @@ function onValueChanged(key, value, isNew) {
 				div.attr("type", "string");
 
 				$('<input type="text">')
+					.keypress(function(e) {
+						var key = e.which;
+						if (key == 13) // the enter key code
+						{
+							NetworkTables.setValue($(this).attr("tableValue"),$(this).val());					//get the key, and set the current value
+						}
+					})
 					.attr('id', 'tuning' + hashCode(key))
 					.attr('value', value)
 					.attr("tableValue", key)
