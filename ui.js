@@ -323,6 +323,13 @@ function onValueChanged(key, value, isNew) {
 				//if the thing is not true, check to see if something else is true, if something else is true, then make it red, else make it cyan
 			}
 			break;
+        case '/SmartDashboard/Drive | backCamera':
+            if (value === true) {
+                $('.camera img').attr('src', 'http://roborio-1418-frc.local:5801/?action=stream');
+            } else {
+                $('.camera img').attr('src', 'http://roborio-1418-frc.local:5800/?action=stream');
+            }
+            break;
 		case '/SmartDashboard/startTheTimer':
 			if (value) {
 				document.getElementById('gameTimer').style.color = 'aqua';
