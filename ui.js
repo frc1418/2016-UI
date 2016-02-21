@@ -451,7 +451,7 @@ function onValueChanged(key, value, isNew) {
 						NetworkTables.setValue('/SmartDashboard/' + thisAttacker.attr('id'), 'empty');
 					}
 				});
-				if (attackerIndex === 0) {
+				if (attackerIndex == 0) {
 					NetworkTables.setValue('/SmartDashboard/robotDefense', 'lowbar');
 				} else {
 					var newPosition = parseInt(attackerIndex) - 1;
