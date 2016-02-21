@@ -10,6 +10,7 @@ var realDefenseNames = [
 	['sallyport', 'drawbridge'],
 	['roughTerrain', 'rockwall']
 ];
+var gyroRotation = 0;
 
 var defenseAutoNames = [
 	['A0', 'A1'],
@@ -31,16 +32,23 @@ function hashCode(s) {
 }
 $(document).ready(function() {
 	$('.winch').hide();
+	document.getElementById('gyroOnclickWrapper').onclick=function() {
+		console.log("gyro clicked");
 
+		//onclick, visually set the offset of the gyro to the current value, if offset != 0 then set to 0
+		zeroTheGyro = 0;
+		var gyroVal = zeroTheGyro + parseInt(NetworkTables.getValue('/SmartDashboard/NavX | Yaw'));
+		$('#gyroArm').css('transform', 'rotate(' + gyroVal + ')');
+		$('#gyroLabel').text(gyroVal + "º");
+	};
 	var gyroRotation = 0;
-	var bulb = $('#bulb');
-	bulb.click(function() {
-		console.log('clicked', $('#bulbSVG').hasClass('active'));
-		if ($('#bulbSVG').hasClass('active')) {
-
-			NetworkTables.setValue('/SmartDashboard/LightBulb', false);
-		} else {
-			NetworkTables.setValue('/SmartDashboard/LightBulb', true);
+	var bulb=$("#bulb");
+	bulb.click(function(){
+		console.log("clicked",bulb.attr("state"));
+		if(bulb.attr("state")=="true"){
+			NetworkTables.setValue("/SmartDashboard/LightBulb",false);
+		}else{
+		NetworkTables.setValue("/SmartDashboard/LightBulb",true);
 		}
 	});
 	document.getElementById('setButton').onclick = function() {
@@ -194,6 +202,7 @@ function onRobotConnection(connected) {
 	//config.frontcam should be set to http://roborio-1418-frc.local:5800/
 	console.log('Robot status: ' + connected);
 	$('#robotstate').text(connected ? 'Connected!' : 'Disconnected');
+
 }
 
 function onNetworkTablesConnection(connected) {
@@ -203,6 +212,9 @@ function onNetworkTablesConnection(connected) {
 		$('#nt tbody > tr').remove();
 	} else {
 		$('#connectstate').text('Disconnected!');
+	}
+	if(connected==false){
+		$("#settingsContainerDiv").empty();
 	}
 }
 
@@ -438,7 +450,7 @@ function onValueChanged(key, value, isNew) {
 						NetworkTables.setValue('/SmartDashboard/' + thisAttacker.attr('id'), 'empty');
 					}
 				});
-				if (attackerIndex === 0) {
+				if (attackerIndex == 0) {
 					NetworkTables.setValue('/SmartDashboard/robotDefense', 'lowbar');
 				} else {
 					var newPosition = parseInt(attackerIndex) - 1;
@@ -450,13 +462,16 @@ function onValueChanged(key, value, isNew) {
 			}
 			attackerImage.attr('state', attackerNames.indexOf(value)).attr('src', 'img/' + value + '.png');
 			break;
-		case '/SmartDashboard/LightBulb':
-			console.log('bulbs', value);
-			if (value === false) {
-				$('#bulbSVG').addClass('active');
-			} else {
-				$('#bulbSVG').removeClass('active');
-			}
+			case "/SmartDashboard/LightBulb":
+			console.log("bulbs",value);
+				if(value){		//intentional,
+					$("#bulb").attr("state","true");
+					$("#bulbSVG").attr("class","active");
+				}
+				else{
+					$("#bulb").attr("state","false");
+					$("#bulbSVG").attr("class","notActive");
+				}
 			break;
 	}
 	if (isNew) {
@@ -472,25 +487,22 @@ function onValueChanged(key, value, isNew) {
 			}
 		}
 		if (addToTuning) {
-			var div = $('<div></div>').attr('propName', propName); //.appendTo($('.settings'));
-			var allOfTheDivs = $('.settings').first().children('[type]');
-			var allOfTheDivsLength = allOfTheDivs.length;
-			if (allOfTheDivsLength === 0) {
-				div.appendTo('.settings');
-			} else {
+			var div = $('<div></div>').attr("propName",propName);//.appendTo($('.settings'));
+			var allOfTheDivs=$(".settings").first().children("[type]");
+			var allOfTheDivsLength=allOfTheDivs.length;
+			if(allOfTheDivsLength==0){div.appendTo(".settings");}//comment
+			else{
 				//run through all of the crap, if the string is greater than this elements propane, insert it after it, it should keep hitting false until true then break
-				var noneFound = true; //if it is the highest in the array append it to .settings
-				var processedDivName = propName.toLowerCase();
-				var processedDivNameLength = processedDivName.length;
-				allOfTheDivs.not(div).each(function() {
-					var thisPropname = $(this).attr('propName').toLowerCase();
-					for (i = 0; i < processedDivNameLength; i++) {
-						console.log(processedDivName.charCodeAt(i) < thisPropname.charCodeAt(i), processedDivName + '<' + thisPropname);
-						if (processedDivName.charCodeAt(i) == thisPropname.charCodeAt(i)) {
+				var noneFound=true;	//if it is the highest in the array append it to .settings
+				var processedDivName=propName.toLowerCase();
+				var processedDivNameLength=processedDivName.length;
+				allOfTheDivs.not(div).each(function(){
+					var thisPropname=$(this).attr("propName").toLowerCase();
+					for(a=0;a<processedDivNameLength;a++){
+						if(processedDivName.charCodeAt(a)==thisPropname.charCodeAt(a)){
 
-						} else if (processedDivName.charCodeAt(i) < thisPropname.charCodeAt(i)) { //if processedDivName is greater, keep going, if not, then insert vefore
-
-							console.log('inserting', processedDivName, 'is <', thisPropname);
+						}
+						else if(processedDivName.charCodeAt(a)<thisPropname.charCodeAt(a)){			//if processedDivName is greater, keep going, if not, then insert vefore
 							div.insertBefore($(this));
 							noneFound = false;
 							return false;
@@ -502,9 +514,11 @@ function onValueChanged(key, value, isNew) {
 					}
 
 				});
-				if (noneFound == true) {
-					console.log('append');
-					div.appendTo('.settings');
+				/*for(a=0;a<allOfTheDivsLength;a++){
+					var
+				}*/
+				if(noneFound==true){
+					div.appendTo	(".settings");
 				}
 			}
 			$('<p></p>').text(propName).appendTo(div);
@@ -530,6 +544,10 @@ function onValueChanged(key, value, isNew) {
 					$('<input type="number">')
 						.keypress(function(e) {
 							var key = e.which;
+							if (key == 13) // the enter key code
+							{
+								NetworkTables.setValue($(this).attr("tableValue"),parseFloat($(this).val()));					//get the key, and set the current value
+							}
 						})
 						.attr('id', 'tuning' + hashCode(key))
 						.attr('tableValue', key)
@@ -540,6 +558,13 @@ function onValueChanged(key, value, isNew) {
 				div.attr('type', 'string');
 
 				$('<input type="text">')
+					.keypress(function(e) {
+						var key = e.which;
+						if (key == 13) // the enter key code
+						{
+							NetworkTables.setValue($(this).attr("tableValue"),$(this).val());					//get the key, and set the current value
+						}
+					})
 					.attr('id', 'tuning' + hashCode(key))
 					.attr('value', value)
 					.attr('tableValue', key)
@@ -576,6 +601,8 @@ $('#set').click(function() {
 		var s;
 		if ($.isNumeric(thisChild.val())) {
 			s = parseInt(thisChild.val());
+			//s = thisChild.val();
+
 		} else {
 			s = thisChild.val();
 		}
@@ -605,17 +632,7 @@ $('#autonomousButton').click(function() {
 	$(this).addClass('active');
 });
 
-var gyroRotation = 0;
-$('#gyro').click(function(e) {
 
-	e.stopPropagation();
-
-	//onclick, visually set the offset of the gyro to the current value, if offset != 0 then set to 0
-	zeroTheGyro = 0;
-	var gyroVal = zeroTheGyro + parseInt(NetworkTables.getValue('/SmartDashboard/NavX | Yaw'));
-	$('#gyroArm').css('transform', 'rotate(' + gyroVal + ')');
-	$('#gyroLabel').text(gyroVal + 'º');
-});
 $('.winch')
 	.mousedown(function() {
 		NetworkTables.setValue('/SmartDashboard/ladderButtonPressed', true);
