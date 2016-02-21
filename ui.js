@@ -33,7 +33,16 @@ $(document).ready(function() {
 	$('.winch').hide();
 
 	var gyroRotation = 0;
+	var bulb=$("#bulb");
+	bulb.click(function(){
+		console.log("clicked",$("#bulbSVG").hasClass("active"));
+		if($("#bulbSVG").hasClass("active")){
 
+			NetworkTables.setValue("/SmartDashboard/LightBulb",false);
+		}else{
+		NetworkTables.setValue("/SmartDashboard/LightBulb",true);
+		}
+	});
 	document.getElementById('setButton').onclick = function() {
 		var setValue = document.getElementById('value').value;
 		if (setValue == 'true') { // ¯\_(ツ)_/¯
@@ -202,6 +211,7 @@ function onValueChanged(key, value, isNew) {
 
 	switch (key) {
 		//raw arm value and is the ball in
+
 		case '/SmartDashboard/ladderUp':
 			//is the ladderLift extended?
 			if (value === true) {
@@ -439,6 +449,15 @@ function onValueChanged(key, value, isNew) {
 				}
 			}
 			attackerImage.attr('state', attackerNames.indexOf(value)).attr('src', 'img/' + value + '.png');
+			break;
+			case "/SmartDashboard/LightBulb":
+			console.log("bulbs",value);
+				if(value==false){
+					$("#bulbSVG").addClass("active");
+				}
+				else{
+					$("#bulbSVG").removeClass("active");
+				}
 			break;
 	}
 	if (isNew) {
