@@ -38,9 +38,9 @@ $(document).ready(function() {
 	bulb.click(function() {
 		console.log('clicked', bulb.attr('state'));
 		if (bulb.attr('state') == 'true') {
-			NetworkTables.setValue('/SmartDashboard/LightBulb', false);
+			NetworkTables.setValue('/SmartDashboard/Lightbulb', false);
 		} else {
-			NetworkTables.setValue('/SmartDashboard/LightBulb', true);
+			NetworkTables.setValue('/SmartDashboard/Lightbulb', true);
 		}
 	});
 	document.getElementById('setButton').onclick = function() {
@@ -461,7 +461,7 @@ function onValueChanged(key, value, isNew) {
 			}
 			attackerImage.attr('state', attackerNames.indexOf(value)).attr('src', 'img/' + value + '.png');
 			break;
-		case '/SmartDashboard/LightBulb':
+		case '/SmartDashboard/Lightbulb':
 			console.log('bulbs', value);
 			if (value) { //intentional,
 				$('#bulb').attr('state', 'true');
