@@ -10,6 +10,7 @@ var realDefenseNames = [
 	['sallyport', 'drawbridge'],
 	['roughTerrain', 'rockwall']
 ];
+var gyroRotation = 0;
 
 var defenseAutoNames = [
 	['A0', 'A1'],
@@ -31,7 +32,15 @@ function hashCode(s) {
 }
 $(document).ready(function() {
 	$('.winch').hide();
+	document.getElementById('gyroOnclickWrapper').onclick=function() {
+		console.log("gyro clicked");
 
+		//onclick, visually set the offset of the gyro to the current value, if offset != 0 then set to 0
+		zeroTheGyro = 0;
+		var gyroVal = zeroTheGyro + parseInt(NetworkTables.getValue('/SmartDashboard/NavX | Yaw'));
+		$('#gyroArm').css('transform', 'rotate(' + gyroVal + ')');
+		$('#gyroLabel').text(gyroVal + "º");
+	};
 	var gyroRotation = 0;
 	var bulb=$("#bulb");
 	bulb.click(function(){
@@ -194,6 +203,7 @@ function onRobotConnection(connected) {
 	//config.frontcam should be set to http://roborio-1418-frc.local:5800/
 	console.log('Robot status: ' + connected);
 	$('#robotstate').text(connected ? 'Connected!' : 'Disconnected');
+
 }
 
 function onNetworkTablesConnection(connected) {
@@ -203,6 +213,9 @@ function onNetworkTablesConnection(connected) {
 		$('#nt tbody > tr').remove();
 	} else {
 		$('#connectstate').text('Disconnected!');
+	}
+	if(connected==false){
+		$("#settingsContainerDiv").empty();
 	}
 }
 
@@ -485,13 +498,10 @@ function onValueChanged(key, value, isNew) {
 				allOfTheDivs.not(div).each(function(){
 					var thisPropname=$(this).attr("propName").toLowerCase();
 					for(a=0;a<processedDivNameLength;a++){
-						console.log(processedDivName.charCodeAt(a)<thisPropname.charCodeAt(a),processedDivName+"<"+thisPropname);
 						if(processedDivName.charCodeAt(a)==thisPropname.charCodeAt(a)){
 
 						}
 						else if(processedDivName.charCodeAt(a)<thisPropname.charCodeAt(a)){			//if processedDivName is greater, keep going, if not, then insert vefore
-
-							console.log("inserting",processedDivName,"is <",thisPropname);
 							div.insertBefore($(this));
 							noneFound=false;
 							return false;
@@ -508,7 +518,6 @@ function onValueChanged(key, value, isNew) {
 					var
 				}*/
 				if(noneFound==true){
-					console.log("append");
 					div.appendTo	(".settings");
 				}
 			}
@@ -585,6 +594,8 @@ $('#set').click(function() {
 		var s;
 		if ($.isNumeric(thisChild.val())) {
 			s = parseInt(thisChild.val());
+			//s = thisChild.val();
+
 		} else {
 			s = thisChild.val();
 		}
@@ -614,17 +625,7 @@ $('#autonomousButton').click(function() {
 	$(this).addClass('active');
 });
 
-var gyroRotation = 0;
-$('#gyro').click(function(e) {
 
-	e.stopPropagation();
-
-	//onclick, visually set the offset of the gyro to the current value, if offset != 0 then set to 0
-	zeroTheGyro = 0;
-	var gyroVal = zeroTheGyro + parseInt(NetworkTables.getValue('/SmartDashboard/NavX | Yaw'));
-	$('#gyroArm').css('transform', 'rotate(' + gyroVal + ')');
-	$('#gyroLabel').text(gyroVal + "º");
-});
 $('.winch')
 	.mousedown(function() {
 		NetworkTables.setValue('/SmartDashboard/ladderButtonPressed', true);
