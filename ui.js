@@ -1,24 +1,24 @@
-var currentSeconds = 135;
-var timerVar;
-var alliedCounter = 0;
-var gameStarted = false;
-var zeroTheGyro = 0;
-var defenseNames = ['A', 'B', 'C', 'D'];
-var realDefenseNames = [
-	['portcullis', 'chevalDeFrise'],
-	['moat', 'ramparts'],
-	['sallyport', 'drawbridge'],
-	['roughTerrain', 'rockwall']
-];
+var currentSeconds = 135,
+    timerVar,
+    alliedCounter = 0,
+    gameStarted = false,
+    zeroTheGyro = 0,
+    defenseNames = ['A', 'B', 'C', 'D'],
+    realDefenseNames = [
+    	['portcullis', 'chevalDeFrise'],
+    	['moat', 'ramparts'],
+    	['sallyport', 'drawbridge'],
+    	['roughTerrain', 'rockwall']
+    ],
+    defenseAutoNames = [
+    	['A0', 'A1'],
+    	['E0', 'E0'],
+    	['C1', 'C1'],
+    	['E0', 'E0']
+    ],
+    attackerNames = ['empty', 'allied', 'us'],
+    displayInTuning = ['/SmartDashboard/']; //if it starts with these strings add to tuning page
 
-var defenseAutoNames = [
-	['A0', 'A1'],
-	['E0', 'E0'],
-	['C1', 'C1'],
-	['E0', 'E0']
-];
-var attackerNames = ['empty', 'allied', 'us'];
-var displayInTuning = ['/SmartDashboard/']; //if it starts with these strings add to tuning page
 function hashCode(s) {
 	//previous value, current value
 	var ret = '';
@@ -67,24 +67,24 @@ $(document).ready(function() {
 			$('.autoButton').not(document.getElementById($thisButton.attr('id'))).each(function() {
 				NetworkTables.setValue('/SmartDashboard/' + $thisButton.attr('id'), false);
 			});
-		} else {}
+		}
 		NetworkTables.setValue('/SmartDashboard/' + $thisButton.attr('id'), activeState); //onclick set the things id to true
 
 	});
-	var EncoderSlider = $('#EncoderSlider');
-	var min = EncoderSlider.attr('min');
-	var max = EncoderSlider.attr('max');
+	var encoderSlider = $('#encoderSlider');
+	var min = encoderSlider.attr('min');
+	var max = encoderSlider.attr('max');
 	var dataList = $('#stepList');
 	var tickDistance = 50;
 	var numberOfTicks = (parseInt(max) - parseInt(min)) / tickDistance;
 	var newVal = parseInt(min);
-	for (var a = 0; a < numberOfTicks; a++) {
+	for (i = 0; i < numberOfTicks; i++) {
 		dataList.append('<option>' + newVal + '</option>');
 		newVal += tickDistance;
 	}
 	$('#encoder').hide().show(0); //element refresh
-	$('#EncoderSlider').change(function() {
-		var encoderVal = $('#EncoderSlider').val();
+	$('#encoderSlider').change(function() {
+		var encoderVal = $('#encoderSlider').val();
 		$('#encoderValueDisplaySpan').text('Arm Encoder Value:' + encoderVal);
 		NetworkTables.setValue('/SmartDashboard/Arm | Middle', parseInt(encoderVal));
 
@@ -118,9 +118,9 @@ $(document).ready(function() {
 
 	//for every selection Div, make the stuff, add a listener to each arrow, the toggleBox,
 	//set the value from networkTables or if no networkTables, get the default value
-	var everyDefenseSelector = $('.DefenseSelector'); //get every defenseSelector(the div that contains the stuff)
-	everyDefenseSelector.each(function(a) {
-		//for every DefenseSelector add the triangles, set the id, 'a' is the index in the list of divs
+	var everydefenseSelector = $('.defenseSelector'); //get every defenseSelector(the div that contains the stuff)
+	everydefenseSelector.each(function(a) {
+		//for every defenseSelector add the triangles, set the id, 'a' is the index in the list of divs
 		var thisDiv = $(this);
 		thisDiv.attr('defenseClass', a);
 		thisDiv.attr('id', 'defenseSelector' + a);
@@ -221,8 +221,8 @@ function onValueChanged(key, value, isNew) {
 			var gyroVal = value + zeroTheGyro;
 			var gyroDisplayVal = String(Math.floor(gyroVal));
 			var addSpaces = 4 - gyroDisplayVal.length;
-			for (var a = 0; a < addSpaces; a++) {
-				gyroDisplayVal = "\xA0" + gyroDisplayVal;
+			for (i = 0; i < addSpaces; i++) {
+				gyroDisplayVal = '\xA0' + gyroDisplayVal;
 			}
 			$('#gyroArm').css('transform', 'rotate(' + gyroVal + 'deg)');
 			$('#gyroLabel').text(gyroDisplayVal + 'º');
@@ -275,7 +275,7 @@ function onValueChanged(key, value, isNew) {
 					thisButton.attr('src', '/img/' + thisButton.attr('baseSrc') + '.png');
 					thisButton.css({
 						'pointer-events': 'auto',
-						'border-color': 'rgb(255, 200,16)',
+						'border-color': '#ffc811',
 					});
 					NetworkTables.setValue('/SmartDashboard/' + thisButton.attr('id'), false);
 				}); //then set everything else that isn't true and make it red, and set their activeState to false,
@@ -288,7 +288,7 @@ function onValueChanged(key, value, isNew) {
 				var isButtonActive = false;
 				var buttonValueListLength = buttonValueList.length;
 				for (i = 0; i < buttonValueListLength; i++) {
-					if (buttonValueList[a] === true) {
+					if (buttonValueList[i] === true) {
 						isButtonActive = true;
 					}
 				}
@@ -317,7 +317,7 @@ function onValueChanged(key, value, isNew) {
 					var currentMinutes = parseInt(currentSeconds / 60);
 					var actualSeconds = (currentSeconds % 60);
 
-					actualSeconds = actualSeconds < 10 ? "0" + actualSeconds : actualSeconds;
+					actualSeconds = actualSeconds < 10 ? '0' + actualSeconds : actualSeconds;
 
 					if (currentSeconds < 0) {
 						window.clearTimeout(timerVar);
@@ -340,8 +340,8 @@ function onValueChanged(key, value, isNew) {
 				value = 1200;
 			} else if (value < 0) {
 				value = 0;
-			} else {}
-			$('#EncoderSlider').val(value);
+			}
+			$('#encoderSlider').val(value);
 			$('#encoderValueDisplaySpan').text('EncoderValue: ' + value);
 			break;
 		case '/SmartDashboard/defenseSelector0':
@@ -397,7 +397,7 @@ function onValueChanged(key, value, isNew) {
 		case '/SmartDashboard/attackerState3':
 		case '/SmartDashboard/attackerState4':
 			var attackerImage = $('#' + propName);
-			if (value == "allied") {
+			if (value == 'allied') {
 				alliedCounter = 0;
 				$('.attackerState').not(document.getElementById(propName)).each(function() {
 					var thisAttacker = $(this);
@@ -447,7 +447,7 @@ function onValueChanged(key, value, isNew) {
 			var div = $('<div></div>').appendTo($('.settings'));
 			$('<p></p>').text(propName).appendTo(div);
 			if (value === true || value === false) {
-				div.attr("type", "boolean");
+				div.attr('type', 'boolean');
 				var boolSlider = $('<div class="bool-slider ' + value +
 					'" id="tuning' + hashCode(key) + '" tableValue="' + key + '"></div>');
 				var innerInset = $('<div class="inset"></div>');
@@ -462,36 +462,30 @@ function onValueChanged(key, value, isNew) {
 				innerInset.appendTo(boolSlider);
 				boolSlider.appendTo(div);
 			} else if (!isNaN(value)) {
-				if (!isNaN(value)) {
-					div.attr("type", "int");
+				div.attr('type', 'int');
 
-					$('<input type="number">')
-						.keypress(function(e) {
-							var key = e.which;
-							if (key == 13) // the enter key code
-							{
-								//NetworkTables.setValue();					//get the key, and set the current value
-							}
-						})
-						.attr('id', 'tuning' + hashCode(key))
-						.attr("tableValue", key)
-						.attr('value', value)
-						.appendTo(div);
-				}
+				$('<input type="number">')
+					.keypress(function(e) {
+						var key = e.which;
+					})
+					.attr('id', 'tuning' + hashCode(key))
+					.attr('tableValue', key)
+					.attr('value', value)
+					.appendTo(div);
 			} else {
-				div.attr("type", "string");
+				div.attr('type', 'string');
 
 				$('<input type="text">')
 					.attr('id', 'tuning' + hashCode(key))
 					.attr('value', value)
-					.attr("tableValue", key)
+					.attr('tableValue', key)
 					.appendTo(div);
 			}
-			var alphabeticallyOrderedDivs = $("#settingsContainerDiv > div").sort(function(a, b) {
+			var alphabeticallyOrderedDivs = $('#settingsContainerDiv > div').sort(function(a, b) {
 
-				return $(a).children("[tableValue]:first").attr("tableValue") > $(b).children("[tableValue]:first").attr("tableValue");
+				return $(a).children('[tableValue]:first').attr('tableValue') > $(b).children('[tableValue]:first').attr('tableValue');
 			});
-			$("#settingsContainerDiv").empty().html(alphabeticallyOrderedDivs);
+			$('#settingsContainerDiv').empty().html(alphabeticallyOrderedDivs);
 		}
 	} else {
 		var $tuningDiv = $('#tuning' + hashCode(key));
@@ -545,14 +539,12 @@ $('#autonomousButton').click(function() {
 
 var gyroRotation = 0;
 $('#gyro').click(function(e) {
-
 	e.stopPropagation();
 
 	//onclick, visually set the offset of the gyro to the current value, if offset != 0 then set to 0
-	zeroTheGyro = 0;
-	var gyroVal = zeroTheGyro + parseInt(NetworkTables.getValue('/SmartDashboard/NavX | Yaw'));
+	var gyroVal = parseInt(NetworkTables.getValue('/SmartDashboard/NavX | Yaw'));
 	$('#gyroArm').css('transform', 'rotate(' + gyroVal + ')');
-	$('#gyroLabel').text(gyroVal + "º");
+	$('#gyroLabel').text(gyroVal + 'º');
 });
 $('.winch')
 	.mousedown(function() {

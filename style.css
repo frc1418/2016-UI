@@ -157,11 +157,11 @@ aside {
     background-color: lightgrey;
     border: solid 4px black;
 }
-#EncoderSlider {
+#encoderSlider {
     width: 18vw;
 }
 #lowBarImg {
-  transform: translateY(50px);
+  transform: translateY(60px);
   height: 100px;
   width: 100px;
   display: block;
@@ -270,18 +270,18 @@ aside {
     height: 100px;
     width: 100px;
 }
-.FieldSelector {
+.fieldSelector {
     display: inline-block;
     margin-left: -5px;
 }
-.ObstacleSelector {
+.obstacleSelector {
     display: block;
     width: 100px;
     height: 100px;
-    margin-bottom: 100px;
+    margin-bottom: 120px;
 }
-.DefenseSelector {}
-.RobotSelector {
+.defenseSelector {}
+.robotSelector {
     display: block;
     width: 100px;
     height: 100px;
