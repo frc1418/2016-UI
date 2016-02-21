@@ -1,25 +1,26 @@
-var currentSeconds = 135;
-var timerVar;
-var alliedCounter = 0;
-var gameStarted = false;
-var zeroTheGyro = 0;
-var defenseNames = ['A', 'B', 'C', 'D'];
-var realDefenseNames = [
-	['portcullis', 'chevalDeFrise'],
-	['moat', 'ramparts'],
-	['sallyport', 'drawbridge'],
-	['roughTerrain', 'rockwall']
-];
-var gyroRotation = 0;
+var currentSeconds = 135,
+	timerVar,
+	alliedCounter = 0,
+	gameStarted = false,
+	defenseNames = ['A', 'B', 'C', 'D'],
+	realDefenseNames = [
+		['portcullis', 'chevalDeFrise'],
+		['moat', 'ramparts'],
+		['sallyport', 'drawbridge'],
+		['roughTerrain', 'rockwall']
+	],
+	gyroRotation = 0,
+	gyroDiff = 0,
+	visualGyroVal = 0,
+	defenseAutoNames = [
+		['A0', 'A1'],
+		['E0', 'E0'],
+		['C1', 'C1'],
+		['E0', 'E0']
+	],
+	attackerNames = ['empty', 'allied', 'us'],
+	displayInTuning = ['/SmartDashboard/']; //if it starts with these strings add to tuning page
 
-var defenseAutoNames = [
-	['A0', 'A1'],
-	['E0', 'E0'],
-	['C1', 'C1'],
-	['E0', 'E0']
-];
-var attackerNames = ['empty', 'allied', 'us'];
-var displayInTuning = ['/SmartDashboard/']; //if it starts with these strings add to tuning page
 function hashCode(s) {
 	//previous value, current value
 	var ret = '';
@@ -32,23 +33,14 @@ function hashCode(s) {
 }
 $(document).ready(function() {
 	$('.winch').hide();
-	document.getElementById('gyroOnclickWrapper').onclick=function() {
-		console.log("gyro clicked");
-
-		//onclick, visually set the offset of the gyro to the current value, if offset != 0 then set to 0
-		zeroTheGyro = 0;
-		var gyroVal = zeroTheGyro + parseInt(NetworkTables.getValue('/SmartDashboard/NavX | Yaw'));
-		$('#gyroArm').css('transform', 'rotate(' + gyroVal + ')');
-		$('#gyroLabel').text(gyroVal + "º");
-	};
 	var gyroRotation = 0;
-	var bulb=$("#bulb");
-	bulb.click(function(){
-		console.log("clicked",bulb.attr("state"));
-		if(bulb.attr("state")=="true"){
-			NetworkTables.setValue("/SmartDashboard/LightBulb",false);
-		}else{
-		NetworkTables.setValue("/SmartDashboard/LightBulb",true);
+	var bulb = $('#bulb');
+	bulb.click(function() {
+		console.log('clicked', bulb.attr('state'));
+		if (bulb.attr('state') == 'true') {
+			NetworkTables.setValue('/SmartDashboard/LightBulb', false);
+		} else {
+			NetworkTables.setValue('/SmartDashboard/LightBulb', true);
 		}
 	});
 	document.getElementById('setButton').onclick = function() {
@@ -88,13 +80,13 @@ $(document).ready(function() {
 		NetworkTables.setValue('/SmartDashboard/' + $thisButton.attr('id'), activeState); //onclick set the things id to true
 
 	});
-	var encoderSlider = $('#encoderSlider');
-	var min = encoderSlider.attr('min');
-	var max = encoderSlider.attr('max');
-	var dataList = $('#stepList');
-	var tickDistance = 50;
-	var numberOfTicks = (parseInt(max) - parseInt(min)) / tickDistance;
-	var newVal = parseInt(min);
+	var encoderSlider = $('#encoderSlider'),
+		min = encoderSlider.attr('min'),
+		max = encoderSlider.attr('max'),
+		dataList = $('#stepList'),
+		tickDistance = 50,
+		numberOfTicks = (parseInt(max) - parseInt(min)) / tickDistance,
+		newVal = parseInt(min);
 	for (i = 0; i < numberOfTicks; i++) {
 		dataList.append('<option>' + newVal + '</option>');
 		newVal += tickDistance;
@@ -213,8 +205,8 @@ function onNetworkTablesConnection(connected) {
 	} else {
 		$('#connectstate').text('Disconnected!');
 	}
-	if(connected==false){
-		$("#settingsContainerDiv").empty();
+	if (connected === false) {
+		$('#settingsContainerDiv').empty();
 	}
 }
 
@@ -240,8 +232,8 @@ function onValueChanged(key, value, isNew) {
 			}
 			break;
 		case '/SmartDashboard/NavX | Yaw':
-			var gyroVal = value + zeroTheGyro;
-			var gyroDisplayVal = String(Math.floor(gyroVal));
+			var gyroVal = value;
+			var gyroDisplayVal = String(Math.floor(gyroVal - gyroDiff));
 			var addSpaces = 4 - gyroDisplayVal.length;
 			for (i = 0; i < addSpaces; i++) {
 				gyroDisplayVal = '\xA0' + gyroDisplayVal;
@@ -331,6 +323,13 @@ function onValueChanged(key, value, isNew) {
 				//if the thing is not true, check to see if something else is true, if something else is true, then make it red, else make it cyan
 			}
 			break;
+        case '/SmartDashboard/Drive | backCamera':
+            if (value === true) {
+                $('.camera img').attr('src', 'http://roborio-1418-frc.local:5801/?action=stream');
+            } else {
+                $('.camera img').attr('src', 'http://roborio-1418-frc.local:5800/?action=stream');
+            }
+            break;
 		case '/SmartDashboard/startTheTimer':
 			if (value) {
 				document.getElementById('gameTimer').style.color = 'aqua';
@@ -462,16 +461,15 @@ function onValueChanged(key, value, isNew) {
 			}
 			attackerImage.attr('state', attackerNames.indexOf(value)).attr('src', 'img/' + value + '.png');
 			break;
-			case "/SmartDashboard/LightBulb":
-			console.log("bulbs",value);
-				if(value){		//intentional,
-					$("#bulb").attr("state","true");
-					$("#bulbSVG").attr("class","active");
-				}
-				else{
-					$("#bulb").attr("state","false");
-					$("#bulbSVG").attr("class","notActive");
-				}
+		case '/SmartDashboard/LightBulb':
+			console.log('bulbs', value);
+			if (value) { //intentional,
+				$('#bulb').attr('state', 'true');
+				$('#bulbSVG').attr('class', 'active');
+			} else {
+				$('#bulb').attr('state', 'false');
+				$('#bulbSVG').attr('class', 'notActive');
+			}
 			break;
 	}
 	if (isNew) {
@@ -487,22 +485,23 @@ function onValueChanged(key, value, isNew) {
 			}
 		}
 		if (addToTuning) {
-			var div = $('<div></div>').attr("propName",propName);//.appendTo($('.settings'));
-			var allOfTheDivs=$(".settings").first().children("[type]");
-			var allOfTheDivsLength=allOfTheDivs.length;
-			if(allOfTheDivsLength==0){div.appendTo(".settings");}//comment
-			else{
+			var div = $('<div></div>').attr('propName', propName); //.appendTo($('.settings'));
+			var allOfTheDivs = $('.settings').first().children('[type]');
+			var allOfTheDivsLength = allOfTheDivs.length;
+			if (allOfTheDivsLength === 0) {
+				div.appendTo('.settings');
+			} //comment
+			else {
 				//run through all of the crap, if the string is greater than this elements propane, insert it after it, it should keep hitting false until true then break
-				var noneFound=true;	//if it is the highest in the array append it to .settings
-				var processedDivName=propName.toLowerCase();
-				var processedDivNameLength=processedDivName.length;
-				allOfTheDivs.not(div).each(function(){
-					var thisPropname=$(this).attr("propName").toLowerCase();
-					for(a=0;a<processedDivNameLength;a++){
-						if(processedDivName.charCodeAt(a)==thisPropname.charCodeAt(a)){
+				var noneFound = true; //if it is the highest in the array append it to .settings
+				var processedDivName = propName.toLowerCase();
+				var processedDivNameLength = processedDivName.length;
+				allOfTheDivs.not(div).each(function() {
+					var thisPropname = $(this).attr('propName').toLowerCase();
+					for (a = 0; a < processedDivNameLength; a++) {
+						if (processedDivName.charCodeAt(a) == thisPropname.charCodeAt(a)) {
 
-						}
-						else if(processedDivName.charCodeAt(a)<thisPropname.charCodeAt(a)){			//if processedDivName is greater, keep going, if not, then insert vefore
+						} else if (processedDivName.charCodeAt(a) < thisPropname.charCodeAt(a)) { //if processedDivName is greater, keep going, if not, then insert vefore
 							div.insertBefore($(this));
 							noneFound = false;
 							return false;
@@ -517,8 +516,8 @@ function onValueChanged(key, value, isNew) {
 				/*for(a=0;a<allOfTheDivsLength;a++){
 					var
 				}*/
-				if(noneFound==true){
-					div.appendTo	(".settings");
+				if (noneFound === true) {
+					div.appendTo('.settings');
 				}
 			}
 			$('<p></p>').text(propName).appendTo(div);
@@ -546,7 +545,7 @@ function onValueChanged(key, value, isNew) {
 							var key = e.which;
 							if (key == 13) // the enter key code
 							{
-								NetworkTables.setValue($(this).attr("tableValue"),parseFloat($(this).val()));					//get the key, and set the current value
+								NetworkTables.setValue($(this).attr('tableValue'), parseFloat($(this).val())); //get the key, and set the current value
 							}
 						})
 						.attr('id', 'tuning' + hashCode(key))
@@ -562,7 +561,7 @@ function onValueChanged(key, value, isNew) {
 						var key = e.which;
 						if (key == 13) // the enter key code
 						{
-							NetworkTables.setValue($(this).attr("tableValue"),$(this).val());					//get the key, and set the current value
+							NetworkTables.setValue($(this).attr('tableValue'), $(this).val()); //get the key, and set the current value
 						}
 					})
 					.attr('id', 'tuning' + hashCode(key))
@@ -632,7 +631,6 @@ $('#autonomousButton').click(function() {
 	$(this).addClass('active');
 });
 
-
 $('.winch')
 	.mousedown(function() {
 		NetworkTables.setValue('/SmartDashboard/ladderButtonPressed', true);
@@ -640,3 +638,14 @@ $('.winch')
 	.mouseup(function() {
 		NetworkTables.setValue('/SmartDashboard/ladderButtonPressed', false);
 	});
+
+$('#gyro').click(function() {
+	console.log('gyro clicked');
+	gyroDiff = gyroVal;
+
+	visualGyroVal -= gyroDiff;
+
+	var gyroVal = parseInt(NetworkTables.getValue('/SmartDashboard/NavX | Yaw'));
+	$('#gyroArm').css('transform', 'rotate(' + visualGyroVal + ')');
+	$('#gyroLabel').text(visualGyroVal + 'º');
+});

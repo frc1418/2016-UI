@@ -64,6 +64,5 @@ Current Students
 * [Erik Boesen](https://github.com/ErikBoesen)
 * [Tim Winters](https://github.com/Twinters007)
 * [Aki Maher](https://github.com/17mahera)
-* Tyler Gogal
 
 Special Thanks to [Dustin Spicuzza](https://github.com/virtuald), mentor and head of the [RobotPy](http://github.com/robotpy) project.

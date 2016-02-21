@@ -84,10 +84,10 @@ header {
 }
 #bulb svg.notActive * {
     fill: aqua;
-    /*stroke: none;*/
 }
 #bulb svg.active * {
     fill: yellow;
+    stroke: none;
 }
 .camera {
     position: fixed;
