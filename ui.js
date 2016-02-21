@@ -287,7 +287,7 @@ function onValueChanged(key, value, isNew) {
 					}).get();
 				var isButtonActive = false;
 				var buttonValueListLength = buttonValueList.length;
-				for (var i = 0; i < buttonValueListLength; i++) {
+				for (i = 0; i < buttonValueListLength; i++) {
 					if (buttonValueList[a] === true) {
 						isButtonActive = true;
 					}
