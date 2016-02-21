@@ -44,9 +44,8 @@ $(document).ready(function() {
 	var gyroRotation = 0;
 	var bulb=$("#bulb");
 	bulb.click(function(){
-		console.log("clicked",$("#bulbSVG").hasClass("active"));
-		if($("#bulbSVG").hasClass("active")){
-
+		console.log("clicked",bulb.attr("state"));
+		if(bulb.attr("state")=="true"){
 			NetworkTables.setValue("/SmartDashboard/LightBulb",false);
 		}else{
 		NetworkTables.setValue("/SmartDashboard/LightBulb",true);
@@ -465,11 +464,13 @@ function onValueChanged(key, value, isNew) {
 			break;
 			case "/SmartDashboard/LightBulb":
 			console.log("bulbs",value);
-				if(value==true){
-					$("#bulbSVG").addClass("active");
+				if(value){		//intentional,
+					$("#bulb").attr("state","true");
+					$("#bulbSVG").attr("class","active");
 				}
 				else{
-					$("#bulbSVG").removeClass("active");
+					$("#bulb").attr("state","false");
+					$("#bulbSVG").attr("class","notActive");
 				}
 			break;
 	}

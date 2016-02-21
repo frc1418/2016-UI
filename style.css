@@ -82,9 +82,9 @@ header {
     left: 42vw;
     top: 0;
 }
-#bulb svg * {
+#bulb svg.notActive * {
     fill: aqua;
-    stroke: none;
+    /*stroke: none;*/
 }
 #bulb svg.active * {
     fill: yellow;
@@ -253,12 +253,10 @@ aside {
     display: block;
 }
 .arrow-up {
-    margin-bottom: 10px;
-    border-bottom: 25px solid aqua;
+    border-bottom: 25px solid red;
 }
 .arrow-down {
-    margin-top: 10px;
-    border-top: 25px solid aqua;
+    border-top: 25px solid red;
 }
 .selectionToggleBox {
     height: 100px;
