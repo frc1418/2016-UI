@@ -365,6 +365,16 @@ function onValueChanged(key, value, isNew) {
 			if (defenseClass == -1) {
 				break;
 			}
+			//
+			var s=parseInt(key.charAt(key.length-1))+1;
+			var thisAttacker=$("#attackerState"+s);
+			console.log(thisAttacker);
+			if(thisAttacker.attr("state")==2){		//if it is allied or us, change it
+				console.log("state is attacker");
+				NetworkTables.setValue("/SmartDashboard/robotPosition",thisAttacker.attr("position"));
+				NetworkTables.setValue("/SmartDashboard/robotDefense",defenseAutoNames[defenseClass][defenseNum]);
+
+			}
 			theChangedDiv.attr('defenseClass', defenseClass)
 				.attr('defenseNumber', defenseNum);
 			theChangedDiv.children('.selectionToggleBox')
@@ -444,7 +454,45 @@ function onValueChanged(key, value, isNew) {
 			}
 		}
 		if (addToTuning) {
-			var div = $('<div></div>').appendTo($('.settings'));
+			var div = $('<div></div>').attr("propName",propName);//.appendTo($('.settings'));
+			var allOfTheDivs=$(".settings").first().children("[type]");
+			var allOfTheDivsLength=allOfTheDivs.length;
+			if(allOfTheDivsLength==0){div.appendTo(".settings");}
+			else{
+				//run through all of the crap, if the string is greater than this elements propane, insert it after it, it should keep hitting false until true then break
+				var noneFound=true;	//if it is the highest in the array append it to .settings
+				var processedDivName=propName.toLowerCase();
+				var processedDivNameLength=processedDivName.length;
+				allOfTheDivs.not(div).each(function(){
+					var thisPropname=$(this).attr("propName").toLowerCase();
+					for(a=0;a<processedDivNameLength;a++){
+						console.log(processedDivName.charCodeAt(a)<thisPropname.charCodeAt(a),processedDivName+"<"+thisPropname);
+						if(processedDivName.charCodeAt(a)==thisPropname.charCodeAt(a)){
+
+						}
+						else if(processedDivName.charCodeAt(a)<thisPropname.charCodeAt(a)){			//if processedDivName is greater, keep going, if not, then insert vefore
+
+							console.log("inserting",processedDivName,"is <",thisPropname);
+							div.insertBefore($(this));
+							noneFound=false;
+							return false;
+							break;
+						}
+						else{
+							break;
+						}
+
+					}
+
+				});
+				/*for(a=0;a<allOfTheDivsLength;a++){
+					var
+				}*/
+				if(noneFound==true){
+					console.log("append");
+					div.appendTo	(".settings");
+				}
+			}
 			$('<p></p>').text(propName).appendTo(div);
 			if (value === true || value === false) {
 				div.attr("type", "boolean");
@@ -487,11 +535,15 @@ function onValueChanged(key, value, isNew) {
 					.attr("tableValue", key)
 					.appendTo(div);
 			}
-			var alphabeticallyOrderedDivs = $("#settingsContainerDiv > div").sort(function(a, b) {
-
-				return $(a).children("[tableValue]:first").attr("tableValue") > $(b).children("[tableValue]:first").attr("tableValue");
-			});
-			$("#settingsContainerDiv").empty().html(alphabeticallyOrderedDivs);
+			/*var settingsContainerDiv=document.getElementById("settingsContainerDiv");
+			var UnorderedDivs = $("#settingsContainerDiv > div").children("[tableValue]:first");
+			var UnorderedDivsLength=UnorderedDivs.length;
+			var alphabet = "abcdefghijklmnopqrstuvwxyz".split();
+			for(a=0;a<UnorderedDivsLength;a++){
+				if()
+			}
+					return $(a).children("[tableValue]:first").attr("tableValue") > $(b).children("[tableValue]:first").attr("tableValue");
+			$(settingsContainerDiv).empty().append(alphabeticallyOrderedDivs);*/
 		}
 	} else {
 		var $tuningDiv = $('#tuning' + hashCode(key));
