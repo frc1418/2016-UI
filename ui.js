@@ -35,6 +35,7 @@ $(document).ready(function() {
 	$('.winch').hide();
 	var gyroRotation = 0;
 	var bulb = $('#bulb');
+	NetworkTables.setValue('/SmartDashboard/Lightbulb', false);
 	bulb.click(function() {
 		console.log('clicked', bulb.attr('state'));
 		if (bulb.attr('state') == 'true') {
