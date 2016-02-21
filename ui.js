@@ -476,7 +476,7 @@ function onValueChanged(key, value, isNew) {
 			var div = $('<div></div>').attr("propName",propName);//.appendTo($('.settings'));
 			var allOfTheDivs=$(".settings").first().children("[type]");
 			var allOfTheDivsLength=allOfTheDivs.length;
-			if(allOfTheDivsLength==0){div.appendTo(".settings");}
+			if(allOfTheDivsLength==0){div.appendTo(".settings");}//comment
 			else{
 				//run through all of the crap, if the string is greater than this elements propane, insert it after it, it should keep hitting false until true then break
 				var noneFound=true;	//if it is the highest in the array append it to .settings
