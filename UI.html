@@ -31,13 +31,11 @@
     </div>
     <div id="gameTimer">2:15</div>
     <article id="main">
-      <div id="gyroOnclickWrapper">
         <svg id="gyro" z-index="10" pointer-events= "">
             <circle id="gyroCircle" cx="85" cy="85" r="50" stroke="aqua" stroke-width="3" />
             <rect id="gyroArm" x="80" y="5" width="10" height="80" stroke="aqua" stroke-width="3" />
             <text id="gyroLabel" x="50" y="30" fill="aqua" font-size="25">0º</text>
         </svg>
-      </div>
         <svg id="robotDiagram" width="332" height="450">
             <rect class="winch back" x="200" y="340" width="70" height="8" />
             <rect class="winch back" x="200" y="295" width="70" height="8" />
@@ -73,43 +71,43 @@
         <button id="set">Set</button>
     </article>
     <article id="autonomousSelection">
-        <div class="FieldSelector">
-            <div class="ObstacleSelector">
+        <div class="fieldSelector">
+            <div class="obstacleSelector">
                 <img src="/img/lowbar.png" id="lowBarImg">
             </div>
-            <div class="RobotSelector">
+            <div class="robotSelector">
                 <img class="attackerState">
             </div>
         </div>
-        <div class="FieldSelector">
-            <div class="ObstacleSelector">
-                <div class="DefenseSelector"></div>
+        <div class="fieldSelector">
+            <div class="obstacleSelector">
+                <div class="defenseSelector"></div>
             </div>
-            <div class="RobotSelector">
+            <div class="robotSelector">
                 <img class="attackerState">
             </div>
         </div>
-        <div class="FieldSelector">
-            <div class="ObstacleSelector">
-                <div class="DefenseSelector"></div>
+        <div class="fieldSelector">
+            <div class="obstacleSelector">
+                <div class="defenseSelector"></div>
             </div>
-            <div class="RobotSelector">
+            <div class="robotSelector">
                 <img class="attackerState">
             </div>
         </div>
-        <div class="FieldSelector">
-            <div class="ObstacleSelector">
-                <div class="DefenseSelector"></div>
+        <div class="fieldSelector">
+            <div class="obstacleSelector">
+                <div class="defenseSelector"></div>
             </div>
-            <div class="RobotSelector">
+            <div class="robotSelector">
                 <img class="attackerState">
             </div>
         </div>
-        <div class="FieldSelector">
-            <div class="ObstacleSelector">
-                <div class="DefenseSelector"></div>
+        <div class="fieldSelector">
+            <div class="obstacleSelector">
+                <div class="defenseSelector"></div>
             </div>
-            <div class="RobotSelector">
+            <div class="robotSelector">
                 <img class="attackerState">
             </div>
         </div>
@@ -123,7 +121,7 @@
     </article>
     <aside>
         <div id="encoder">
-            <input id="EncoderSlider" type="range" min="0" max="1200" value="770" step="25" list="stepList">
+            <input id="encoderSlider" type="range" min="0" max="1200" value="770" step="25" list="stepList">
             <datalist id="stepList"></datalist>
             <br>
             <span id="encoderValueDisplaySpan">Arm Encoder Value: 200</span>

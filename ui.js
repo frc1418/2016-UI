@@ -1,25 +1,26 @@
-var currentSeconds = 135;
-var timerVar;
-var alliedCounter = 0;
-var gameStarted = false;
-var zeroTheGyro = 0;
-var defenseNames = ['A', 'B', 'C', 'D'];
-var realDefenseNames = [
-	['portcullis', 'chevalDeFrise'],
-	['moat', 'ramparts'],
-	['sallyport', 'drawbridge'],
-	['roughTerrain', 'rockwall']
-];
-var gyroRotation = 0;
+var currentSeconds = 135,
+	timerVar,
+	alliedCounter = 0,
+	gameStarted = false,
+	defenseNames = ['A', 'B', 'C', 'D'],
+	realDefenseNames = [
+		['portcullis', 'chevalDeFrise'],
+		['moat', 'ramparts'],
+		['sallyport', 'drawbridge'],
+		['roughTerrain', 'rockwall']
+	],
+	gyroRotation = 0,
+	gyroDiff = 0,
+	visualGyroVal = 0,
+	defenseAutoNames = [
+		['A0', 'A1'],
+		['E0', 'E0'],
+		['C1', 'C1'],
+		['E0', 'E0']
+	],
+	attackerNames = ['empty', 'allied', 'us'],
+	displayInTuning = ['/SmartDashboard/']; //if it starts with these strings add to tuning page
 
-var defenseAutoNames = [
-	['A0', 'A1'],
-	['E0', 'E0'],
-	['C1', 'C1'],
-	['E0', 'E0']
-];
-var attackerNames = ['empty', 'allied', 'us'];
-var displayInTuning = ['/SmartDashboard/']; //if it starts with these strings add to tuning page
 function hashCode(s) {
 	//previous value, current value
 	var ret = '';
@@ -40,23 +41,15 @@ $(document).ready(function() {
 		}
 	});
 	$('.winch').hide();
-	document.getElementById('gyroOnclickWrapper').onclick=function() {
-		console.log("gyro clicked");
-
-		//onclick, visually set the offset of the gyro to the current value, if offset != 0 then set to 0
-		zeroTheGyro = 0;
-		var gyroVal = zeroTheGyro + parseInt(NetworkTables.getValue('/SmartDashboard/NavX | Yaw'));
-		$('#gyroArm').css('transform', 'rotate(' + gyroVal + ')');
-		$('#gyroLabel').text(gyroVal + "º");
-	};
 	var gyroRotation = 0;
-	var bulb=$("#bulb");
-	bulb.click(function(){
-		console.log("clicked",bulb.attr("state"));
-		if(bulb.attr("state")=="true"){
-			NetworkTables.setValue("/SmartDashboard/LightBulb",false);
-		}else{
-		NetworkTables.setValue("/SmartDashboard/LightBulb",true);
+	var bulb = $('#bulb');
+	NetworkTables.setValue('/SmartDashboard/Lightbulb', false);
+	bulb.click(function() {
+		console.log('clicked', bulb.attr('state'));
+		if (bulb.attr('state') == 'true') {
+			NetworkTables.setValue('/SmartDashboard/Lightbulb', false);
+		} else {
+			NetworkTables.setValue('/SmartDashboard/Lightbulb', true);
 		}
 	});
 	document.getElementById('setButton').onclick = function() {
@@ -96,20 +89,20 @@ $(document).ready(function() {
 		NetworkTables.setValue('/SmartDashboard/' + $thisButton.attr('id'), activeState); //onclick set the things id to true
 
 	});
-	var EncoderSlider = $('#EncoderSlider');
-	var min = EncoderSlider.attr('min');
-	var max = EncoderSlider.attr('max');
-	var dataList = $('#stepList');
-	var tickDistance = 50;
-	var numberOfTicks = (parseInt(max) - parseInt(min)) / tickDistance;
-	var newVal = parseInt(min);
-	for (var a = 0; a < numberOfTicks; a++) {
+	var encoderSlider = $('#encoderSlider'),
+		min = encoderSlider.attr('min'),
+		max = encoderSlider.attr('max'),
+		dataList = $('#stepList'),
+		tickDistance = 50,
+		numberOfTicks = (parseInt(max) - parseInt(min)) / tickDistance,
+		newVal = parseInt(min);
+	for (i = 0; i < numberOfTicks; i++) {
 		dataList.append('<option>' + newVal + '</option>');
 		newVal += tickDistance;
 	}
 	$('#encoder').hide().show(0); //element refresh
-	$('#EncoderSlider').change(function() {
-		var encoderVal = $('#EncoderSlider').val();
+	$('#encoderSlider').change(function() {
+		var encoderVal = $('#encoderSlider').val();
 		$('#encoderValueDisplaySpan').text('Arm Encoder Value:' + encoderVal);
 		NetworkTables.setValue('/SmartDashboard/Arm | Middle', parseInt(encoderVal));
 
@@ -143,9 +136,9 @@ $(document).ready(function() {
 
 	//for every selection Div, make the stuff, add a listener to each arrow, the toggleBox,
 	//set the value from networkTables or if no networkTables, get the default value
-	var everyDefenseSelector = $('.DefenseSelector'); //get every defenseSelector(the div that contains the stuff)
-	everyDefenseSelector.each(function(a) {
-		//for every DefenseSelector add the triangles, set the id, 'a' is the index in the list of divs
+	var everydefenseSelector = $('.defenseSelector'); //get every defenseSelector(the div that contains the stuff)
+	everydefenseSelector.each(function(a) {
+		//for every defenseSelector add the triangles, set the id, 'a' is the index in the list of divs
 		var thisDiv = $(this);
 		thisDiv.attr('defenseClass', a);
 		thisDiv.attr('id', 'defenseSelector' + a);
@@ -221,8 +214,8 @@ function onNetworkTablesConnection(connected) {
 	} else {
 		$('#connectstate').text('Disconnected!');
 	}
-	if(connected==false){
-		$("#settingsContainerDiv").empty();
+	if (connected === false) {
+		$('#settingsContainerDiv').empty();
 	}
 }
 
@@ -248,11 +241,11 @@ function onValueChanged(key, value, isNew) {
 			}
 			break;
 		case '/SmartDashboard/NavX | Yaw':
-			var gyroVal = value + zeroTheGyro;
-			var gyroDisplayVal = String(Math.floor(gyroVal));
+			var gyroVal = value;
+			var gyroDisplayVal = String(Math.floor(gyroVal - gyroDiff));
 			var addSpaces = 4 - gyroDisplayVal.length;
-			for (var a = 0; a < addSpaces; a++) {
-				gyroDisplayVal = "\xA0" + gyroDisplayVal;
+			for (i = 0; i < addSpaces; i++) {
+				gyroDisplayVal = '\xA0' + gyroDisplayVal;
 			}
 			$('#gyroArm').css('transform', 'rotate(' + gyroVal + 'deg)');
 			$('#gyroLabel').text(gyroDisplayVal + 'º');
@@ -317,7 +310,7 @@ function onValueChanged(key, value, isNew) {
 					}).get();
 				var isButtonActive = false;
 				var buttonValueListLength = buttonValueList.length;
-				for (var i = 0; i < buttonValueListLength; i++) {
+				for (i = 0; i < buttonValueListLength; i++) {
 					if (buttonValueList[a] === true) {
 						isButtonActive = true;
 					}
@@ -339,6 +332,13 @@ function onValueChanged(key, value, isNew) {
 				//if the thing is not true, check to see if something else is true, if something else is true, then make it red, else make it cyan
 			}
 			break;
+        case '/SmartDashboard/Drive | backCamera':
+            if (value === true) {
+                $('.camera img').attr('src', 'http://roborio-1418-frc.local:5801/?action=stream');
+            } else {
+                $('.camera img').attr('src', 'http://roborio-1418-frc.local:5800/?action=stream');
+            }
+            break;
 		case '/SmartDashboard/startTheTimer':
 			if (value) {
 				document.getElementById('gameTimer').style.color = 'aqua';
@@ -347,7 +347,7 @@ function onValueChanged(key, value, isNew) {
 					var currentMinutes = parseInt(currentSeconds / 60);
 					var actualSeconds = (currentSeconds % 60);
 
-					actualSeconds = actualSeconds < 10 ? "0" + actualSeconds : actualSeconds;
+					actualSeconds = actualSeconds < 10 ? '0' + actualSeconds : actualSeconds;
 
 					if (currentSeconds < 0) {
 						window.clearTimeout(timerVar);
@@ -371,7 +371,7 @@ function onValueChanged(key, value, isNew) {
 			} else if (value < 0) {
 				value = 0;
 			} else {}
-			$('#EncoderSlider').val(value);
+			$('#encoderSlider').val(value);
 			$('#encoderValueDisplaySpan').text('EncoderValue: ' + value);
 			break;
 		case '/SmartDashboard/defenseSelector0':
@@ -396,13 +396,13 @@ function onValueChanged(key, value, isNew) {
 				break;
 			}
 			//
-			var s=parseInt(key.charAt(key.length-1))+1;
-			var thisAttacker=$("#attackerState"+s);
+			var s = parseInt(key.charAt(key.length - 1)) + 1;
+			var thisAttacker = $('#attackerState' + s);
 			console.log(thisAttacker);
-			if(thisAttacker.attr("state")==2){		//if it is allied or us, change it
-				console.log("state is attacker");
-				NetworkTables.setValue("/SmartDashboard/robotPosition",thisAttacker.attr("position"));
-				NetworkTables.setValue("/SmartDashboard/robotDefense",defenseAutoNames[defenseClass][defenseNum]);
+			if (thisAttacker.attr('state') == 2) { //if it is allied or us, change it
+				console.log('state is attacker');
+				NetworkTables.setValue('/SmartDashboard/robotPosition', thisAttacker.attr('position'));
+				NetworkTables.setValue('/SmartDashboard/robotDefense', defenseAutoNames[defenseClass][defenseNum]);
 
 			}
 			theChangedDiv.attr('defenseClass', defenseClass)
@@ -416,7 +416,7 @@ function onValueChanged(key, value, isNew) {
 			var autonomousOptionSelect = $('#autonomousOptionSelect');
 			autonomousOptionSelect.empty();
 			var autonomousModeArrayLength = value.length;
-			for (var n = 0; n < autonomousModeArrayLength; n++) {
+			for (n = 0; n < autonomousModeArrayLength; n++) {
 				//for each entry, make a option, get the value of currentlySelectedMode if it exists, if not then use the first
 				autonomousOptionSelect.append('<option id=' + value[n] + 'AutoMode' + '>' + value[n] + '</option>');
 			}
@@ -437,7 +437,7 @@ function onValueChanged(key, value, isNew) {
 		case '/SmartDashboard/attackerState3':
 		case '/SmartDashboard/attackerState4':
 			var attackerImage = $('#' + propName);
-			if (value == "allied") {
+			if (value == 'allied') {
 				alliedCounter = 0;
 				$('.attackerState').not(document.getElementById(propName)).each(function() {
 					var thisAttacker = $(this);
@@ -470,16 +470,15 @@ function onValueChanged(key, value, isNew) {
 			}
 			attackerImage.attr('state', attackerNames.indexOf(value)).attr('src', 'img/' + value + '.png');
 			break;
-			case "/SmartDashboard/LightBulb":
-			console.log("bulbs",value);
-				if(value){		//intentional,
-					$("#bulb").attr("state","true");
-					$("#bulbSVG").attr("class","active");
-				}
-				else{
-					$("#bulb").attr("state","false");
-					$("#bulbSVG").attr("class","notActive");
-				}
+		case '/SmartDashboard/Lightbulb':
+			console.log('bulbs', value);
+			if (value) { //intentional,
+				$('#bulb').attr('state', 'true');
+				$('#bulbSVG').attr('class', 'active');
+			} else {
+				$('#bulb').attr('state', 'false');
+				$('#bulbSVG').attr('class', 'notActive');
+			}
 			break;
 	}
 	if (isNew) {
@@ -495,28 +494,28 @@ function onValueChanged(key, value, isNew) {
 			}
 		}
 		if (addToTuning) {
-			var div = $('<div></div>').attr("propName",propName);//.appendTo($('.settings'));
-			var allOfTheDivs=$(".settings").first().children("[type]");
-			var allOfTheDivsLength=allOfTheDivs.length;
-			if(allOfTheDivsLength==0){div.appendTo(".settings");}//comment
-			else{
+			var div = $('<div></div>').attr('propName', propName); //.appendTo($('.settings'));
+			var allOfTheDivs = $('.settings').first().children('[type]');
+			var allOfTheDivsLength = allOfTheDivs.length;
+			if (allOfTheDivsLength === 0) {
+				div.appendTo('.settings');
+			} //comment
+			else {
 				//run through all of the crap, if the string is greater than this elements propane, insert it after it, it should keep hitting false until true then break
-				var noneFound=true;	//if it is the highest in the array append it to .settings
-				var processedDivName=propName.toLowerCase();
-				var processedDivNameLength=processedDivName.length;
-				allOfTheDivs.not(div).each(function(){
-					var thisPropname=$(this).attr("propName").toLowerCase();
-					for(a=0;a<processedDivNameLength;a++){
-						if(processedDivName.charCodeAt(a)==thisPropname.charCodeAt(a)){
+				var noneFound = true; //if it is the highest in the array append it to .settings
+				var processedDivName = propName.toLowerCase();
+				var processedDivNameLength = processedDivName.length;
+				allOfTheDivs.not(div).each(function() {
+					var thisPropname = $(this).attr('propName').toLowerCase();
+					for (a = 0; a < processedDivNameLength; a++) {
+						if (processedDivName.charCodeAt(a) == thisPropname.charCodeAt(a)) {
 
-						}
-						else if(processedDivName.charCodeAt(a)<thisPropname.charCodeAt(a)){			//if processedDivName is greater, keep going, if not, then insert vefore
+						} else if (processedDivName.charCodeAt(a) < thisPropname.charCodeAt(a)) { //if processedDivName is greater, keep going, if not, then insert vefore
 							div.insertBefore($(this));
-							noneFound=false;
+							noneFound = false;
 							return false;
 							break;
-						}
-						else{
+						} else {
 							break;
 						}
 
@@ -526,13 +525,13 @@ function onValueChanged(key, value, isNew) {
 				/*for(a=0;a<allOfTheDivsLength;a++){
 					var
 				}*/
-				if(noneFound==true){
-					div.appendTo	(".settings");
+				if (noneFound === true) {
+					div.appendTo('.settings');
 				}
 			}
 			$('<p></p>').text(propName).appendTo(div);
 			if (value === true || value === false) {
-				div.attr("type", "boolean");
+				div.attr('type', 'boolean');
 				var boolSlider = $('<div class="bool-slider ' + value +
 					'" id="tuning' + hashCode(key) + '" tableValue="' + key + '"></div>');
 				var innerInset = $('<div class="inset"></div>');
@@ -548,45 +547,45 @@ function onValueChanged(key, value, isNew) {
 				boolSlider.appendTo(div);
 			} else if (!isNaN(value)) {
 				if (!isNaN(value)) {
-					div.attr("type", "int");
+					div.attr('type', 'int');
 
 					$('<input type="number">')
 						.keypress(function(e) {
 							var key = e.which;
 							if (key == 13) // the enter key code
 							{
-								NetworkTables.setValue($(this).attr("tableValue"),parseFloat($(this).val()));					//get the key, and set the current value
+								NetworkTables.setValue($(this).attr('tableValue'), parseFloat($(this).val())); //get the key, and set the current value
 							}
 						})
 						.attr('id', 'tuning' + hashCode(key))
-						.attr("tableValue", key)
+						.attr('tableValue', key)
 						.attr('value', value)
 						.appendTo(div);
 				}
 			} else {
-				div.attr("type", "string");
+				div.attr('type', 'string');
 
 				$('<input type="text">')
 					.keypress(function(e) {
 						var key = e.which;
 						if (key == 13) // the enter key code
 						{
-							NetworkTables.setValue($(this).attr("tableValue"),$(this).val());					//get the key, and set the current value
+							NetworkTables.setValue($(this).attr('tableValue'), $(this).val()); //get the key, and set the current value
 						}
 					})
 					.attr('id', 'tuning' + hashCode(key))
 					.attr('value', value)
-					.attr("tableValue", key)
+					.attr('tableValue', key)
 					.appendTo(div);
 			}
-			/*var settingsContainerDiv=document.getElementById("settingsContainerDiv");
-			var UnorderedDivs = $("#settingsContainerDiv > div").children("[tableValue]:first");
+			/*var settingsContainerDiv=document.getElementById('settingsContainerDiv');
+			var UnorderedDivs = $('#settingsContainerDiv > div').children('[tableValue]:first');
 			var UnorderedDivsLength=UnorderedDivs.length;
-			var alphabet = "abcdefghijklmnopqrstuvwxyz".split();
+			var alphabet = 'abcdefghijklmnopqrstuvwxyz'.split();
 			for(a=0;a<UnorderedDivsLength;a++){
 				if()
 			}
-					return $(a).children("[tableValue]:first").attr("tableValue") > $(b).children("[tableValue]:first").attr("tableValue");
+					return $(a).children('[tableValue]:first').attr('tableValue') > $(b).children('[tableValue]:first').attr('tableValue');
 			$(settingsContainerDiv).empty().append(alphabeticallyOrderedDivs);*/
 		}
 	} else {
@@ -641,7 +640,6 @@ $('#autonomousButton').click(function() {
 	$(this).addClass('active');
 });
 
-
 $('.winch')
 	.mousedown(function() {
 		NetworkTables.setValue('/SmartDashboard/ladderButtonPressed', true);
@@ -649,3 +647,14 @@ $('.winch')
 	.mouseup(function() {
 		NetworkTables.setValue('/SmartDashboard/ladderButtonPressed', false);
 	});
+
+$('#gyro').click(function() {
+	console.log('gyro clicked');
+	gyroDiff = gyroVal;
+
+	visualGyroVal -= gyroDiff;
+
+	var gyroVal = parseInt(NetworkTables.getValue('/SmartDashboard/NavX | Yaw'));
+	$('#gyroArm').css('transform', 'rotate(' + visualGyroVal + ')');
+	$('#gyroLabel').text(visualGyroVal + 'º');
+});

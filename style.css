@@ -84,10 +84,10 @@ header {
 }
 #bulb svg.notActive * {
     fill: aqua;
-    /*stroke: none;*/
 }
 #bulb svg.active * {
     fill: yellow;
+    stroke: none;
 }
 .camera {
     position: fixed;
@@ -157,7 +157,7 @@ aside {
     background-color: lightgrey;
     border: solid 4px black;
 }
-#EncoderSlider {
+#encoderSlider {
     width: 18vw;
 }
 #lowBarImg {
@@ -268,18 +268,17 @@ aside {
     height: 100px;
     width: 100px;
 }
-.FieldSelector {
+.fieldSelector {
     display: inline-block;
     margin-left: -5px;
 }
-.ObstacleSelector {
+.obstacleSelector {
     display: block;
     width: 100px;
     height: 100px;
     margin-bottom: 100px;
 }
-.DefenseSelector {}
-.RobotSelector {
+.robotSelector {
     display: block;
     width: 100px;
     height: 100px;
