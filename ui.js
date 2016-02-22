@@ -32,17 +32,17 @@ function hashCode(s) {
 	return ret;
 }
 $(document).ready(function() {
-	
+
 	$('.winch').hide();
 	var gyroRotation = 0;
 	var bulb = $('#bulb');
-	NetworkTables.setValue('/SmartDashboard/Lightbulb', false);
+	NetworkTables.setValue('/SmartDashboard/LightBulb', false);
 	bulb.click(function() {
 		console.log('clicked', bulb.attr('state'));
 		if (bulb.attr('state') == 'true') {
-			NetworkTables.setValue('/SmartDashboard/Lightbulb', false);
+			NetworkTables.setValue('/SmartDashboard/LightBulb', false);
 		} else {
-			NetworkTables.setValue('/SmartDashboard/Lightbulb', true);
+			NetworkTables.setValue('/SmartDashboard/LightBulb', true);
 		}
 	});
 	document.getElementById('setButton').onclick = function() {
@@ -463,7 +463,7 @@ function onValueChanged(key, value, isNew) {
 			}
 			attackerImage.attr('state', attackerNames.indexOf(value)).attr('src', 'img/' + value + '.png');
 			break;
-		case '/SmartDashboard/Lightbulb':
+		case '/SmartDashboard/LightBulb':
 			console.log('bulbs', value);
 			if (value) { //intentional,
 				$('#bulb').attr('state', 'true');
