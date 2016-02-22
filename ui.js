@@ -32,14 +32,7 @@ function hashCode(s) {
 	return ret;
 }
 $(document).ready(function() {
-	var cam=$("#camera");
-	cam.click(function(){
-		if(cam.attr("src")=="http://roborio-1418-frc.local:5800/?action=stream"){
-			cam.attr("src","http://roborio-1418-frc.local:5801/?action=stream");
-		}else{
-			cam.attr("src","http://roborio-1418-frc.local:5800/?action=stream");
-		}
-	});
+	
 	$('.winch').hide();
 	var gyroRotation = 0;
 	var bulb = $('#bulb');
@@ -310,7 +303,7 @@ function onValueChanged(key, value, isNew) {
 					}).get();
 				var isButtonActive = false;
 				var buttonValueListLength = buttonValueList.length;
-				for (i = 0; i < buttonValueListLength; i++) {
+				for (a = 0; a < buttonValueListLength; a++) {
 					if (buttonValueList[a] === true) {
 						isButtonActive = true;
 					}
