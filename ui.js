@@ -31,6 +31,14 @@ function hashCode(s) {
 	return ret;
 }
 $(document).ready(function() {
+	var cam=$("#camera");
+	cam.click(function(){
+		if(cam.attr("src")=="http://roborio-1418-frc.local:5800/?action=stream"){
+			cam.attr("src","http://roborio-1418-frc.local:5801/?action=stream");
+		}else{
+			cam.attr("src","http://roborio-1418-frc.local:5800/?action=stream");
+		}
+	});
 	$('.winch').hide();
 	document.getElementById('gyroOnclickWrapper').onclick=function() {
 		console.log("gyro clicked");
