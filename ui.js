@@ -9,9 +9,9 @@ var currentSeconds = 135,
 		['sallyport', 'drawbridge'],
 		['roughTerrain', 'rockwall']
 	],
-	gyroRotation = 0,
+    gyroVal = 0,
 	gyroDiff = 0,
-	visualGyroVal = 0,
+	gyroDisplayVal = 0,
 	defenseAutoNames = [
 		['A0', 'A1'],
 		['E0', 'E0'],
@@ -33,7 +33,6 @@ function hashCode(s) {
 }
 $(document).ready(function() {
 	$('.winch').hide();
-	var gyroRotation = 0;
 	var bulb = $('#bulb');
 	bulb.click(function() {
 		console.log('clicked', bulb.attr('state'));
@@ -232,13 +231,14 @@ function onValueChanged(key, value, isNew) {
 			}
 			break;
 		case '/SmartDashboard/NavX | Yaw':
-			var gyroVal = value;
-			var gyroDisplayVal = String(Math.floor(gyroVal - gyroDiff));
-			var addSpaces = 4 - gyroDisplayVal.length;
-			for (i = 0; i < addSpaces; i++) {
-				gyroDisplayVal = '\xA0' + gyroDisplayVal;
-			}
-			$('#gyroArm').css('transform', 'rotate(' + gyroVal + 'deg)');
+            gyroVal = value - 90;
+
+            if (gyroVal < 0) {
+                gyroVal += 360;
+            }
+			var gyroDisplayVal = Math.floor(gyroVal - gyroDiff);
+
+			$('#gyroArm').css('transform', 'rotate(' + gyroDisplayVal + 'deg)');
 			$('#gyroLabel').text(gyroDisplayVal + 'º');
 			break;
 		case '/SmartDashboard/Arm | Forward Limit Switch': //checkspelling
@@ -323,13 +323,13 @@ function onValueChanged(key, value, isNew) {
 				//if the thing is not true, check to see if something else is true, if something else is true, then make it red, else make it cyan
 			}
 			break;
-        case '/SmartDashboard/Drive | backCamera':
-            if (value === true) {
-                $('.camera img').attr('src', 'http://roborio-1418-frc.local:5801/?action=stream');
-            } else {
-                $('.camera img').attr('src', 'http://roborio-1418-frc.local:5800/?action=stream');
-            }
-            break;
+		case '/SmartDashboard/Drive | backCamera':
+			if (value === true) {
+				$('.camera img').attr('src', 'http://roborio-1418-frc.local:5801/?action=stream');
+			} else {
+				$('.camera img').attr('src', 'http://roborio-1418-frc.local:5800/?action=stream');
+			}
+			break;
 		case '/SmartDashboard/startTheTimer':
 			if (value) {
 				document.getElementById('gameTimer').style.color = 'aqua';
@@ -569,15 +569,6 @@ function onValueChanged(key, value, isNew) {
 					.attr('tableValue', key)
 					.appendTo(div);
 			}
-			/*var settingsContainerDiv=document.getElementById('settingsContainerDiv');
-			var UnorderedDivs = $('#settingsContainerDiv > div').children('[tableValue]:first');
-			var UnorderedDivsLength=UnorderedDivs.length;
-			var alphabet = 'abcdefghijklmnopqrstuvwxyz'.split();
-			for(a=0;a<UnorderedDivsLength;a++){
-				if()
-			}
-					return $(a).children('[tableValue]:first').attr('tableValue') > $(b).children('[tableValue]:first').attr('tableValue');
-			$(settingsContainerDiv).empty().append(alphabeticallyOrderedDivs);*/
 		}
 	} else {
 		var $tuningDiv = $('#tuning' + hashCode(key));
@@ -639,13 +630,7 @@ $('.winch')
 		NetworkTables.setValue('/SmartDashboard/ladderButtonPressed', false);
 	});
 
-$('#gyro').click(function() {
-	console.log('gyro clicked');
+$('#gyroButton').click(function() {
 	gyroDiff = gyroVal;
-
-	visualGyroVal -= gyroDiff;
-
-	var gyroVal = parseInt(NetworkTables.getValue('/SmartDashboard/NavX | Yaw'));
-	$('#gyroArm').css('transform', 'rotate(' + visualGyroVal + ')');
-	$('#gyroLabel').text(visualGyroVal + 'º');
+	gyroDisplayVal = gyroVal - gyroDiff;
 });
