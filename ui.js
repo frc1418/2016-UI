@@ -9,7 +9,7 @@ var currentSeconds = 135,
 		['sallyport', 'drawbridge'],
 		['roughTerrain', 'rockwall']
 	],
-	gyroRotation = 0,
+	gyroVal = 0,
 	gyroDiff = 0,
 	visualGyroVal = 0,
 	defenseAutoNames = [
@@ -34,7 +34,6 @@ function hashCode(s) {
 $(document).ready(function() {
 
 	$('.winch').hide();
-	var gyroRotation = 0;
 	var bulb = $('#bulb');
 	NetworkTables.setValue('/SmartDashboard/LightBulb', false);
 	bulb.click(function() {
@@ -234,13 +233,14 @@ function onValueChanged(key, value, isNew) {
 			}
 			break;
 		case '/SmartDashboard/NavX | Yaw':
-			var gyroVal = value;
-			var gyroDisplayVal = String(Math.floor(gyroVal - gyroDiff));
-			var addSpaces = 4 - gyroDisplayVal.length;
-			for (i = 0; i < addSpaces; i++) {
-				gyroDisplayVal = '\xA0' + gyroDisplayVal;
+			gyroVal = value - 90;
+
+			if (gyroVal < 0) {
+				gyroVal += 360;
 			}
-			$('#gyroArm').css('transform', 'rotate(' + gyroVal + 'deg)');
+			var gyroDisplayVal = Math.floor(gyroVal - gyroDiff);
+
+			$('#gyroArm').css('transform', 'rotate(' + gyroDisplayVal + 'deg)');
 			$('#gyroLabel').text(gyroDisplayVal + 'º');
 			break;
 		case '/SmartDashboard/Arm | Forward Limit Switch': //checkspelling
@@ -325,13 +325,13 @@ function onValueChanged(key, value, isNew) {
 				//if the thing is not true, check to see if something else is true, if something else is true, then make it red, else make it cyan
 			}
 			break;
-        case '/SmartDashboard/Drive | backCamera':
-            if (value === true) {
-                $('.camera img').attr('src', 'http://roborio-1418-frc.local:5801/?action=stream');
-            } else {
-                $('.camera img').attr('src', 'http://roborio-1418-frc.local:5800/?action=stream');
-            }
-            break;
+		case '/SmartDashboard/Drive | backCamera':
+			if (value === true) {
+				$('.camera img').attr('src', 'http://roborio-1418-frc.local:5801/?action=stream');
+			} else {
+				$('.camera img').attr('src', 'http://roborio-1418-frc.local:5800/?action=stream');
+			}
+			break;
 		case '/SmartDashboard/startTheTimer':
 			if (value) {
 				document.getElementById('gameTimer').style.color = 'aqua';
@@ -641,13 +641,7 @@ $('.winch')
 		NetworkTables.setValue('/SmartDashboard/ladderButtonPressed', false);
 	});
 
-$('#gyro').click(function() {
-	console.log('gyro clicked');
+$('#gyroButton').click(function() {
 	gyroDiff = gyroVal;
-
-	visualGyroVal -= gyroDiff;
-
-	var gyroVal = parseInt(NetworkTables.getValue('/SmartDashboard/NavX | Yaw'));
-	$('#gyroArm').css('transform', 'rotate(' + visualGyroVal + ')');
-	$('#gyroLabel').text(visualGyroVal + 'º');
+	gyroDisplayVal = gyroVal - gyroDiff;
 });
