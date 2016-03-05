@@ -470,7 +470,7 @@ function onValueChanged(key, value, isNew) {
 				$('#bulbSVG').attr('class', 'active');
 			} else {
 				$('#bulb').attr('state', 'false');
-				$('#bulbSVG').attr('class', 'notActive');
+				$('#bulbSVG').attr('class', '');
 			}
 			break;
 	}
@@ -511,9 +511,7 @@ function onValueChanged(key, value, isNew) {
 						} else {
 							break;
 						}
-
 					}
-
 				});
 				/*for(a=0;a<allOfTheDivsLength;a++){
 					var
@@ -644,4 +642,7 @@ $('.winch')
 $('#gyroButton').click(function() {
 	gyroDiff = gyroVal;
 	gyroDisplayVal = gyroVal - gyroDiff;
+    if (gyroDisplayVal < 0) {
+        gyroDisplayVal = 360 - gyroDisplayVal;
+    }
 });
