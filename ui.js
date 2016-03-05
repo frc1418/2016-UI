@@ -32,7 +32,7 @@ function hashCode(s) {
 	return ret;
 }
 $(document).ready(function() {
-    $('.winch').hide();
+	$('.winch').hide();
 	var bulb = $('#bulb');
 	NetworkTables.setValue('/SmartDashboard/LightBulb', false);
 	bulb.click(function() {
@@ -232,15 +232,16 @@ function onValueChanged(key, value, isNew) {
 			}
 			break;
 		case '/SmartDashboard/NavX | Yaw':
-			gyroVal = value - 90;
+			gyroVal = value;
 
-			if (gyroVal < 0) {
-				gyroVal += 360;
+			visualGyroVal = Math.floor(gyroVal - gyroDiff);
+
+			if (visualGyroVal < 0) {
+				visualGyroVal += 360;
 			}
-			var gyroDisplayVal = Math.floor(gyroVal - gyroDiff);
 
-			$('#gyroArm').css('transform', 'rotate(' + gyroDisplayVal + 'deg)');
-			$('#gyroLabel').text(gyroDisplayVal + 'º');
+			$('#gyroArm').css('transform', 'rotate(' + visualGyroVal + 'deg)');
+			$('#gyroLabel').text(visualGyroVal + 'º');
 			break;
 		case '/SmartDashboard/Arm | Forward Limit Switch': //checkspelling
 			if (value === true || value == 'true') { //recheck valuetype, this display a bool
@@ -271,7 +272,7 @@ function onValueChanged(key, value, isNew) {
 		case '/SmartDashboard/chevyButton':
 		case '/SmartDashboard/gateButton':
 		case '/SmartDashboard/ladderButton':
-			//set the images border to something bright like orange if it equals true
+			//set the images border to orange if it equals true
 			//do acheck to see if all 3 are false, if so, then make them white border and selectable
 			var name = key.substring(16, key.length);
 			var $button = $('#' + name);
@@ -282,7 +283,7 @@ function onValueChanged(key, value, isNew) {
 				$button.attr('activeState', true);
 				$button.css({
 					'pointer-events': 'auto',
-					'border-color': 'aqua',
+					'border-color': '#ff5111',
 				});
 				$button.attr('src', '/img/' + $button.attr('baseSrc') + '.gif');
 				$('.autoButton').not(document.getElementById(name)).each(function() {
@@ -290,7 +291,7 @@ function onValueChanged(key, value, isNew) {
 					thisButton.attr('src', '/img/' + thisButton.attr('baseSrc') + '.png');
 					thisButton.css({
 						'pointer-events': 'auto',
-						'border-color': 'rgb(255, 200,16)',
+						'border-color': 'aqua',
 					});
 					NetworkTables.setValue('/SmartDashboard/' + thisButton.attr('id'), false);
 				}); //then set everything else that isn't true and make it red, and set their activeState to false,
@@ -314,12 +315,15 @@ function onValueChanged(key, value, isNew) {
 					});
 					$button.css({
 						'pointer-events': 'none',
-						'border-color': '#ff0a10'
+						'border-color': 'aqua'
 					});
 
 				} else if (isButtonActive === false) { //if they are all false then set the current border to cyan
 					$button.attr('src', '/img/' + $button.attr('baseSrc') + '.png');
-					$button.attr('style', 'pointer-events: auto; border-color: #ffc811;');
+					$button.css({
+                        'pointer-events': 'auto',
+                        'border-color': 'aqua'
+                    });
 				}
 				//if the thing is not true, check to see if something else is true, if something else is true, then make it red, else make it cyan
 			}
@@ -640,5 +644,14 @@ $('.winch')
 
 $('#gyroButton').click(function() {
 	gyroDiff = gyroVal;
-	gyroDisplayVal = gyroVal - gyroDiff;
+
+    // Duplicate code! Needs revising.
+    visualGyroVal = Math.floor(gyroVal - gyroDiff);
+
+    if (visualGyroVal < 0) {
+        visualGyroVal += 360;
+    }
+
+    $('#gyroArm').css('transform', 'rotate(' + visualGyroVal + 'deg)');
+    $('#gyroLabel').text(visualGyroVal + 'º');
 });

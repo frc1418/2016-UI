@@ -119,22 +119,27 @@ nav li {
     float: left;
 }
 button {
-    position: relative;
     display: block;
+    position: relative;
     padding: 7px 8px;
     text-decoration: none;
     border: solid 1px aqua;
     background: 0;
+    font-size: .8em;
     color: aqua;
 }
+nav button, #tuning button {
+    display: inline-block;
+}
+#tuning button {
+    margin-right: -10px;
+}
 button:hover,
-button:focus {
+button:focus,
+nav .active {
     text-decoration: none;
     background-color: #007480;
     outline: 0;
-}
-nav .active {
-    background: #888;
 }
 aside {
     right: 0;
@@ -159,7 +164,6 @@ aside {
     width: 150px;
     height: 150px;
     margin-left: 5vw;
-    background-color: lightgrey;
     border: solid 4px black;
 }
 #encoderSlider {
