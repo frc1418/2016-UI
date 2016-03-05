@@ -49,6 +49,10 @@ svg * {
 #gyroArm {
     transform-origin: bottom;
 }
+#gyroButton {
+    display: inline-block;
+    z-index: 100;
+}
 #robotDiagram {
     position: absolute;
     bottom: 1px;
@@ -82,7 +86,7 @@ header {
     left: 42vw;
     top: 0;
 }
-#bulb svg.notActive * {
+#bulb svg * {
     fill: aqua;
 }
 #bulb svg.active * {
@@ -113,19 +117,19 @@ nav li {
     display: block;
     float: left;
 }
-nav button {
+button {
     position: relative;
     display: block;
     padding: 7px 10px;
     text-decoration: none;
-    border: 0;
-    background: #666;
-    color: #eee;
+    border: solid 1px aqua;
+    background: 0;
+    color: aqua;
 }
-nav button:hover,
-nav button:focus {
+button:hover,
+button:focus {
     text-decoration: none;
-    background-color: #888;
+    background-color: #007480;
     outline: 0;
 }
 nav .active {
