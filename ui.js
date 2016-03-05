@@ -32,8 +32,7 @@ function hashCode(s) {
 	return ret;
 }
 $(document).ready(function() {
-
-	$('.winch').hide();
+    $('.winch').hide();
 	var bulb = $('#bulb');
 	NetworkTables.setValue('/SmartDashboard/LightBulb', false);
 	bulb.click(function() {
@@ -642,7 +641,4 @@ $('.winch')
 $('#gyroButton').click(function() {
 	gyroDiff = gyroVal;
 	gyroDisplayVal = gyroVal - gyroDiff;
-    if (gyroDisplayVal < 0) {
-        gyroDisplayVal = 360 - gyroDisplayVal;
-    }
 });
