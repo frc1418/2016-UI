@@ -245,9 +245,9 @@ function onValueChanged(key, value, isNew) {
 			break;
 		case '/SmartDashboard/Arm | Forward Limit Switch': //checkspelling
 			if (value === true || value == 'true') { //recheck valuetype, this display a bool
-				$('#forwardEncoderSpan').text('Forward Encoder:True').css('color', 'green');
+				$('#forwardEncoderSpan').text('Forward Enc:True').css('color', 'green');
 			} else {
-				$('#forwardEncoderSpan').text('Forward Encoder:False').css('color', 'red');
+				$('#forwardEncoderSpan').text('Forward Enc:False').css('color', 'red');
 			}
 			break;
 		case '/SmartDashboard/Arm | Reverse Limit Switch':
@@ -368,7 +368,7 @@ function onValueChanged(key, value, isNew) {
 				value = 0;
 			} else {}
 			$('#encoderSlider').val(value);
-			$('#encoderValueDisplaySpan').text('EncoderValue: ' + value);
+			$('#encoderValueDisplaySpan').text('Encoder Val: ' + value);
 			break;
 		case '/SmartDashboard/defenseSelector0':
 		case '/SmartDashboard/defenseSelector1':

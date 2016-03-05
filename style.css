@@ -21,7 +21,6 @@ aside,
 #bulb {
     padding: 10px;
     position: fixed;
-    border: solid 1px aqua;
     overflow: scroll;
 }
 #tuning,
@@ -32,7 +31,7 @@ aside,
     top: 0;
     left: 50vw;
     height: 100vh;
-    width: 30vw;
+    width: 35vw;
 }
 svg * {
     stroke: aqua;
@@ -45,6 +44,8 @@ svg * {
     border: solid 2px aqua;
     border-radius: 50%;
     z-index: 50;
+    margin-left: 30px;
+    margin-top: 15px;
 }
 #gyroArm {
     transform-origin: bottom;
@@ -52,12 +53,12 @@ svg * {
 #gyroButton {
     z-index: 100;
     margin-top: 10px;
-    margin-left: 4.5vw;
+    margin-left: 7vw;
 }
 #robotDiagram {
     position: absolute;
     bottom: 1px;
-    left: .12vw;
+    right: 1vw;
 }
 .winch {
     transition: .5s;
@@ -144,7 +145,7 @@ nav .active {
 aside {
     right: 0;
     top: 0;
-    width: 20vw;
+    width: 15vw;
     height: 100vh;
 }
 #gameTimer {
@@ -163,11 +164,14 @@ aside {
 .autoButton {
     width: 150px;
     height: 150px;
-    margin-left: 5vw;
     border: solid 4px black;
 }
+#encoder {
+    margin-top: 50px;
+    font-size: .8em;
+}
 #encoderSlider {
-    width: 18vw;
+    width: 100%;
 }
 #lowBarImg {
   transform: translateY(50px);
