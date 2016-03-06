@@ -12,7 +12,8 @@
 body {
     background: black;
     color: aqua;
-    font-family: 'PT Mono', monospace;
+    font-family: monospace;
+    font-size: 1.2em;
 }
 header,
 article,
@@ -126,10 +127,11 @@ button {
     text-decoration: none;
     border: solid 1px aqua;
     background: 0;
-    font-size: .8em;
+    font-size: .7em;
     color: aqua;
 }
-nav button, #tuning button {
+nav button,
+#tuning button {
     display: inline-block;
 }
 #tuning button {
@@ -174,11 +176,11 @@ aside {
     width: 100%;
 }
 #lowBarImg {
-  transform: translateY(50px);
-  height: 100px;
-  width: 100px;
-  display: block;
-  background-color: lightgrey;
+    transform: translateY(50px);
+    height: 100px;
+    width: 100px;
+    display: block;
+    background-color: lightgrey;
 }
 .encoderLimitSwitchSpan {
     color: red;
