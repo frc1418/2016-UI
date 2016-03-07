@@ -634,7 +634,7 @@ $('#autonomousButton').click(function() {
 	$(this).addClass('active');
 });
 
-$('.winch').onclick(function() {
+$('#robotDiagram').click(function() {
 	if (NetworkTables.getValue('/SmartDashboard/ladderUp')) {
 		NetworkTables.setValue('/SmartDashboard/ladderUp', false);
 	} else {
