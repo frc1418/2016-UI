@@ -12,7 +12,8 @@
 body {
     background: black;
     color: aqua;
-    font-family: 'PT Mono', monospace;
+    font-family: monospace;
+    font-size: 1.2em;
 }
 header,
 article,
@@ -21,7 +22,6 @@ aside,
 #bulb {
     padding: 10px;
     position: fixed;
-    border: solid 1px aqua;
     overflow: scroll;
 }
 #tuning,
@@ -32,7 +32,7 @@ aside,
     top: 0;
     left: 50vw;
     height: 100vh;
-    width: 30vw;
+    width: 35vw;
 }
 svg * {
     stroke: aqua;
@@ -45,18 +45,21 @@ svg * {
     border: solid 2px aqua;
     border-radius: 50%;
     z-index: 50;
+    margin-left: 30px;
+    margin-top: 15px;
 }
 #gyroArm {
     transform-origin: bottom;
 }
 #gyroButton {
-    display: inline-block;
     z-index: 100;
+    margin-top: 10px;
+    margin-left: 7vw;
 }
 #robotDiagram {
     position: absolute;
     bottom: 1px;
-    left: .12vw;
+    right: 1vw;
 }
 .winch {
     transition: .5s;
@@ -74,10 +77,10 @@ svg * {
     transform: rotate(5deg);
 }
 header {
-    width: 20vw;
+    width: 24vw;
     height: 20vh;
     top: 0;
-    left: 22vw;
+    left: 18vw;
     color: aqua;
 }
 #bulb {
@@ -118,27 +121,33 @@ nav li {
     float: left;
 }
 button {
-    position: relative;
     display: block;
-    padding: 7px 10px;
+    position: relative;
+    padding: 7px 8px;
     text-decoration: none;
     border: solid 1px aqua;
     background: 0;
+    font-size: .7em;
     color: aqua;
 }
+nav button,
+#tuning button {
+    display: inline-block;
+}
+#tuning button {
+    margin-right: -10px;
+}
 button:hover,
-button:focus {
+button:focus,
+nav .active {
     text-decoration: none;
     background-color: #007480;
     outline: 0;
 }
-nav .active {
-    background: #888;
-}
 aside {
     right: 0;
     top: 0;
-    width: 20vw;
+    width: 15vw;
     height: 100vh;
 }
 #gameTimer {
@@ -146,7 +155,7 @@ aside {
     font-family: 'DS-Digital', monospace;
     display: block;
     height: 20vh;
-    width: 22vw;
+    width: 18vw;
     top: 0;
     left: 0;
     font-size: 9vmax;
@@ -157,19 +166,21 @@ aside {
 .autoButton {
     width: 150px;
     height: 150px;
-    margin-left: 5vw;
-    background-color: lightgrey;
     border: solid 4px black;
 }
+#encoder {
+    margin-top: 50px;
+    font-size: .8em;
+}
 #encoderSlider {
-    width: 18vw;
+    width: 100%;
 }
 #lowBarImg {
-  transform: translateY(50px);
-  height: 100px;
-  width: 100px;
-  display: block;
-  background-color: lightgrey;
+    transform: translateY(50px);
+    height: 100px;
+    width: 100px;
+    display: block;
+    background-color: lightgrey;
 }
 .encoderLimitSwitchSpan {
     color: red;
