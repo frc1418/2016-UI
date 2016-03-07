@@ -321,9 +321,9 @@ function onValueChanged(key, value, isNew) {
 				} else if (isButtonActive === false) { //if they are all false then set the current border to cyan
 					$button.attr('src', '/img/' + $button.attr('baseSrc') + '.png');
 					$button.css({
-                        'pointer-events': 'auto',
-                        'border-color': 'aqua'
-                    });
+						'pointer-events': 'auto',
+						'border-color': 'aqua'
+					});
 				}
 				//if the thing is not true, check to see if something else is true, if something else is true, then make it red, else make it cyan
 			}
@@ -634,24 +634,24 @@ $('#autonomousButton').click(function() {
 	$(this).addClass('active');
 });
 
-$('.winch')
-	.mousedown(function() {
-		NetworkTables.setValue('/SmartDashboard/ladderButtonPressed', true);
-	})
-	.mouseup(function() {
-		NetworkTables.setValue('/SmartDashboard/ladderButtonPressed', false);
-	});
+$('.winch').onclick(function() {
+	if (NetworkTables.getValue('/SmartDashboard/ladderUp')) {
+		NetworkTables.setValue('/SmartDashboard/ladderUp', false);
+	} else {
+		NetworkTables.setValue('/SmartDashboard/ladderUp', true);
+	}
+});
 
 $('#gyroButton').click(function() {
 	gyroDiff = gyroVal;
 
-    // Duplicate code! Needs revising.
-    visualGyroVal = Math.floor(gyroVal - gyroDiff);
+	// Duplicate code! Needs revising.
+	visualGyroVal = Math.floor(gyroVal - gyroDiff);
 
-    if (visualGyroVal < 0) {
-        visualGyroVal += 360;
-    }
+	if (visualGyroVal < 0) {
+		visualGyroVal += 360;
+	}
 
-    $('#gyroArm').css('transform', 'rotate(' + visualGyroVal + 'deg)');
-    $('#gyroLabel').text(visualGyroVal + 'º');
+	$('#gyroArm').css('transform', 'rotate(' + visualGyroVal + 'deg)');
+	$('#gyroLabel').text(visualGyroVal + 'º');
 });
