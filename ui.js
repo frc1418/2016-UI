@@ -637,8 +637,10 @@ $('#autonomousButton').click(function() {
 $('#robotDiagram').click(function() {
 	if (NetworkTables.getValue('/SmartDashboard/ladderUp')) {
 		NetworkTables.setValue('/SmartDashboard/ladderUp', false);
+        $('#robotDiagram *').css('stroke', 'aqua');
 	} else {
 		NetworkTables.setValue('/SmartDashboard/ladderUp', true);
+        $('#robotDiagram *').css('stroke', 'red');
 	}
 });
 
