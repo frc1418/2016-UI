@@ -12,6 +12,7 @@ var currentSeconds = 135,
 	gyroVal = 0,
 	gyroDiff = 0,
 	visualGyroVal = 0,
+    ladderUpVis = false,
 	defenseAutoNames = [
 		['A0', 'A1'],
 		['E0', 'E0'],
@@ -635,12 +636,14 @@ $('#autonomousButton').click(function() {
 });
 
 $('#robotDiagram').click(function() {
-	if (NetworkTables.getValue('/SmartDashboard/ladderUp')) {
-		NetworkTables.setValue('/SmartDashboard/ladderUp', false);
+	if (ladderUpVis) {
         $('#robotDiagram *').css('stroke', 'aqua');
+        $('.winch').hide();
+        ladderUpVis = false;
 	} else {
-		NetworkTables.setValue('/SmartDashboard/ladderUp', true);
         $('#robotDiagram *').css('stroke', 'red');
+        $('.winch').show();
+        ladderUpVis = true;
 	}
 });
 
