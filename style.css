@@ -166,7 +166,7 @@ aside {
 .autoButton {
     width: 150px;
     height: 150px;
-    border: solid 4px black;
+    border: solid 4px aqua;
 }
 #encoder {
     margin-top: 50px;
@@ -268,10 +268,10 @@ aside {
     display: block;
 }
 .arrow-up {
-    border-bottom: 25px solid red;
+    border-bottom-color: red;
 }
 .arrow-down {
-    border-top: 25px solid red;
+    border-top-color: red;
 }
 .selectionToggleBox {
     height: 100px;
