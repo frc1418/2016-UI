@@ -1,4 +1,4 @@
-@font-face {
+﻿@font-face {
     font-family: 'DS-Digital';
     src: local('DS-Digital'), url(digital.ttf) format('truetype');
     unicode-range: U+0030—003A;
@@ -112,11 +112,7 @@ header {
 }
 .camera img[src$="10.14.18.2:5801/?action=stream"] {
     transform: rotate(90deg);
-    height: 50vw;
     width: 80vh;
-    position: fixed;
-    bottom: -17.6vh;
-    left: 7.7vw;
 }
 nav ul {
     padding-left: 0;
