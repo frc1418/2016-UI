@@ -331,9 +331,9 @@ function onValueChanged(key, value, isNew) {
 			break;
 		case '/SmartDashboard/Drive | backCamera':
 			if (value === true) {
-				$('.camera img').attr('src', 'http://roborio-1418-frc.local:5801/?action=stream');
+				$('.camera img').attr('src', 'http://10.14.18.2:5801/?action=stream');
 			} else {
-				$('.camera img').attr('src', 'http://roborio-1418-frc.local:5800/?action=stream');
+				$('.camera img').attr('src', 'http://10.14.18.2:5800/?action=stream');
 			}
 			break;
 		case '/SmartDashboard/startTheTimer':

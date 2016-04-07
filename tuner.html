@@ -31,7 +31,8 @@
 					<div class="col-md-6">
 						Present: <span id="present"></span><br>
 						Angle: <span id="target_angle"></span><br>
-						Height: <span id="target_height"></span>
+						Height: <span id="target_height"></span><br>
+						LogError: <span id="logging_error"></span>
 					</div>
 				</div>
 
@@ -132,6 +133,9 @@ $(document).ready(function(){
 				break;
 			case "/components/autoaim/target_height":
 				$('#target_height').text(v);
+				break;
+			case "/camera/logging_error":
+				$('#logging_error').text(v ? "true" : "false");
 				break;
 		}
 
