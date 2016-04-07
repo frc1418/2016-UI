@@ -646,7 +646,9 @@ $('#robotDiagram').click(function() {
         ladderUpVis = true;
 	}
 });
-
+$('.camera').click(function() {
+    NetworkTables.setValue('/SmartDashboard/Drive | backCamera', !NetworkTables.getValue('/SmartDashboard/Drive | backCamera'));
+});
 $('#gyroButton').click(function() {
 	gyroDiff = gyroVal;
 
