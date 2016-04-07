@@ -112,6 +112,11 @@ header {
 }
 .camera img[src$="http://roborio-1418-frc.local:5801/?action=stream"] {
     transform: rotate(90deg);
+    height: 50vw;
+    width: 80vh;
+    position: fixed;
+    bottom: -17.6vh;
+    left: 7.7vw;
 }
 nav ul {
     padding-left: 0;
