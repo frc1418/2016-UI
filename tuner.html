@@ -107,8 +107,11 @@ $(document).ready(function(){
 	      $(this)
 	        .nextAll(".output:first")
 	          .html(data.value);
-	      if (event.trigger != "setValue")
-	      	NetworkTables.setValue('/camera/thresholds/' + this.id, data.value);
+	      
+	    }).bind("change", function(event) {
+	    	if (event.trigger != "setValue") {
+	    		NetworkTables.setValue('/camera/thresholds/' + this.id, event.value);
+	    	}
 	    });
 
 	$("input:checkbox")
@@ -132,7 +135,6 @@ $(document).ready(function(){
 		}
 
 		if (k.startsWith('/camera/thresholds/')) {
-			console.log(k.substring(19));
 			$('#' + k.substring(19)).simpleSlider('setValue', v);
 		}
 
