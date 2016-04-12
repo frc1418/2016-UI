@@ -332,8 +332,10 @@ function onValueChanged(key, value, isNew) {
 		case '/SmartDashboard/Drive | backCamera':
 			if (value === true) {
 				$('.camera img').attr('src', 'http://10.14.18.2:5801/?action=stream');
+                $('.camera img').addClass('flipped');
 			} else {
 				$('.camera img').attr('src', 'http://10.14.18.2:5800/?action=stream');
+                $('.camera img').removeClass('flipped');
 			}
 			break;
 		case '/SmartDashboard/startTheTimer':
