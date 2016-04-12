@@ -110,7 +110,7 @@ header {
     width: 50vw;
     height: 80vh;
 }
-.camera img[src$="10.14.18.2:5801/?action=stream"] {
+.camera img.flipped {
     transform: rotate(90deg);
     width: 80vh;
 }
