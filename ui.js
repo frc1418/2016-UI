@@ -338,6 +338,16 @@ function onValueChanged(key, value, isNew) {
                 $('.camera img').removeClass('flipped');
 			}
 			break;
+        case '/components/autoaim/target_angle':
+            $('.driveAngle').innerHTML(value + 'º');
+            if (Math.abs(value) < 10) {
+                $('.driveAngle').css('color', 'green');
+            } else if (Math.abs(value < 30)) {
+                $('.driveAngle').css('color', 'yellow');
+            } else {
+                $('.driveAngle').css('color', 'red');
+            }
+            break;
 		case '/SmartDashboard/startTheTimer':
 			if (value) {
 				document.getElementById('gameTimer').style.color = 'aqua';
@@ -470,13 +480,16 @@ function onValueChanged(key, value, isNew) {
 			attackerImage.attr('state', attackerNames.indexOf(value)).attr('src', 'img/' + value + '.png');
 			break;
 		case '/SmartDashboard/LightBulb':
-			console.log('bulbs', value);
-			if (value) { //intentional,
+			if (value) {
 				$('#bulb').attr('state', 'true');
-				$('#bulbSVG').attr('class', 'active');
+				$('#bulbSVG').addClass('active');
+                $('.driveAngle').show();
+                NetworkTables.setValue('/camera/enabled', true);
 			} else {
 				$('#bulb').attr('state', 'false');
-				$('#bulbSVG').attr('class', '');
+				$('#bulbSVG').removeClass('active');
+                $('.driveAngle').hide();
+                NetworkTables.setValue('/camera/enabled', false);
 			}
 			break;
 	}
