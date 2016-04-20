@@ -1,4 +1,4 @@
-﻿@font-face {
+@font-face {
     font-family: 'DS-Digital';
     src: local('DS-Digital'), url(digital.ttf) format('truetype');
     unicode-range: U+0030—003A;
@@ -98,6 +98,7 @@ header {
 }
 .camera {
     position: fixed;
+    z-index: 0;
     top: 20vh;
     left: 0;
     width: 50vw;
@@ -113,6 +114,14 @@ header {
 .camera img.flipped {
     transform: rotate(90deg);
     width: 80vh;
+}
+.driveAngle {
+    background: black;
+    left: 50vw;
+    bottom: 0;
+    font-size: 3em;
+    position: fixed;
+    z-index: 100;
 }
 nav ul {
     padding-left: 0;
