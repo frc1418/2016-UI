@@ -34,16 +34,7 @@ function hashCode(s) {
 }
 $(document).ready(function() {
 	$('.winch').hide();
-	var bulb = $('#bulb');
 	NetworkTables.setValue('/SmartDashboard/LightBulb', false);
-	bulb.click(function() {
-		console.log('clicked', bulb.attr('state'));
-		if (bulb.attr('state') == 'true') {
-			NetworkTables.setValue('/SmartDashboard/LightBulb', false);
-		} else {
-			NetworkTables.setValue('/SmartDashboard/LightBulb', true);
-		}
-	});
 	document.getElementById('setButton').onclick = function() {
 		var setValue = document.getElementById('value').value;
 		if (setValue == 'true') { // ¯\_(ツ)_/¯
@@ -338,6 +329,13 @@ function onValueChanged(key, value, isNew) {
                 $('.camera img').removeClass('flipped');
 			}
 			break;
+        case '/SmartDashboard/drive/autoAim':
+            if (value) {
+                $('.driveAngle').show();
+            } else {
+                $('.driveAngle').hide();
+            }
+            break;
         case '/components/autoaim/target_angle':
             $('.driveAngle').innerHTML(value + 'º');
             if (Math.abs(value) < 10) {
@@ -482,14 +480,10 @@ function onValueChanged(key, value, isNew) {
 		case '/SmartDashboard/LightBulb':
 			if (value) {
 				$('#bulb').attr('state', 'true');
-				$('#bulbSVG').addClass('active');
-                $('.driveAngle').show();
-                NetworkTables.setValue('/camera/enabled', true);
+				$('#bulb svg').attr('class', 'active');
 			} else {
 				$('#bulb').attr('state', 'false');
-				$('#bulbSVG').removeClass('active');
-                $('.driveAngle').hide();
-                NetworkTables.setValue('/camera/enabled', false);
+				$('#bulb svg').attr('class', '');
 			}
 			break;
 	}
@@ -676,4 +670,16 @@ $('#gyroButton').click(function() {
 
 	$('#gyroArm').css('transform', 'rotate(' + visualGyroVal + 'deg)');
 	$('#gyroLabel').text(visualGyroVal + 'º');
+});
+$('#bulb').click(function() {
+    if ($('#bulb').attr('state') == 'true') {
+        NetworkTables.setValue('/SmartDashboard/LightBulb', false);
+    } else {
+        NetworkTables.setValue('/SmartDashboard/LightBulb', true);
+    }
+});
+$('#autoAimButton').mousedown(function() {
+    NetworkTables.setValue('/SmartDashboard/drive/autoAim', true);
+}).mouseup(function() {
+    NetworkTables.setValue('/SmartDashboard/drive/autoAim', false);
 });

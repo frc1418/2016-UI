@@ -19,6 +19,7 @@ header,
 article,
 aside,
 #gameTimer,
+#autoAimButton,
 #bulb {
     padding: 10px;
     position: fixed;
@@ -96,6 +97,12 @@ header {
     fill: yellow;
     stroke: none;
 }
+#autoAimButton {
+    width: 8vw;
+    height: 20vh;
+    left: 34vw;
+    top: 0;
+}
 .camera {
     position: fixed;
     z-index: 0;
@@ -116,6 +123,7 @@ header {
     width: 80vh;
 }
 .driveAngle {
+    display: none;
     background: black;
     left: 50vw;
     bottom: 0;
