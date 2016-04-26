@@ -331,19 +331,19 @@ function onValueChanged(key, value, isNew) {
 			break;
         case '/SmartDashboard/drive/autoAim':
             if (value) {
-                $('.driveAngle').show();
+                $('#driveAngle').show();
             } else {
-                $('.driveAngle').hide();
+                $('#driveAngle').hide();
             }
             break;
-        case '/components/autoaim/target_angle':
-            $('.driveAngle').innerHTML(value + 'º');
+        case '/components/autoAim/target_angle':
+            $('#driveAngle').innerHTML = value + 'º';
             if (Math.abs(value) < 10) {
-                $('.driveAngle').css('color', 'green');
+                $('#driveAngle').css('color', 'green');
             } else if (Math.abs(value < 30)) {
-                $('.driveAngle').css('color', 'yellow');
+                $('#driveAngle').css('color', 'yellow');
             } else {
-                $('.driveAngle').css('color', 'red');
+                $('#driveAngle').css('color', 'red');
             }
             break;
 		case '/SmartDashboard/startTheTimer':
@@ -465,7 +465,7 @@ function onValueChanged(key, value, isNew) {
 						NetworkTables.setValue('/SmartDashboard/' + thisAttacker.attr('id'), 'empty');
 					}
 				});
-				if (attackerIndex == 0) {
+				if (attackerIndex === 0) {
 					NetworkTables.setValue('/SmartDashboard/robotDefense', 'lowbar');
 				} else {
 					var newPosition = parseInt(attackerIndex) - 1;
@@ -680,6 +680,8 @@ $('#bulb').click(function() {
 });
 $('#autoAimButton').mousedown(function() {
     NetworkTables.setValue('/SmartDashboard/drive/autoAim', true);
+    $('#autoAimButton svg').attr('class', 'active');
 }).mouseup(function() {
     NetworkTables.setValue('/SmartDashboard/drive/autoAim', false);
+    $('#autoAimButton svg').attr('class', '');
 });
