@@ -329,7 +329,7 @@ function onValueChanged(key, value, isNew) {
                 $('.camera img').removeClass('flipped');
 			}
 			break;
-        case '/SmartDashboard/drive/autoAim':
+        case '/SmartDashboard/Drive/autoAim':
             if (value) {
                 $('#driveAngle').show();
             } else {
@@ -679,9 +679,9 @@ $('#bulb').click(function() {
     }
 });
 $('#autoAimButton').mousedown(function() {
-    NetworkTables.setValue('/SmartDashboard/drive/autoAim', true);
+    NetworkTables.setValue('/SmartDashboard/Drive/autoAim', true);
     $('#autoAimButton svg').attr('class', 'active');
 }).mouseup(function() {
-    NetworkTables.setValue('/SmartDashboard/drive/autoAim', false);
+    NetworkTables.setValue('/SmartDashboard/Drive/autoAim', false);
     $('#autoAimButton svg').attr('class', '');
 });
