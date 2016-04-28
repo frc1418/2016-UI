@@ -678,10 +678,7 @@ $('#bulb').click(function() {
         NetworkTables.setValue('/SmartDashboard/LightBulb', true);
     }
 });
-$('#autoAimButton').mousedown(function() {
-    NetworkTables.setValue('/SmartDashboard/Drive/autoAim', true);
-    $('#autoAimButton svg').attr('class', 'active');
-}).mouseup(function() {
-    NetworkTables.setValue('/SmartDashboard/Drive/autoAim', false);
-    $('#autoAimButton svg').attr('class', '');
+
+$('#autoAimButton').nt_toggle('/SmartDashboard/Drive/autoAim', function(v) {
+	$('#autoAimButton svg').attr('class', v ? 'active' : '');
 });
