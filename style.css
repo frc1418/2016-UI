@@ -110,6 +110,9 @@ header {
     fill: aqua;
     width: 70px;
 }
+#autoAimButton svg.present{
+  fill:yellow;
+}
 #autoAimButton svg.active {
     fill: red;
     animation: 5s rotate infinite linear;
@@ -215,6 +218,19 @@ aside {
     width: 150px;
     height: 150px;
     border: solid 4px aqua;
+}
+
+.activeText#presentButton{
+  color:#007880;
+  padding: 0px;
+      position: relative;
+      overflow: scroll;
+}
+.inactiveText#presentButton{
+  color:#FF4101;
+  padding: 0px;
+      position: relative;
+      overflow: scroll;
 }
 #encoder {
     margin-top: 50px;

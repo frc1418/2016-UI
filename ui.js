@@ -486,6 +486,19 @@ function onValueChanged(key, value, isNew) {
 				$('#bulb svg').attr('class', '');
 			}
 			break;
+		case "/components/autoaim/present":
+			var autoAimButton=$("#autoAimButton svg");
+			if(value===true){
+				autoAimButton.attr('class', 'present');
+				autoAimButton.attr("title","isPresent");
+			}
+			else if(value===false){
+					autoAimButton.attr('class', '');
+					autoAimButton.attr("title","notPresent");
+			}
+			else{
+				console.log("PRESENTBUTTONERROR LINE 500");
+			}
 	}
 	if (isNew) {
 		/*iterate through each value in displayInTuning, if the key starts
@@ -621,7 +634,9 @@ $('#set').click(function() {
 		NetworkTables.setValue(thisChild.attr('tableValue'), s); //need to change id back into a string
 	});
 });
-
+$("presentButton").click(function(){
+	//CURRENTLY DOESN'T DO ANYTHING
+});
 $('#teleopButton').click(function() {
 	$('#tuning').hide();
 	$('#autonomousSelection').hide();
@@ -683,5 +698,10 @@ $('#autoAimButton').mousedown(function() {
     $('#autoAimButton svg').attr('class', 'active');
 }).mouseup(function() {
     NetworkTables.setValue('/SmartDashboard/Drive/autoAim', false);
-    $('#autoAimButton svg').attr('class', '');
+    //$('#autoAimButton svg').attr('class', '');
+		var setTo="";
+		if(NetworkTables.getValue("/components/autoaim/present")){
+			setTo="present"
+		}
+		$('#autoAimButton svg').attr('class', setTo);
 });
