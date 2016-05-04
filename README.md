@@ -1,6 +1,10 @@
 FRC1418 2016 Driver Station Code
 ================================
 
+__A cleaned-up version of this UI designed for forking and use by other teams can be found [here](https://github.com/FRCDashboard/FRCDashboard).__
+
+![Screenshot of UI](screenshot.png)
+
 Introduction
 ------------
 
@@ -15,7 +19,7 @@ UI features:
   * Select one of multiple autonomous modes
 * Two live streaming camera views to assist operators when view is blocked
 
-The HTML/JavaScript interface is made possible by using [pynetworktables2js](https://github.com/robotpy/pynetworktables2js) to forward NetworkTables traffic to the webpage. pynetworktables2js was initially prototyped by [Leon Tan](https://github.com/lleontan), our UI lead, but it is now maintained by the [RobotPy](http://github.com/robotpy) project so that other teams can benefit from our work.
+The HTML/JavaScript interface is made possible by using [pynetworktables2js](https://github.com/robotpy/pynetworktables2js) to forward NetworkTables traffic to the webpage. pynetworktables2js was initially prototyped by [Leon Tan](https://github.com/lleontan), our UI lead, but it is now maintained by the [RobotPy](https://github.com/robotpy) project so that other teams can benefit from our work.
 
 Please note that this version of the UI is designed for a 1119x485 resolution. Since it's not designed to be responsive, you may have to play around with the CSS a bit to make it optimally fit your screen.
 
@@ -37,13 +41,6 @@ Connect to a local simulation
 Run this command:
 
     python3 driverStationServer.py
-
-Connect to the robot
---------------------
-
-Run this command:
-
-    python3 driverStationClientV1.py --host=roborio-1418-frc.local
 
 View the output
 ---------------
