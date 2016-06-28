@@ -1,11 +1,11 @@
-FRC1418 2016 Driver Station Code
-================================
+# 2016 User Interface
+[Robot Code](https://github.com/frc1418/2016-robot) | **UI** | [Image Processing](https://github.com/frc1418/2016-vision) | [Oculus Rift](https://github.com/frc1418/2016-oculus)
 
-__A cleaned-up version of this UI designed for forking and use by other teams can be found [here](https://github.com/FRCDashboard/FRCDashboard).__
+**A cleaned-up version of this UI designed for forking and use by other teams can be found [here](https://github.com/FRCDashboard/FRCDashboard).**
 
 ![Screenshot of UI](screenshot.png)
 
-Introduction
+## Introduction
 ------------
 
 HTML5 & Javascript driver station interface. The
@@ -23,11 +23,9 @@ The HTML/JavaScript interface is made possible by using [pynetworktables2js](htt
 
 Please note that this version of the UI is designed for a 1119x485 resolution. Since it's not designed to be responsive, you may have to play around with the CSS a bit to make it optimally fit your screen.
 
-Running the code
-================
+## Running the code
 
-Requirements
-------------
+### Dependencies
 
 python 3 must be installed!
 
@@ -35,24 +33,20 @@ Make sure you have pynetworktables2 installed:
 
     pip3 install pynetworktables2js
 
-Connect to a local simulation
------------------------------
+### Connect to a local simulation
 
 Run this command:
 
     python3 driverStationServer.py
 
-View the output
----------------
+### View UI
 
 Open a web browser (preferably Chrome), and go to:
 
     http://localhost:8888
 
 
-Authors
-=======
-
+## Authors
 * [Leon Tan](https://github.com/lleontan), UI Lead
 * [Erik Boesen](https://github.com/ErikBoesen), design & code
 * [Tim Winters](https://github.com/Twinters007), code
