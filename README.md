@@ -1,7 +1,9 @@
 # 2016 User Interface
 [Robot Code](https://github.com/frc1418/2016-robot) | **UI** | [Image Processing](https://github.com/frc1418/2016-vision) | [Oculus Rift](https://github.com/frc1418/2016-oculus)
 
-**A cleaned-up version of this UI designed for forking and use by other teams can be found [here](https://github.com/FRCDashboard/FRCDashboard).**
+**FRC Dashboard, a cleaned-up dashboard framework designed for easy forking and use by other teams can be found [here](https://github.com/FRCDashboard/FRCDashboard).**
+
+**A revamped version of _this_ UI, based off of the above framework and used in our offseason competitions, can be found [here](https://github.com/frc1418/FRCDashboard/tree/2016).**
 
 ![Screenshot of UI](screenshot.png)
 
