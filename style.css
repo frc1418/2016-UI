@@ -10,8 +10,8 @@
     display: none;
 }
 body {
-    background: black;
-    color: aqua;
+    background: #333;
+    color: #18b5ee;
     font-family: monospace;
     font-size: 1.2em;
     -webkit-user-select: none;
@@ -38,14 +38,15 @@ aside,
     width: 35vw;
 }
 svg * {
-    stroke: aqua;
+    stroke: #18b5ee;
+    fill: #333;
     stroke-width: 2;
     transform-origin: center;
 }
 #gyro {
     width: 175px;
     height: 175px;
-    border: solid 2px aqua;
+    border: solid 2px #18b5ee;
     border-radius: 50%;
     z-index: 50;
     margin-left: 30px;
@@ -84,7 +85,7 @@ header {
     height: 20vh;
     top: 0;
     left: 18vw;
-    color: aqua;
+    color: #18b5ee;
 }
 #bulb {
     width: 8vw;
@@ -93,7 +94,7 @@ header {
     top: 0;
 }
 #bulb svg * {
-    fill: aqua;
+    fill: #18b5ee;
 }
 #bulb svg.active * {
     fill: yellow;
@@ -107,8 +108,11 @@ header {
     top: 0;
 }
 #autoAimButton svg {
-    fill: aqua;
+    fill: #18b5ee;
     width: 70px;
+}
+#autoAimButton svg * {
+    fill: #18b5ee;
 }
 #autoAimButton svg.present{
   fill:yellow;
@@ -154,7 +158,7 @@ header {
 }
 #driveAngle {
     display: none;
-    background: black;
+    background: #333;
     left: 50vw;
     bottom: 0;
     font-size: 3em;
@@ -176,10 +180,10 @@ button {
     position: relative;
     padding: 7px 8px;
     text-decoration: none;
-    border: solid 1px aqua;
+    border: solid 1px #18b5ee;
     background: 0;
     font-size: .7em;
-    color: aqua;
+    color: #18b5ee;
 }
 nav button,
 #tuning button {
@@ -217,7 +221,7 @@ aside {
 .autoButton {
     width: 150px;
     height: 150px;
-    border: solid 4px aqua;
+    border: solid 4px #18b5ee;
 }
 
 .activeText#presentButton{
@@ -247,10 +251,10 @@ aside {
     background-color: lightgrey;
 }
 .encoderLimitSwitchSpan {
-    color: red;
+    color: #18b5ee;
 }
 #tuning {
-    background: black;
+    background: #333;
     top: 20vh;
     left: 0;
     width: 50vw;
@@ -317,7 +321,7 @@ aside {
 #autonomousSelection {
     width: 50vw;
     height: 100vh;
-    background: black;
+    background: #333;
     top: 0;
     right: 0;
     display: none;
@@ -332,10 +336,10 @@ aside {
     display: block;
 }
 .arrow-up {
-    border-bottom-color: red;
+    border-bottom-color: #18b5ee;
 }
 .arrow-down {
-    border-top-color: red;
+    border-top-color: #18b5ee;
 }
 .selectionToggleBox {
     height: 100px;

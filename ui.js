@@ -283,7 +283,7 @@ function onValueChanged(key, value, isNew) {
 					thisButton.attr('src', '/img/' + thisButton.attr('baseSrc') + '.png');
 					thisButton.css({
 						'pointer-events': 'auto',
-						'border-color': 'aqua',
+						'border-color': '#18b5ee',
 					});
 					NetworkTables.setValue('/SmartDashboard/' + thisButton.attr('id'), false);
 				}); //then set everything else that isn't true and make it red, and set their activeState to false,
@@ -307,14 +307,14 @@ function onValueChanged(key, value, isNew) {
 					});
 					$button.css({
 						'pointer-events': 'none',
-						'border-color': 'aqua'
+						'border-color': '#18b5ee'
 					});
 
 				} else if (isButtonActive === false) { //if they are all false then set the current border to cyan
 					$button.attr('src', '/img/' + $button.attr('baseSrc') + '.png');
 					$button.css({
 						'pointer-events': 'auto',
-						'border-color': 'aqua'
+						'border-color': '#18b5ee'
 					});
 				}
 				//if the thing is not true, check to see if something else is true, if something else is true, then make it red, else make it cyan
@@ -348,7 +348,7 @@ function onValueChanged(key, value, isNew) {
             break;
 		case '/SmartDashboard/startTheTimer':
 			if (value) {
-				document.getElementById('gameTimer').style.color = 'aqua';
+				document.getElementById('gameTimer').style.color = '#18b5ee';
 				timerVar = setInterval(function() {
 					currentSeconds--;
 					var currentMinutes = parseInt(currentSeconds / 60);
@@ -661,7 +661,7 @@ $('#autonomousButton').click(function() {
 
 $('#robotDiagram').click(function() {
 	if (ladderUpVis) {
-        $('#robotDiagram *').css('stroke', 'aqua');
+        $('#robotDiagram *').css('stroke', '#18b5ee');
         $('.winch').hide();
         ladderUpVis = false;
 	} else {
